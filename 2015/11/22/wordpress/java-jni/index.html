@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Java JNI | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="介绍C++调用Java JNI例子和原理 简单的步骤   完成普通的Java类，没有限制，没有规则。如果已经有了现成的类，就直接拿来用吧。  编译Java代码，没有限制，没有规则。  开发C++代码: 初始化JVM，通过Java JNI Functions调用Java逻辑。  编译、运行C++ 应用。  例子（源码） 1. 一个简单的Java类 package zman.demo.jni.cpp.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java JNI">
+<meta property="og:url" content="http://example.com/2015/11/22/wordpress/java-jni/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="介绍C++调用Java JNI例子和原理 简单的步骤   完成普通的Java类，没有限制，没有规则。如果已经有了现成的类，就直接拿来用吧。  编译Java代码，没有限制，没有规则。  开发C++代码: 初始化JVM，通过Java JNI Functions调用Java逻辑。  编译、运行C++ 应用。  例子（源码） 1. 一个简单的Java类 package zman.demo.jni.cpp.">
+<meta property="og:locale">
+<meta property="article:published_time" content="2015-11-22T14:39:20.000Z">
+<meta property="article:modified_time" content="2020-11-19T15:27:35.301Z">
+<meta property="article:author" content="zman">
+<meta property="article:tag" content="C调用Java">
+<meta property="article:tag" content="JNI">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-wordpress/java-jni" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/11/22/wordpress/java-jni/" class="article-date">
+  <time datetime="2015-11-22T14:39:20.000Z" itemprop="datePublished">2015-11-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java JNI
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><em>介绍C++调用Java JNI例子和原理</em> <strong>简单的步骤</strong></p>
+<ol>
+<li> 完成普通的Java类，没有限制，没有规则。如果已经有了现成的类，就直接拿来用吧。</li>
+<li> 编译Java代码，没有限制，没有规则。</li>
+<li> 开发C++代码: 初始化JVM，通过Java JNI Functions调用Java逻辑。</li>
+<li> 编译、运行C++ 应用。</li>
+</ol>
+<p><strong>例子（<a target="_blank" rel="noopener" href="https://github.com/zman2013/java-jni-demo.git">源码</a>）</strong> <strong>1.</strong> 一个简单的Java类</p>
+<p>package zman.demo.jni.cpp.invoke.java;</p>
+<p>public class CppInvokeJava{<br>    //求和计算<br>    public int sum(int a, int b, int c) {<br>        return a + b + c;<br>    }</p>
+<p>}</p>
+<p><strong>2.</strong> 编译一下</p>
+<p>zman@zman:find . -name “*.java”  xargs javac -d build</p>
+<p>-d build: 指定class输出路径。</p>
+<p><strong>3.</strong> 完成C++代码 <strong>3.1</strong> 声明一个类CppInvokeJava，文件名：cppinvokejava.h</p>
+<p>#ifndef __CPP_INVOKE_JAVA_H__<br>#define __CPP_INVOKE_JAVA_H__</p>
+<p>#include &lt;jni.h&gt;</p>
+<p>class CppInvokeJava<br>{<br>public:<br>  //init nested jvm, and init java instance.<br>  CppInvokeJava();<br>  //destroy jvm<br>  ~CppInvokeJava();<br>  //normal method<br>  int Sum(int a, int b, int c);</p>
+<p>private:<br>  JavaVM *m_jvm;<br>  JNIEnv *m_env;<br>  //the java class of CppInvokeJava<br>  jclass m_cppinvokejava_class;<br>  //the java instace of the class CppInvokeJava<br>  jobject m_cppinvokejava;<br>  //the java method id of the java sum method which will be invoked by the above ‘sum’ method.<br>  jmethodID m_sum_method;<br>};</p>
+<p>#endif</p>
+<p><strong>3.2</strong> 完成相应的实现逻辑，文件名：cppinvokejava.cpp</p>
+<p>#include &lt;jni.h&gt;<br>#include &lt;string.h&gt;<br>#include “cppinvokejava.h”</p>
+<p>CppInvokeJava::CppInvokeJava()<br>{<br>  //1. prepare jvm args<br>  JavaVMInitArgs vm_args;<br>  vm_args.version = JNI_VERSION_1_8;</p>
+<p>  JavaVMOption options[1];<br>  options[0].optionString = “-Djava.class.path=build”;<br>  vm_args.nOptions = 1;<br>  vm_args.options = options;</p>
+<p>  //2. create jvm<br>  long jvmStatus = JNI_CreateJavaVM(&amp;m_jvm, (void **)&amp;m_env, &amp;vm_args);<br>  if( jvmStatus == JNI_ERR ){<br>    printf(“Creating JVM failed.\n”);<br>  }</p>
+<p>  printf(“Created JVM successfully.\n”);</p>
+<p>  //3. find the CppInvokeJava class<br>  m_cppinvokejava_class = m_env-&gt;FindClass(“zman/demo/jni/cpp/invoke/java/CppInvokeJava”);<br>  if( m_cppinvokejava_class == 0 ){<br>    printf(“Not found class CppInvokeJava.\n”);<br>  }<br>  //4. get the constructor method id<br>  jmethodID cppinvokejava_constructor = m_env-&gt;GetMethodID(m_cppinvokejava_class, “<init>“, “()V”);<br>  if( cppinvokejava_constructor == 0 ){<br>    printf(“Not found CppInvokeJava’s constructor.\n”);<br>  }<br>  //5. create CppInvokeJava instance<br>  m_cppinvokejava = m_env-&gt;NewObject(m_cppinvokejava_class, cppinvokejava_constructor);<br>  if( m_cppinvokejava == 0 ){<br>    printf(“Creating CppInvokeJava instance failed.\n”);<br>  }</p>
+<p>  //6. find the sum method id<br>  m_sum_method = m_env-&gt;GetMethodID(m_cppinvokejava_class, “sum”, “(III)I”);<br>  if( m_sum_method == 0 ){<br>    printf(“Not found sum method.\n”);<br>  }</p>
+<p>}</p>
+<p>CppInvokeJava::~CppInvokeJava()<br>{<br>  m_jvm-&gt;DestroyJavaVM();<br>}</p>
+<p>int CppInvokeJava::Sum(int a, int b, int c)<br>{<br>  return m_env-&gt;CallIntMethod(m_cppinvokejava, m_sum_method, a, b, c);<br>}</p>
+<p>int main()<br>{<br>  CppInvokeJava cppInvokeJava;<br>  int sum = cppInvokeJava.Sum(1, 2, 3);<br>  printf(“The sum is: %d.\n”, sum);<br>}</p>
+<ol>
+<li> 准备虚拟机参数</li>
+<li> 创建虚拟机</li>
+<li> 调用JNI FindClass方法找到CppInvokeJava class</li>
+<li> 调用JNI GetMethodID方法找到CppInvokeJava的构造方法</li>
+<li> 调用JNI NewObject方法创建CppInvokeJava对象</li>
+<li> 调用JNI GetMethodID方法找到CppInvokeJava的sum方法</li>
+</ol>
+<p><strong>4.</strong> 编译、运行 <strong>4.1</strong> 编译</p>
+<p>//Linux 版<br>zman@zman:g++ -o cppinvokejava src/main/java/zman/demo/jni/cpp/invoke/java/cppinvokejava.cpp -I ${JAVA_HOME}/include/ -I ${JAVA_HOME}/include/linux/ -L ${JAVA_HOME}/jre/lib/amd64/server/ -ljvm</p>
+<p>//Mac 版<br>$ g++ -o cppinvokejava src/main/java/zman/demo/jni/cpp/invoke/java/cppinvokejava.cpp -I ${JAVA_HOME}/include/ -I ${JAVA_HOME}/include/darwin/ -L ${JAVA_HOME}/jre/lib/server/ -ljvm<br>//JDK&gt;1.6时，Mac运行JNI会提示需要安装JDK6，可以通过一下命令解决。<br>$ sudo mkdir /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/<br>$ sudo mkdir /System/Library/Java/Support/Deploy.bundle/</p>
+<p>编译cppinvokejava.cpp，输出到cppinvokejava。</p>
+<p>-I：指定头文件的位置（jni.h等）</p>
+<p>-L：指定动态链接库的位置（libjvm.so）</p>
+<p>-l：指定动态链接库名称（jvm）</p>
+<p><strong>4.2</strong> 指定动态链接库环境变量</p>
+<p>zman@zman:export LD_LIBRARY_PATH=${JAVA_HOME}/jre/lib/amd64/server/</p>
+<p><strong>4.3</strong> 运行</p>
+<p>zman@zman:java-jni-demo$ ./cppinvokejava<br>Created JVM successfully.<br>The sum is: 6.<br>zman@zman:java-jni-demo$</p>
+<p><strong>原理</strong> 正如我们一直了解的，java的字节码是在JVM中加载执行的。C++调用java，事实上是启动一个JVM，java的字节码依然是运行在JVM中，C++通过Java JNI提供的方法与JVM进行通信，达到调用java逻辑的目的。 注意 <strong>*</strong> 对于java对象，C++代码获得的都是引用，C++需要通过JNI Function调用对象提供的方法实现对象的修改。 <strong>*</strong> C++不能直接获得java String字符串，需要通过GetStringUTFRegion将字符串内容复制到C++的空间中；也可以通过SetStringUTFRegion将C++中的字符串赋值给java String对象。 <strong>*</strong> 数组操作与String操作基本相同。 <strong>*</strong> C++中的局部变量如果是java对象的引用，C++方法运行结束时，局部变量自动释放，而相应java对象由JVM自动回收。（如果C++使用完java对象，后续有比较耗时的逻辑，可以调用JNI Function主动释放java对象的引用，不必等到方法结束） <strong>调试</strong> 1. 调试Java程序 设置JVM参数如下，然后在IDE中启动Remote Debug模式:</p>
+<p>JavaVMOption options[2];<br>options[0].optionString = “-Djava.class.path=build”;<br>//添加debug参数<br>options[1].optionString = “-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y”;<br>vm_args.nOptions = 2;<br>vm_args.options = options;</p>
+<p>2. 调试C++程序</p>
+<p>zman@zman: gdb ./cppinvokejava     //调试程序<br>(gdb) r        //启动<br>(gdb) c        //继续执行<br>(gdb&gt; info s   //查看stack信息</p>
+<p><strong>内存泄露</strong> 1. 创建字符串引起内存泄露 实际开发中，在本地方法里，创建字符串并获得本地引用（LocalReference），此本地引用不会返回到上层函数，依然会引起引起内存泄露。 这一现象和JNI Guide and Specification第五章“Local and Global References”描述的机制不一样。 <em>Local and global references have different lifetimes. Local references are</em> <em>automatically freed, whereas global and weak global references remain valid</em> <em>until they are freed by the programmer.</em> <em>It is acceptable to leave up to 16 local references in use for the virtual machine</em> <em>to delete after the native method returns.</em> 推荐：无论何时字符串对象不会再被引用，就手工释放引用。</p>
+<p>void createString()<br>{<br>    jstring localRef = env-&gt;NewStringUTF(“some content”);<br>    …<br>    env-&gt;DeleteLocalRef( localRef );<br>    …<br>}</p>
+<p><strong><a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2015/11/22/java-jni/">LINK</a></strong> 1. <a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/jniTOC.html">JNI Guide from Oracle</a> 2. <a target="_blank" rel="noopener" href="http://www.ibm.com/developerworks/java/tutorials/j-jni/j-jni.html">Java programming with JNI</a> 3. <a target="_blank" rel="noopener" href="http://www.e-booksdirectory.com/details.php?ebook=325">JNI Guide and Specification</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2015/11/22/wordpress/java-jni/" data-id="ckhoznqrs000jwpnihsgw6a8m" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%B0%83%E7%94%A8Java/" rel="tag">C调用Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/01/17/wordpress/rocketmq/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          RocketMQ，队列选型
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/11/22/wordpress/mysql-innodb-recovery-from-ibd/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">MySQL从.ibd文件恢复数据</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/HttpClient/">HttpClient</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/IoT/">IoT</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/MQ/">MQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mock/">Mock</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/RPC/">RPC</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SVN-Git/">SVN Git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Unit-Test/">Unit Test</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/WordPress/">WordPress</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/code-generator/">code generator</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/container/">container</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/log/">log</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/performance-optimize/">performance_optimize</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pull-stream/">pull-stream</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/tcp/">tcp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/unity/">unity</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/">分布式系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">开发环境</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ibd/" rel="tag">.ibd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2d/" rel="tag">2d</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ActiveMQ/" rel="tag">ActiveMQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/" rel="tag">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%B0%83%E7%94%A8Java/" rel="tag">C调用Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Demo/" rel="tag">Demo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dubbo/" rel="tag">Dubbo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dubbo%E5%8E%9F%E7%90%86/" rel="tag">Dubbo原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Finagle/" rel="tag">Finagle</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/" rel="tag">Gradle</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hessian/" rel="tag">Hessian</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HttpClient/" rel="tag">HttpClient</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JDK/" rel="tag">JDK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E6%8F%92%E4%BB%B6/" rel="tag">Java 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Log4j2/" rel="tag">Log4j2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MQ/" rel="tag">MQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/" rel="tag">Maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/" rel="tag">Mock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mockito/" rel="tag">Mockito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" rel="tag">MySQL数据恢复</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Proxy/" rel="tag">Proxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RPC/" rel="tag">RPC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RabbitMQ/" rel="tag">RabbitMQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RestTemplate/" rel="tag">RestTemplate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RocketMQ/" rel="tag">RocketMQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SPI/" rel="tag">SPI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/STS/" rel="tag">STS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVN/" rel="tag">SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Application/" rel="tag">Spring Application</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Demo/" rel="tag">Spring Demo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-MVC/" rel="tag">Spring MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Mybatis/" rel="tag">Spring Mybatis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Web/" rel="tag">Spring Web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Web%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" rel="tag">Spring Web项目搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-%E4%BE%8B%E5%AD%90/" rel="tag">Spring 例子</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-%E6%A1%86%E6%9E%B6/" rel="tag">Spring 框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" rel="tag">Spring项目搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sprint-Test/" rel="tag">Sprint Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SwitchSharp/" rel="tag">SwitchSharp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tchannel/" rel="tag">Tchannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unit-Test/" rel="tag">Unit Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VirtualBox/" rel="tag">VirtualBox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WordPress/" rel="tag">WordPress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/backpressure/" rel="tag">backpressure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/" rel="tag">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dataframe/" rel="tag">dataframe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/decrypt/" rel="tag">decrypt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/devops/" rel="tag">devops</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/" rel="tag">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flannel/" rel="tag">flannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iot/" rel="tag">iot</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jetty-run/" rel="tag">jetty:run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubectl/" rel="tag">kubectl</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/" rel="tag">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/" rel="tag">log</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE/" rel="tag">maven 全局配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/merge/" rel="tag">merge</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/" rel="tag">mybatis代码生成器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/performance-optimize/" rel="tag">performance_optimize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh%E7%9B%B4%E8%BF%9E/" rel="tag">ssh直连</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/table/" rel="tag">table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/" rel="tag">tcp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcpdump/" rel="tag">tcpdump</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wireshark/" rel="tag">wireshark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%80%E8%87%B4%E6%80%A7/" rel="tag">一致性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8D%E5%90%8C%E7%8E%AF%E5%A2%83%E6%89%93%E5%8C%85/" rel="tag">不同环境打包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%90%86/" rel="tag">代理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" rel="tag">代码版本管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/" rel="tag">免密登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">分布式系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E6%A8%A1%E5%9D%97/" rel="tag">多模块</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E9%85%8D%E7%BD%AE/" rel="tag">多配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/" rel="tag">服务治理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" rel="tag">自动挂载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%9F%E5%88%97%E9%80%89%E5%9E%8B/" rel="tag">队列选型</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ibd/" style="font-size: 10px;">.ibd</a> <a href="/tags/2d/" style="font-size: 15px;">2d</a> <a href="/tags/ActiveMQ/" style="font-size: 10px;">ActiveMQ</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/C%E8%B0%83%E7%94%A8Java/" style="font-size: 10px;">C调用Java</a> <a href="/tags/Demo/" style="font-size: 10px;">Demo</a> <a href="/tags/Dubbo/" style="font-size: 15px;">Dubbo</a> <a href="/tags/Dubbo%E5%8E%9F%E7%90%86/" style="font-size: 10px;">Dubbo原理</a> <a href="/tags/Finagle/" style="font-size: 10px;">Finagle</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Hessian/" style="font-size: 10px;">Hessian</a> <a href="/tags/HttpClient/" style="font-size: 10px;">HttpClient</a> <a href="/tags/JDK/" style="font-size: 10px;">JDK</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">Java 插件</a> <a href="/tags/Log4j2/" style="font-size: 10px;">Log4j2</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Mockito/" style="font-size: 15px;">Mockito</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" style="font-size: 10px;">MySQL数据恢复</a> <a href="/tags/Proxy/" style="font-size: 15px;">Proxy</a> <a href="/tags/RPC/" style="font-size: 20px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 15px;">RabbitMQ</a> <a href="/tags/RestTemplate/" style="font-size: 10px;">RestTemplate</a> <a href="/tags/RocketMQ/" style="font-size: 10px;">RocketMQ</a> <a href="/tags/SPI/" style="font-size: 10px;">SPI</a> <a href="/tags/STS/" style="font-size: 10px;">STS</a> <a href="/tags/SVN/" style="font-size: 10px;">SVN</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Spring-Application/" style="font-size: 10px;">Spring Application</a> <a href="/tags/Spring-Demo/" style="font-size: 10px;">Spring Demo</a> <a href="/tags/Spring-MVC/" style="font-size: 15px;">Spring MVC</a> <a href="/tags/Spring-Mybatis/" style="font-size: 10px;">Spring Mybatis</a> <a href="/tags/Spring-Web/" style="font-size: 15px;">Spring Web</a> <a href="/tags/Spring-Web%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">Spring Web项目搭建</a> <a href="/tags/Spring-%E4%BE%8B%E5%AD%90/" style="font-size: 10px;">Spring 例子</a> <a href="/tags/Spring-%E6%A1%86%E6%9E%B6/" style="font-size: 15px;">Spring 框架</a> <a href="/tags/Spring%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">Spring项目搭建</a> <a href="/tags/Sprint-Test/" style="font-size: 10px;">Sprint Test</a> <a href="/tags/SwitchSharp/" style="font-size: 10px;">SwitchSharp</a> <a href="/tags/Tchannel/" style="font-size: 10px;">Tchannel</a> <a href="/tags/Unit-Test/" style="font-size: 10px;">Unit Test</a> <a href="/tags/VirtualBox/" style="font-size: 10px;">VirtualBox</a> <a href="/tags/WordPress/" style="font-size: 10px;">WordPress</a> <a href="/tags/backpressure/" style="font-size: 10px;">backpressure</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/dataframe/" style="font-size: 10px;">dataframe</a> <a href="/tags/decrypt/" style="font-size: 10px;">decrypt</a> <a href="/tags/devops/" style="font-size: 10px;">devops</a> <a href="/tags/docker/" style="font-size: 20px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/flannel/" style="font-size: 10px;">flannel</a> <a href="/tags/iot/" style="font-size: 10px;">iot</a> <a href="/tags/jetty-run/" style="font-size: 10px;">jetty:run</a> <a href="/tags/kubectl/" style="font-size: 10px;">kubectl</a> <a href="/tags/kubernetes/" style="font-size: 20px;">kubernetes</a> <a href="/tags/log/" style="font-size: 10px;">log</a> <a href="/tags/maven-%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">maven 全局配置</a> <a href="/tags/merge/" style="font-size: 10px;">merge</a> <a href="/tags/mybatis%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/" style="font-size: 10px;">mybatis代码生成器</a> <a href="/tags/performance-optimize/" style="font-size: 10px;">performance_optimize</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/ssh%E7%9B%B4%E8%BF%9E/" style="font-size: 10px;">ssh直连</a> <a href="/tags/table/" style="font-size: 10px;">table</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/tcpdump/" style="font-size: 10px;">tcpdump</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/wireshark/" style="font-size: 10px;">wireshark</a> <a href="/tags/%E4%B8%80%E8%87%B4%E6%80%A7/" style="font-size: 10px;">一致性</a> <a href="/tags/%E4%B8%8D%E5%90%8C%E7%8E%AF%E5%A2%83%E6%89%93%E5%8C%85/" style="font-size: 10px;">不同环境打包</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" style="font-size: 10px;">代码版本管理</a> <a href="/tags/%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/" style="font-size: 10px;">免密登录</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">分布式系统设计</a> <a href="/tags/%E5%A4%9A%E6%A8%A1%E5%9D%97/" style="font-size: 10px;">多模块</a> <a href="/tags/%E5%A4%9A%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">多配置</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/" style="font-size: 15px;">服务治理</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" style="font-size: 10px;">自动挂载</a> <a href="/tags/%E9%98%9F%E5%88%97%E9%80%89%E5%9E%8B/" style="font-size: 10px;">队列选型</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/19/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/29/wordpress/vue-table-styles/">Vue table styles</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/29/wordpress/mockito-invoking-callback/">Mockito invoking callback</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/12/wordpress/package-one-runnable-jar/">Package One Runnable Jar</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/11/wordpress/a-stream-is-just-an-array-in-time/">A stream is just an array in time</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 zman<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

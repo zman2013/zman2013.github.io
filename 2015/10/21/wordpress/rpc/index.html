@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>RPC | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="详细介绍基于RPC的系统与本地调用程序、常用的网络系统的区别，和基本的RPC系统如何实现。 RPC是什么RPC（Remote Procedure Call）从字面理解就是远程过程调用，即像调用本地方法一样调用网络另一端系统中的一段逻辑。我们常说的RPC指的是RPC框架，一个把网络请求、数据编码都封装好的框架或者lib库，内部逻辑对开发人员是透明的，开发人员只关心调用了一个（远程）方法，然后得到了结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RPC">
+<meta property="og:url" content="http://example.com/2015/10/21/wordpress/rpc/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="详细介绍基于RPC的系统与本地调用程序、常用的网络系统的区别，和基本的RPC系统如何实现。 RPC是什么RPC（Remote Procedure Call）从字面理解就是远程过程调用，即像调用本地方法一样调用网络另一端系统中的一段逻辑。我们常说的RPC指的是RPC框架，一个把网络请求、数据编码都封装好的框架或者lib库，内部逻辑对开发人员是透明的，开发人员只关心调用了一个（远程）方法，然后得到了结">
+<meta property="og:locale">
+<meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2015/10/%E6%9C%AC%E5%9C%B0%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%841.jpg">
+<meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2015/10/HTTP-API%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg">
+<meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg">
+<meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2015/10/%E8%AF%A6%E7%BB%86RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%842.jpg">
+<meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%861.jpg">
+<meta property="article:published_time" content="2015-10-21T23:22:47.000Z">
+<meta property="article:modified_time" content="2020-11-19T15:27:35.301Z">
+<meta property="article:author" content="zman">
+<meta property="article:tag" content="Proxy">
+<meta property="article:tag" content="RPC">
+<meta property="article:tag" content="服务治理">
+<meta property="article:tag" content="Demo">
+<meta property="article:tag" content="代理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zmannotes.com/wp-content/uploads/2015/10/%E6%9C%AC%E5%9C%B0%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%841.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-wordpress/rpc" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/10/21/wordpress/rpc/" class="article-date">
+  <time datetime="2015-10-21T23:22:47.000Z" itemprop="datePublished">2015-10-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/RPC/">RPC</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RPC
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>详细介绍基于RPC的系统与本地调用程序、常用的网络系统的区别，和基本的RPC系统如何实现。</p>
+<h3 id="RPC是什么"><a href="#RPC是什么" class="headerlink" title="RPC是什么"></a>RPC是什么</h3><p>RPC（Remote Procedure Call）从字面理解就是远程过程调用，即像调用本地方法一样调用网络另一端系统中的一段逻辑。我们常说的RPC指的是RPC框架，一个把网络请求、数据编码都封装好的框架或者lib库，内部逻辑对开发人员是透明的，开发人员只关心调用了一个（远程）方法，然后得到了结果。</p>
+<h3 id="RPC的好处"><a href="#RPC的好处" class="headerlink" title="RPC的好处"></a>RPC的好处</h3><p>RPC使得引用方在本地直接调用服务接口就可以完成远端逻辑的执行，省去网络请求、数据编码解码等步骤，无疑可以极大提高开发效率。同时由于所有的请求都交给框架处理，我们又可以进一步扩展框架负责的功能，比如：服务发现、容错、负载均衡、路由等，自然而然服务治理就产生了。</p>
+<h3 id="RPC介绍"><a href="#RPC介绍" class="headerlink" title="RPC介绍"></a>RPC介绍</h3><p>通过介绍简单的本地调用结构、HTTP调用结构、PRC调用结构，可以直观地理解RPC究竟是什么、做了哪些事情。 <strong>本地调用结构</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E6%9C%AC%E5%9C%B0%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%841.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E6%9C%AC%E5%9C%B0%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%841.jpg" alt="本地调用结构"></a> 本地调用结构中所有模块都在一个系统里面，Caller可以直接调用另一段代码逻辑。简单、方便、高效，但耦合度高。 <strong>HTTP API调用结构</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/HTTP-API%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/HTTP-API%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg" alt="HTTP-API调用结构"></a> 目前中小型的互联网公司均使用HTTP API方式实现系统间的调用，此结构相比本地调用，已经实现了解耦，使得开发工作更加灵活，只要保持API不变，不同功能开发互不影响。但增加了调用端和服务器端的工作量，对于每个服务：服务端要进行数据与json的双向转换（或映射）并封装为HTTP接口，调用端同样要进行数据与json的双向转换并实现http请求的调用逻辑。 <strong>RPC调用结构</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg" alt="RPC调用结构"></a> 如上图，调用方调用‘API Proxy’即完成远端服务调用过程，RPC框架隐式地完成网络通信逻辑。服务提供方也只需要实现相应的服务逻辑，使工程师将更多精力集中在业务上。 <em>‘API Proxy’是什么？</em> <em>服务接口的代理，是RPC Framework暴露出的供调用方使用的，输入输出与Implement一样（可参考代理模式）。</em> <strong>完整RPC调用过程</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E8%AF%A6%E7%BB%86RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%842.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E8%AF%A6%E7%BB%86RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%842.jpg" alt="详细RPC调用结构"></a> 上图中所有蓝色块是RPC框架实现的功能模块。 在公司内部，为了实现对系统的监控、增强稳健性、扩展性，经常需要做一些额外的工作。 例如：为了统计接口的调用次数、响应时间，一般是通过日志记录；服务器地址或端口改动时，引起下游消费端进行相应配置改动；负载均衡通过各种第三方工具实现…… 由于所有服务调用均通过RPC框架，因而很容易拓展RPC框架实现服务治理功能，如下图：   <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%861.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%861.jpg" alt="RPC服务治理1"></a></p>
+<h3 id="RPC-Demo"><a href="#RPC-Demo" class="headerlink" title="RPC Demo"></a>RPC Demo</h3><p>先假设RPC框架已经完成，基于RPC框架开发系统需要做那些事情呢？ 以Calculator为例，上游系统调用下游的计算系统获取结果。 <strong>1. 设计接口/契约</strong></p>
+<p>public interface Calculator {</p>
+<pre><code>/\*\*
+ \* @return a \* b
+ \*/
+int multiply(int a, int b);
+
+/\*\*
+ \* @return a / b
+ \*/
+int devide(int a, int b);</code></pre>
+<p>}</p>
+<p><strong>2. 上游系统(Caller)实现</strong></p>
+<p>public class CalculatorCaller {</p>
+<pre><code>public static void main(String\[\] args) &#123;
+    SimpleRPCFramework rpc = new SimpleRPCFramework();   //实例化RPC框架
+
+    Calculator calc = rpc.getProxy(Calculator.class);    //获得Calculator代理
+
+    for (int i = 0; i &lt; 10; i++) &#123;                       //把Calculator代理当做Calculator具体实现来调用,
+        int result = calc.multiply(i, (i + 1));          //剩下的事情RPC框架会自行处理
+        System.out.println(result);
+    &#125;
+&#125;</code></pre>
+<p>}</p>
+<p><em>（有木有很简单？就像本地调用一样简单）</em> <strong>3. 下游系统(Server)实现</strong></p>
+<p>public class CalculatorImpl implements Calculator {      //实现Calculator接口</p>
+<pre><code>@Override
+public int multiply(int a, int b) &#123;
+    return a \* b;
+&#125;
+
+@Override
+public int devide(int a, int b) &#123;
+    return a / b;
+&#125;</code></pre>
+<p>}</p>
+<p>public class CalculatorServer {</p>
+<pre><code>public static void main(String\[\] args) throws IOException &#123;
+    //实例化helloWorld
+    CalculatorImpl calculator = new CalculatorImpl();
+    //创建rpc框架实例
+    SimpleRPCFramework rpc = new SimpleRPCFramework();
+    //注册接口和对应实现
+    rpc.registerImplements(Calculator.class, calculator);     //开放更多服务，只需修改此处
+    //暴露服务接口，监听服务
+    rpc.expose();
+&#125;</code></pre>
+<p>}</p>
+<p>至此，接口设计、上下游所有开发工作完成。接下来看下神奇的RPC框架究竟如何实现~ <strong>4. Simple RPC Framework</strong> 根据上面的例子，可以发现该RPC框架有三个接口：</p>
+<p>public interface RPC {</p>
+<pre><code>/\*\*
+ \* 服务器端注册接口与相应实现。
+ \*
+ \* @param inteface
+ \* @param instance
+ \*/
+void registerImplements(Class&lt;?&gt; inteface, Object instance);
+
+/\*\*
+ \* 服务器端暴露端口，并监听调用请求
+ \*/
+void expose() throws IOException;
+
+/\*\*
+ \* 调用端获取接口的代理
+ \*/
+&lt;T&gt; T getProxy(final Class&lt;T&gt; inteface);</code></pre>
+<p>}</p>
+<p>下面看一下具体实现：</p>
+<p>/**<br> * @from zmannotes.com<br> */<br>public class SimpleRPCFramework {</p>
+<pre><code>/\*\* 存储接口与实现的对应关系 \*/
+private final Map&lt;Class&lt;?&gt;, Object&gt; implCache = new ConcurrentHashMap&lt;&gt;();
+
+/\*\* 存储接口与代理的对应关系 \*/
+private final Map&lt;Class&lt;?&gt;, Object&gt; proxyCache = new ConcurrentHashMap&lt;&gt;();
+
+public synchronized void registerImplements(Class&lt;?&gt; inteface, Object instance) &#123;
+    //检测接口是否已经存在
+    if (implCache.containsKey(inteface)) &#123;
+        throw new RuntimeException(&quot;This interface\[&quot; + inteface.getName() + &quot;\] have already been exposed.&quot;);
+    &#125; else &#123;
+        implCache.put(inteface, instance);
+    &#125;
+&#125;
+
+public void expose() throws IOException &#123;
+    //……
+&#125;
+
+public synchronized &lt;T&gt; T getProxy(final Class&lt;T&gt; inteface) &#123;
+   //……
+&#125;</code></pre>
+<p>}</p>
+<p>registerImplements没有复杂逻辑，只是检测缓存中是否已经包含目标接口，完全可以并入expose中，但为使逻辑简单，故为之。 下面是具体的服务暴露逻辑，采用基于Socket的通信方式，编码解码直接使用Java IO自带的序列化流。 原理比较简单，就是上面介绍的三个模块：</p>
+<ol>
+<li> 服务器负责监听端口和接收/发送数据。</li>
+<li> 协议模块负责编码/解码数据。</li>
+<li> Dispatcher负责将请求分发到对应的实现逻辑。</li>
+</ol>
+<p>public void expose() throws IOException {<br>        //暴露服务端口<br>        ServerSocket server = new ServerSocket(2008);<br>        while (true) {<br>            final Socket socket = server.accept();<br>            new Thread(new Runnable() {<br>                public void run() {<br>                    try (<br>                            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());<br>                            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {<br>                        //获取请求数据 - 接收请求,并解码<br>                        Class<?> inter = (Class<?>) in.readObject();<br>                        String methodName = in.readUTF();<br>                        Class<?>\[\] parameterTypes = (Class<?>[]) in.readObject();<br>                        Object[] args = (Object[]) in.readObject();<br>                        //根据接口信息获得对应的接口实现 - Dispatcher<br>                        Object instance = implCache.get(inter);<br>                        //调用接口实现 - invoke<br>                        Method method = instance.getClass().getMethod(methodName, parameterTypes);<br>                        Object result = method.invoke(instance, args);<br>                        //返回结果 - 编码,并返回结果<br>                        out.writeObject(result);<br>                    } catch (Exception e) {<br>                        throw new RuntimeException(e);<br>                    }<br>                }<br>            }).run();<br>        }<br>    }</p>
+<p>下面是接口代理类的生成逻辑，采用JDK自带的Proxy生成机制来实现，具体流程参见‘完整RPC调用过程’。</p>
+<p>public synchronized <T> T getProxy(final Class<T> inteface) {<br>        //检测接口是否已经存在<br>        if (proxyCache.containsKey(inteface)) {<br>            return (T) proxyCache.get(inteface);<br>        }</p>
+<pre><code>    T proxy = (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+            new Class&lt;?&gt;\[\] &#123; inteface &#125;, new InvocationHandler() &#123;
+                public Object invoke(Object proxy, Method method, Object\[\] args) throws Throwable &#123;
+                    Socket socket = new Socket(InetAddress.getLocalHost(), 2008);
+                    try(
+                            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+                            ObjectInputStream input = new ObjectInputStream(socket.getInputStream())
+                            )&#123;
+                        //发送请求数据 - 编码,并发送请求
+                        output.writeObject(inteface);
+                        output.writeUTF(method.getName());
+                        output.writeObject(method.getParameterTypes());
+                        output.writeObject(args);
+                        //接收结果 - 接受数据,并解码
+                        Object result = input.readObject();
+
+                        return result;
+                    &#125;
+                &#125;
+            &#125;);
+    proxyCache.put(inteface, proxy);
+    return proxy;
+&#125;</code></pre>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2015/10/22/rpc/">总结</a></h3><p>本文对RPC的原理和模块进行较详细介绍，并与其它系统间调用方式进行对比，最后给出简单的RPC框架实现。 例子中各模块都可以进一步扩展、优化，以提高框架的运行效率、稳定性、扩展性。完整Demo代码存于Github: <a target="_blank" rel="noopener" href="https://github.com/zman2013/simple-rpc-demo">Go</a>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2015/10/21/wordpress/rpc/" data-id="ckhoznqsh001iwpnia4m8bk0s" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Demo/" rel="tag">Demo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Proxy/" rel="tag">Proxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RPC/" rel="tag">RPC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BB%A3%E7%90%86/" rel="tag">代理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/" rel="tag">服务治理</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/10/26/wordpress/popular-rpc-framework/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          主流RPC框架
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/10/18/wordpress/devenv/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">开发环境初始化</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/HttpClient/">HttpClient</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/IoT/">IoT</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/MQ/">MQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mock/">Mock</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/RPC/">RPC</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SVN-Git/">SVN Git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Unit-Test/">Unit Test</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/WordPress/">WordPress</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/code-generator/">code generator</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/container/">container</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/log/">log</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/performance-optimize/">performance_optimize</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pull-stream/">pull-stream</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/tcp/">tcp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/unity/">unity</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/">分布式系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">开发环境</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ibd/" rel="tag">.ibd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2d/" rel="tag">2d</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ActiveMQ/" rel="tag">ActiveMQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/" rel="tag">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%B0%83%E7%94%A8Java/" rel="tag">C调用Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Demo/" rel="tag">Demo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dubbo/" rel="tag">Dubbo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dubbo%E5%8E%9F%E7%90%86/" rel="tag">Dubbo原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Finagle/" rel="tag">Finagle</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/" rel="tag">Gradle</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hessian/" rel="tag">Hessian</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HttpClient/" rel="tag">HttpClient</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JDK/" rel="tag">JDK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E6%8F%92%E4%BB%B6/" rel="tag">Java 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Log4j2/" rel="tag">Log4j2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MQ/" rel="tag">MQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/" rel="tag">Maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/" rel="tag">Mock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mockito/" rel="tag">Mockito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" rel="tag">MySQL数据恢复</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Proxy/" rel="tag">Proxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RPC/" rel="tag">RPC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RabbitMQ/" rel="tag">RabbitMQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RestTemplate/" rel="tag">RestTemplate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RocketMQ/" rel="tag">RocketMQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SPI/" rel="tag">SPI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/STS/" rel="tag">STS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVN/" rel="tag">SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Application/" rel="tag">Spring Application</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Demo/" rel="tag">Spring Demo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-MVC/" rel="tag">Spring MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Mybatis/" rel="tag">Spring Mybatis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Web/" rel="tag">Spring Web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Web%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" rel="tag">Spring Web项目搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-%E4%BE%8B%E5%AD%90/" rel="tag">Spring 例子</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-%E6%A1%86%E6%9E%B6/" rel="tag">Spring 框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" rel="tag">Spring项目搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sprint-Test/" rel="tag">Sprint Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SwitchSharp/" rel="tag">SwitchSharp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tchannel/" rel="tag">Tchannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unit-Test/" rel="tag">Unit Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VirtualBox/" rel="tag">VirtualBox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WordPress/" rel="tag">WordPress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/backpressure/" rel="tag">backpressure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/" rel="tag">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dataframe/" rel="tag">dataframe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/decrypt/" rel="tag">decrypt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/devops/" rel="tag">devops</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/" rel="tag">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flannel/" rel="tag">flannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iot/" rel="tag">iot</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jetty-run/" rel="tag">jetty:run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubectl/" rel="tag">kubectl</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/" rel="tag">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/" rel="tag">log</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE/" rel="tag">maven 全局配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/merge/" rel="tag">merge</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/" rel="tag">mybatis代码生成器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/performance-optimize/" rel="tag">performance_optimize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh%E7%9B%B4%E8%BF%9E/" rel="tag">ssh直连</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/table/" rel="tag">table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/" rel="tag">tcp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcpdump/" rel="tag">tcpdump</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wireshark/" rel="tag">wireshark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%80%E8%87%B4%E6%80%A7/" rel="tag">一致性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8D%E5%90%8C%E7%8E%AF%E5%A2%83%E6%89%93%E5%8C%85/" rel="tag">不同环境打包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%90%86/" rel="tag">代理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" rel="tag">代码版本管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/" rel="tag">免密登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">分布式系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E6%A8%A1%E5%9D%97/" rel="tag">多模块</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E9%85%8D%E7%BD%AE/" rel="tag">多配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/" rel="tag">服务治理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" rel="tag">自动挂载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%9F%E5%88%97%E9%80%89%E5%9E%8B/" rel="tag">队列选型</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ibd/" style="font-size: 10px;">.ibd</a> <a href="/tags/2d/" style="font-size: 15px;">2d</a> <a href="/tags/ActiveMQ/" style="font-size: 10px;">ActiveMQ</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/C%E8%B0%83%E7%94%A8Java/" style="font-size: 10px;">C调用Java</a> <a href="/tags/Demo/" style="font-size: 10px;">Demo</a> <a href="/tags/Dubbo/" style="font-size: 15px;">Dubbo</a> <a href="/tags/Dubbo%E5%8E%9F%E7%90%86/" style="font-size: 10px;">Dubbo原理</a> <a href="/tags/Finagle/" style="font-size: 10px;">Finagle</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Hessian/" style="font-size: 10px;">Hessian</a> <a href="/tags/HttpClient/" style="font-size: 10px;">HttpClient</a> <a href="/tags/JDK/" style="font-size: 10px;">JDK</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">Java 插件</a> <a href="/tags/Log4j2/" style="font-size: 10px;">Log4j2</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Mockito/" style="font-size: 15px;">Mockito</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" style="font-size: 10px;">MySQL数据恢复</a> <a href="/tags/Proxy/" style="font-size: 15px;">Proxy</a> <a href="/tags/RPC/" style="font-size: 20px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 15px;">RabbitMQ</a> <a href="/tags/RestTemplate/" style="font-size: 10px;">RestTemplate</a> <a href="/tags/RocketMQ/" style="font-size: 10px;">RocketMQ</a> <a href="/tags/SPI/" style="font-size: 10px;">SPI</a> <a href="/tags/STS/" style="font-size: 10px;">STS</a> <a href="/tags/SVN/" style="font-size: 10px;">SVN</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Spring-Application/" style="font-size: 10px;">Spring Application</a> <a href="/tags/Spring-Demo/" style="font-size: 10px;">Spring Demo</a> <a href="/tags/Spring-MVC/" style="font-size: 15px;">Spring MVC</a> <a href="/tags/Spring-Mybatis/" style="font-size: 10px;">Spring Mybatis</a> <a href="/tags/Spring-Web/" style="font-size: 15px;">Spring Web</a> <a href="/tags/Spring-Web%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">Spring Web项目搭建</a> <a href="/tags/Spring-%E4%BE%8B%E5%AD%90/" style="font-size: 10px;">Spring 例子</a> <a href="/tags/Spring-%E6%A1%86%E6%9E%B6/" style="font-size: 15px;">Spring 框架</a> <a href="/tags/Spring%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">Spring项目搭建</a> <a href="/tags/Sprint-Test/" style="font-size: 10px;">Sprint Test</a> <a href="/tags/SwitchSharp/" style="font-size: 10px;">SwitchSharp</a> <a href="/tags/Tchannel/" style="font-size: 10px;">Tchannel</a> <a href="/tags/Unit-Test/" style="font-size: 10px;">Unit Test</a> <a href="/tags/VirtualBox/" style="font-size: 10px;">VirtualBox</a> <a href="/tags/WordPress/" style="font-size: 10px;">WordPress</a> <a href="/tags/backpressure/" style="font-size: 10px;">backpressure</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/dataframe/" style="font-size: 10px;">dataframe</a> <a href="/tags/decrypt/" style="font-size: 10px;">decrypt</a> <a href="/tags/devops/" style="font-size: 10px;">devops</a> <a href="/tags/docker/" style="font-size: 20px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/flannel/" style="font-size: 10px;">flannel</a> <a href="/tags/iot/" style="font-size: 10px;">iot</a> <a href="/tags/jetty-run/" style="font-size: 10px;">jetty:run</a> <a href="/tags/kubectl/" style="font-size: 10px;">kubectl</a> <a href="/tags/kubernetes/" style="font-size: 20px;">kubernetes</a> <a href="/tags/log/" style="font-size: 10px;">log</a> <a href="/tags/maven-%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">maven 全局配置</a> <a href="/tags/merge/" style="font-size: 10px;">merge</a> <a href="/tags/mybatis%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/" style="font-size: 10px;">mybatis代码生成器</a> <a href="/tags/performance-optimize/" style="font-size: 10px;">performance_optimize</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/ssh%E7%9B%B4%E8%BF%9E/" style="font-size: 10px;">ssh直连</a> <a href="/tags/table/" style="font-size: 10px;">table</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/tcpdump/" style="font-size: 10px;">tcpdump</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/wireshark/" style="font-size: 10px;">wireshark</a> <a href="/tags/%E4%B8%80%E8%87%B4%E6%80%A7/" style="font-size: 10px;">一致性</a> <a href="/tags/%E4%B8%8D%E5%90%8C%E7%8E%AF%E5%A2%83%E6%89%93%E5%8C%85/" style="font-size: 10px;">不同环境打包</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" style="font-size: 10px;">代码版本管理</a> <a href="/tags/%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/" style="font-size: 10px;">免密登录</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">分布式系统设计</a> <a href="/tags/%E5%A4%9A%E6%A8%A1%E5%9D%97/" style="font-size: 10px;">多模块</a> <a href="/tags/%E5%A4%9A%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">多配置</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/" style="font-size: 15px;">服务治理</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" style="font-size: 10px;">自动挂载</a> <a href="/tags/%E9%98%9F%E5%88%97%E9%80%89%E5%9E%8B/" style="font-size: 10px;">队列选型</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/19/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/29/wordpress/vue-table-styles/">Vue table styles</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/29/wordpress/mockito-invoking-callback/">Mockito invoking callback</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/12/wordpress/package-one-runnable-jar/">Package One Runnable Jar</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/11/wordpress/a-stream-is-just-an-array-in-time/">A stream is just an array in time</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 zman<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

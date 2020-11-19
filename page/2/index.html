@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale">
+<meta property="article:author" content="zman">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-wordpress/iot" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/02/13/wordpress/iot/" class="article-date">
+  <time datetime="2018-02-13T06:54:15.000Z" itemprop="datePublished">2018-02-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/IoT/">IoT</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/13/wordpress/iot/">AWS IoT</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><em>去年调研了所有的IoT平台，最后总结只有两家，分别是：AWS IoT和其他IoT。本文从AWS IoT Document中摘取核心功能和特点进行说明。</em></p>
+<h2 id="1-IoT是什么？"><a href="#1-IoT是什么？" class="headerlink" title="1 IoT是什么？"></a>1 IoT是什么？</h2><p>IOT能够提供在设备与云端进行安全的双向通信的能力，可以进行数据的远程采集、分析、存储，并可以进行设备的远程控制。</p>
+<h2 id="2-功能组件"><a href="#2-功能组件" class="headerlink" title="2 功能组件"></a>2 功能组件</h2><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot.png"><img src="https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot.png" alt="aws_iot"></a> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot_data_services.png"><img src="https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot_data_services.png" alt="aws_iot_data_services"></a> 下图是阿里的，基本没差别。 <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2018/02/ali_iot_architecture.png"><img src="https://www.zmannotes.com/wp-content/uploads/2018/02/ali_iot_architecture.png" alt="ali_iot_architecture"></a></p>
+<h2 id="3-组件介绍"><a href="#3-组件介绍" class="headerlink" title="3 组件介绍"></a>3 组件介绍</h2><h3 id="3-1-安全与认证"><a href="#3-1-安全与认证" class="headerlink" title="3.1 安全与认证"></a>3.1 安全与认证</h3><h4 id="3-1-1-原理"><a href="#3-1-1-原理" class="headerlink" title="3.1.1 原理"></a>3.1.1 原理</h4><p>任何设备都必要拥有证书才能访问Broker，所有经过IOT的数据都使用TLS进行加密。IOT基于标准的TLS协议进行设备和云端双向认证来验证双方的身份。 设备需要将包含私钥的证书埋在安全可靠的地方，并且每个设备拥有唯一的证书，云端使用对应的公钥进行验证。 设备也需要将AWS的根证书加入本地可信任证书列表中，用来验证云端的身份。</p>
+<h4 id="3-1-2-证书生成方式"><a href="#3-1-2-证书生成方式" class="headerlink" title="3.1.2 证书生成方式"></a>3.1.2 证书生成方式</h4><p>证书可以在AWS控制台直接生成，也可以通过命令行，以及RESTful API进行生成。 <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cli/latest/reference/iot/create-keys-and-certificate.html">https://docs.aws.amazon.com/cli/latest/reference/iot/create-keys-and-certificate.html</a> <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/apireference/API_CreateKeysAndCertificate.html">https://docs.aws.amazon.com/iot/latest/apireference/API_CreateKeysAndCertificate.html</a></p>
+<h4 id="3-1-3-授权策略"><a href="#3-1-3-授权策略" class="headerlink" title="3.1.3 授权策略"></a>3.1.3 授权策略</h4><p>IOT授权策略使用与IAM相同的规范进行管理，通过将设备唯一标识或组与策略进行关联实现权限的控制。举例如下：</p>
+<p>{<br>    “Version”: “2012-10-17”,<br>    “Statement”: [{<br>        “Effect”: “Allow”,<br>        “Action”:[“iot:Publish”],<br>        “Resource”: [“arn:aws:iot:us-east-1:123456789012:/topic/foo/bar”]<br>    },<br>    {<br>        “Effect”: “Allow”,<br>        “Action”: [“iot:Connect”],<br>        “Resource”: [“*“]<br>        }]<br>}</p>
+<p>解释： 版本2012-10-17 允许进行发布到 us-east-1 区 topic/foo/bar 队列，同时允许连接到任何Broker。 策略列表： <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/action-resources.html">https://docs.aws.amazon.com/iot/latest/developerguide/action-resources.html</a></p>
+<p><strong>Action</strong></p>
+<p><strong>Resource</strong></p>
+<p>iot:DeleteThingShadow</p>
+<p>A thing ARN - arn:aws:iot:us-east-1:123456789012:thing/thingOne</p>
+<p>iot:Connect</p>
+<p>A client ID ARN - arn:aws:iot:us-east1:123456789012:client/myClientId</p>
+<p>iot:Publish</p>
+<p>A topic ARN - arn:aws:iot:us-east-1:123456789012:topic/myTopicName</p>
+<p>iot:Subscribe</p>
+<p>A topic filter ARN - arn:aws:iot:us-east-1:123456789012:topicfilter/myTopicFilter</p>
+<p>iot:Receive</p>
+<p>A topic ARN - arn:aws:iot:us-east-1:123456789012:topic/myTopicName</p>
+<p>iot:UpdateThingShadow</p>
+<p>A thing ARN - arn:aws:iot:us-east-1:123456789012:thing/thingOne</p>
+<h3 id="3-2-Message-Broker"><a href="#3-2-Message-Broker" class="headerlink" title="3.2 Message Broker"></a>3.2 Message Broker</h3><h4 id="3-2-1-功能"><a href="#3-2-1-功能" class="headerlink" title="3.2.1 功能"></a>3.2.1 功能</h4><p>Message Broker允许Client向某个Topic发送消息，订阅一个或多个Topic。Broker保存所有连接信息及订阅信息（这里介绍不清楚，直接影响到实现方式：所有连接信息是指当前broker上的所有连接，还是整个Broker集群的所有连接信息）。</p>
+<h4 id="3-2-2-协议"><a href="#3-2-2-协议" class="headerlink" title="3.2.2 协议"></a>3.2.2 协议</h4><h5 id="3-2-2-1-端口映射"><a href="#3-2-2-1-端口映射" class="headerlink" title="3.2.2.1 端口映射"></a>3.2.2.1 端口映射</h5><p><strong>Protocol</strong></p>
+<p><strong>Authentication</strong></p>
+<p><strong>Port</strong></p>
+<p>MQTT</p>
+<p>Client Certificate</p>
+<p>8883</p>
+<p>HTTP</p>
+<p>Client Certificate</p>
+<p>8443</p>
+<p>HTTP</p>
+<p>SigV4</p>
+<p>443</p>
+<p>MQTT + WebSocket</p>
+<p>SigV4</p>
+<p>443</p>
+<h5 id="3-2-2-2-MQTT"><a href="#3-2-2-2-MQTT" class="headerlink" title="3.2.2.2 MQTT"></a>3.2.2.2 MQTT</h5><p>AWS IOT没有完全实现MQTT协议 <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html">https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html</a> 不支持QoS2； 不支持Retained消息； 不支持session持久化存储； …</p>
+<h4 id="3-2-3-Topics"><a href="#3-2-3-Topics" class="headerlink" title="3.2.3 Topics"></a>3.2.3 Topics</h4><p>Topic用来在设备和云端之间路由消息。 ’/’用来对topic进行分层。 ‘$’表示保留topic。 <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/topics.html">https://docs.aws.amazon.com/iot/latest/developerguide/topics.html</a> 通配符功能如下：</p>
+<p><strong>Wildcard</strong></p>
+<p><strong>Description</strong></p>
+<p>#</p>
+<p>Must be the last character in the topic to which you are subscribing. Works as a wildcard by matching the current tree and all subtrees. For example, a subscription to Sensor/# will receive messages published to Sensor/,Sensor/temp, Sensor/temp/room1, but not the messages published to Sensor.</p>
+<p>+</p>
+<p>Matches exactly one item in the topic hierarchy. For example, a subscription to Sensor/+/room1 will receive messages published to Sensor/temp/room1, Sensor/moisture/room1, and so on.</p>
+<h4 id="3-2-4-事件"><a href="#3-2-4-事件" class="headerlink" title="3.2.4 事件"></a>3.2.4 事件</h4><p><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/life-cycle-events.html">https://docs.aws.amazon.com/iot/latest/developerguide/life-cycle-events.html</a> 客户端建立连接时，IOT向如下topic发送事件，业务可以监听此topic获取通知： $aws/events/presence/connected/clientId 对应内容：</p>
+<p>{<br>    “clientId”: “a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6”,<br>    “timestamp”: 1460065214626,<br>    “eventType”: “connected”,<br>    “sessionIdentifier”: “00000000-0000-0000-0000-000000000000”,<br>    “principalIdentifier”: “000000000000/ABCDEFGHIJKLMNOPQRSTU:some-user/ABCDEFGHIJKLMNOPQRSTU:some-user”<br>}</p>
+<p>连接断开时，对应的topic如下： $aws/events/presence/disconnected/<em>clientId</em> 订阅topic时： $aws/events/subscriptions/subscribed/<em>clientId</em> 取消订阅时： $aws/events/subscriptions/unsubscribed/<em>clientId</em></p>
+<h3 id="3-3-影子服务"><a href="#3-3-影子服务" class="headerlink" title="3.3 影子服务"></a>3.3 影子服务</h3><h4 id="3-3-1-定义"><a href="#3-3-1-定义" class="headerlink" title="3.3.1 定义"></a>3.3.1 定义</h4><p>设备影子是一个json串用来存储和检索设备的当前状态。</p>
+<h4 id="3-3-2-功能"><a href="#3-3-2-功能" class="headerlink" title="3.3.2 功能"></a>3.3.2 功能</h4><p>AWS IOT提供的三个方法来操作影子服务 UPDATE：更新影子服务的状态，如果目标不存在就直接创建。 GET：获取设备在影子服务中最新的快照。 DELETE：删除设备对应的影子。 <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-rest-api.html">https://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-rest-api.html</a></p>
+<h4 id="3-3-3-影子JSON内容"><a href="#3-3-3-影子JSON内容" class="headerlink" title="3.3.3 影子JSON内容"></a>3.3.3 影子JSON内容</h4><p>HTTP GET https://<em>endpoint</em>/things/<em>thingName</em>/shadow</p>
+<p>{<br>    “state”: {<br>        “desired”: {<br>            “lights”: {<br>                “color”: “RED”<br>            },<br>            “engine”: “ON”<br>        },<br>        “reported”: {<br>            “lights”: {<br>                “color”: “GREEN”<br>            },<br>            “engine”: “ON”<br>        },<br>        “delta”: {<br>            “lights”: {<br>                “color”: “RED”<br>            }<br>        }<br>    },<br>    “metadata”: {<br>        “desired”: {<br>            “lights”: {<br>                “color”: {<br>                    “timestamp”: 123456<br>                },<br>             }<br>             “engine”: {<br>                “timestamp”: 123456<br>            }<br>        },<br>        “reported”: {<br>            “lights”: {<br>                “color”: {<br>                    “timestamp”: 789012<br>                }<br>            },<br>            “engine”: {<br>                “timestamp”: 789012<br>            }<br>        },<br>        “delta”: {<br>            “lights”: {<br>                “color”: {<br>                    “timestamp”: 123456<br>                }<br>            }<br>        }<br>    },<br>    “version”: 10,<br>    “timestamp”: 123456789<br>}</p>
+<h3 id="3-4-规则引擎"><a href="#3-4-规则引擎" class="headerlink" title="3.4 规则引擎"></a>3.4 规则引擎</h3><h4 id="3-4-1-定义"><a href="#3-4-1-定义" class="headerlink" title="3.4.1 定义"></a>3.4.1 定义</h4><p>规则引擎提供一种将设备和云服务关联起来的能力。规则引擎基于mqtt topic stream来工作的。</p>
+<h4 id="3-4-2-功能"><a href="#3-4-2-功能" class="headerlink" title="3.4.2 功能"></a>3.4.2 功能</h4><p>过滤来自某一个设备的数据。 将数据路由到DynamoDB。 将数据保存到S3。 将数据路由到SQS。 将数据录入Elastic Search服务。 将数据路由到Amazon ML服务基于模型进行分析。 …</p>
+<h4 id="3-4-3-例子"><a href="#3-4-3-例子" class="headerlink" title="3.4.3 例子"></a>3.4.3 例子</h4><p>将目标为Topic ‘iot/test’ 的所有消息路由到名称为my-dynamodb-table的表中。</p>
+<p>{<br>  “sql”: “SELECT * FROM ‘iot/test’”,<br>  “ruleDisabled”: false,<br>  “awsIotSqlVersion”: “2016-03-23”,<br>  “actions”: [{<br>      “dynamoDB”: {<br>          “tableName”: “my-dynamodb-table”,<br>          “roleArn”: “arn:aws:iam::123456789012:role/my-iot-role”,<br>          “hashKeyField”: “topic”,<br>          “hashKeyValue”: “${topic(2)}”,<br>          “rangeKeyField”: “timestamp”,<br>          “rangeKeyValue”: “${timestamp()}”<br>      }<br>  }]<br>}</p>
+<p>将目标为Topic ‘some/topic’的所有消息路由到my_sqs_queue的队列中。</p>
+<p>{<br>    “rule”: {<br>        “sql”: “SELECT * FROM ‘some/topic’”,<br>        “ruleDisabled”: false,<br>        “actions”: [{<br>            “sqs”: {<br>                “queueUrl”: “<a target="_blank" rel="noopener" href="https://sqs.us-east-2.amazonaws.com/123456789012/my/_sqs/_queue&quot;">https://sqs.us-east-2.amazonaws.com/123456789012/my\_sqs\_queue&quot;</a>,<br>                “roleArn”: “arn:aws:iam::123456789012:role/aws_iot_sqs”,<br>                “useBase64”: false<br>            }<br>        }]<br>    }<br>}</p>
+<h3 id="3-5-监控"><a href="#3-5-监控" class="headerlink" title="3.5 监控"></a>3.5 监控</h3><h4 id="3-5-1-说明"><a href="#3-5-1-说明" class="headerlink" title="3.5.1 说明"></a>3.5.1 说明</h4><p>监控是IOT服务的重要组成部分，用来监测服务的稳定性、可用性、性能。</p>
+<h4 id="3-5-2-提出问题"><a href="#3-5-2-提出问题" class="headerlink" title="3.5.2 提出问题"></a>3.5.2 提出问题</h4><p><em>（AWS IoT没有指明监控如何实现，但是提出了设计监控时应当考虑的问题，挺专业的）</em> 监控的目标是什么？ 监控那些资源？ 监控的频率是多长时间？ 使用什么监控工具？ 谁来执行监控任务？ 当监控到错误时，由谁来处理？ <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html">https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html</a></p>
+<h2 id="4-费用"><a href="#4-费用" class="headerlink" title="4 费用"></a>4 费用</h2><h3 id="4-1-计费"><a href="#4-1-计费" class="headerlink" title="4.1 计费"></a>4.1 计费</h3><p>单连接每百万分钟$0.08; Broker每百万条消息$1.00; 影子服务每百万次操作$1.25; 规则引擎每百万次操作$0.15; SQS每百万条消息$0.40;</p>
+<h3 id="4-2-举例"><a href="#4-2-举例" class="headerlink" title="4.2 举例"></a>4.2 举例</h3><p>以美西区为例，一百万辆车，每分钟上报两条数据，忽略（车控指令产生的费用，读取影子服务产生的费用）经过规则引擎路由到SQS计算一年中费用： 一百万辆车保持一年长连接：0.08 * 60 * 24 * 365 一百万辆车每辆车每分钟上报两条车辆状态(↑128k)：1 * 2 * 60 * 24 * 365 一百万辆车每辆车每分钟更新两次影子服务：1.25 * 2 * 60 * 24 * 365 一百万辆车每辆车每分钟触发两次规则引擎，并执行规则（触发和执行分别计费）：0.15 * 2 * 2 * 60 * 24 * 365 一百万辆车每辆车每分钟写两条消息到SQS（消费端读单独计费）：0.4 * 2 * 2 * 60 * 24 * 365 乘以6.4汇率，一百万辆车一年的保守费用：(0.08 + 1*2 + 1.25*2 + 0.15*2*2 + 0.4*2*2) * 60 * 24 * 365 * 6.4 = 22,806,836人民币。</p>
+<h2 id="5-缺点"><a href="#5-缺点" class="headerlink" title="5 缺点"></a>5 缺点</h2><p>5.1 只能通过日志查看消息的投递状态 5.2 对接依然需要较高开发成本</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/02/13/wordpress/iot/" data-id="ckhoznqrq000gwpni47fn7tnt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iot/" rel="tag">iot</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-wordpress/kubernetes-basic-command" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/24/wordpress/kubernetes-basic-command/" class="article-date">
+  <time datetime="2017-09-24T14:30:39.000Z" itemprop="datePublished">2017-09-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/container/">container</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/24/wordpress/kubernetes-basic-command/">Kubernetes常用命令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="核心命令"><a href="#核心命令" class="headerlink" title="核心命令"></a>核心命令</h3><p>kubectl get - list resources</p>
+<p>kubectl describe - show detailed information about a resource</p>
+<p>kubectl logs - print the logs from a container in a pod</p>
+<p>kubectl exec - execute a command on a contain in a pod</p>
+<h3 id="1-get"><a href="#1-get" class="headerlink" title="1. get"></a>1. get</h3><p>    1.1 查看nodes</p>
+<p>        kubectl get nodes</p>
+<p>    1.2 查看pod</p>
+<p>        kubectl get pod</p>
+<p>    1.3 查看deployment</p>
+<p>        kubectl get deployments</p>
+<h3 id="2-describe"><a href="#2-describe" class="headerlink" title="2. describe"></a>2. describe</h3><p>    2.1 查看详情</p>
+<p>        kubectl describe pods</p>
+<p>            kubectl describe pods $POD_NAME</p>
+<p>        kubectl describe nodes</p>
+<h3 id="3-exec"><a href="#3-exec" class="headerlink" title="3. exec"></a>3. exec</h3><p>    3.1 调用pod内部命令</p>
+<p>        kubectl exec -ti $POD_NAME curl localhost:8080</p>
+<p>    3.2 启动容器bash</p>
+<p>        kubectl exec -ti $POD_NAME bash    （退出：exit）</p>
+<h3 id="4-删除service"><a href="#4-删除service" class="headerlink" title="4. 删除service"></a>4. 删除service</h3><p>kubectl delete service -l run=kubernetes-bootcamp</p>
+<h3 id="5-查看版本"><a href="#5-查看版本" class="headerlink" title="5. 查看版本"></a>5. 查看版本</h3><p>kubectl version</p>
+<h3 id="6-查看集群信息"><a href="#6-查看集群信息" class="headerlink" title="6. 查看集群信息"></a>6. 查看集群信息</h3><p>kubectl cluster-info</p>
+<h3 id="7-创建一个deployment"><a href="#7-创建一个deployment" class="headerlink" title="7. 创建一个deployment"></a>7. 创建一个deployment</h3><p>kubectl run kubernetes-bootcamp –image=docker.io/jocatalin/kubernetes-bootcamp:v1 –port=8080</p>
+<h3 id="8-暴露服务到外网（即：创建一个service）"><a href="#8-暴露服务到外网（即：创建一个service）" class="headerlink" title="8. 暴露服务到外网（即：创建一个service）"></a>8. 暴露服务到外网（即：创建一个service）</h3><p>    8.1 创建service</p>
+<p>        kubectl expose deployment/kubernetes-bootcamp –type=”NodePort” –port 8080    (port: 为pod监听的端口）</p>
+<p>    8.2 查看service</p>
+<p>        kubectl describe service</p>
+<p>        kubectl describe services/kubernetes-bootcamp</p>
+<p>    8.3 删除service</p>
+<p>        kubectl delete service $SERVICE_NAME</p>
+<p>        kubectl delete service -l run=kubernetes-bootcamp</p>
+<h3 id="9-标签的使用（label）"><a href="#9-标签的使用（label）" class="headerlink" title="9. 标签的使用（label）"></a>9. 标签的使用（label）</h3><p>    9.1 打标签</p>
+<p>        kubectl label pod $POD_NAME app=v1</p>
+<p>    9.2 使用标签过滤</p>
+<p>        kubectl get pods -l app=v1</p>
+<h3 id="10-scale"><a href="#10-scale" class="headerlink" title="10. scale"></a>10. scale</h3><p>kubectl scale deployments/kubernetes-bootcamp –replicas=2</p>
+<h3 id="11-平滑升级、回滚"><a href="#11-平滑升级、回滚" class="headerlink" title="11. 平滑升级、回滚"></a>11. 平滑升级、回滚</h3><p>    11.1 <strong>升级</strong></p>
+<p>        kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2</p>
+<p>    11.2 <strong>检查状态</strong></p>
+<p>        11.2.1 通过service访问服务接口</p>
+<p>        11.2.2 kubectl rollout status deployments/kubernetes-bootcamp</p>
+<p>    11.3 <strong>回滚</strong></p>
+<p>        kubectl rollout undo deployments/kubernetes-bootcamp</p>
+<h3 id="12-namespace"><a href="#12-namespace" class="headerlink" title="12. namespace"></a>12. namespace</h3><p>kubectl create namespace mem-example</p>
+<p>kubectl create -f <a target="_blank" rel="noopener" href="https://k8s.io/docs/tasks/configure-pod-container/memory-request-limit.yaml">https://k8s.io/docs/tasks/configure-pod-container/memory-request-limit.yaml</a> –namespace=mem-example</p>
+<p>kubectl get pod memory-demo –namespace=mem-example</p>
+<p> LINK <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/user-guide/kubectl/v1.7/">Kubectl API</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2017/09/24/wordpress/kubernetes-basic-command/" data-id="ckhoznqrt000kwpniguf2g918" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubectl/" rel="tag">kubectl</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/" rel="tag">kubernetes</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-wordpress/docker-basic-commands" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/24/wordpress/docker-basic-commands/" class="article-date">
+  <time datetime="2017-09-24T14:24:16.000Z" itemprop="datePublished">2017-09-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/container/">container</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/24/wordpress/docker-basic-commands/">Docker常用命令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>docker pull gcr.io/google_containers/pause-amd64 docker commit -m ‘message’ docker push docker images docker rmi imageId docker run -i -t ubuntu /bin/bash docker run –name demo -d ubuntu docker exec -i -t containerId /bin/bash # 查看containerId docker ps -a docker stop containerId docker start containerId docker rm containerId docker save gcr.io/google_containers/pause-amd64 -o pause.tar docker load -i pause.tar</p>
+<h1 id="常用容器"><a href="#常用容器" class="headerlink" title="常用容器"></a>常用容器</h1><h2 id="1-mongodb"><a href="#1-mongodb" class="headerlink" title="1. mongodb"></a>1. mongodb</h2><p># 运行容器<br>docker run -d -p 27017-27019:27017-27019 –name mongodb mongo</p>
+<h1 id="连接到容器"><a href="#连接到容器" class="headerlink" title="连接到容器"></a>连接到容器</h1><p>docker exec -it mongodb bash</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2017/09/24/wordpress/docker-basic-commands/" data-id="ckhoznqrl000bwpnigiar6jjr" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-wordpress/kubernetes-cluster-setup" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/24/wordpress/kubernetes-cluster-setup/" class="article-date">
+  <time datetime="2017-09-24T14:16:47.000Z" itemprop="datePublished">2017-09-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/container/">container</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/24/wordpress/kubernetes-cluster-setup/">Kubernetes集群搭建</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><em>献给在墙内尝试搭建最新版kubernetes集群的家伙</em></p>
+<h2 id="1-Overview"><a href="#1-Overview" class="headerlink" title="1. Overview"></a>1. Overview</h2><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/cluster_topology.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/cluster_topology-300x248.png" alt="cluster_topology"></a></p>
+<h2 id="2-组件"><a href="#2-组件" class="headerlink" title="2. 组件"></a>2. 组件</h2><p>OS：CentOS7</p>
+<h3 id="2-1-Master"><a href="#2-1-Master" class="headerlink" title="2.1 Master"></a>2.1 Master</h3><p>Apiproxy (必要)</p>
+<p>Scheduler (必要)</p>
+<p>Controller Manager (必要)</p>
+<p>Kubectl (非必要)</p>
+<h3 id="2-2-Node"><a href="#2-2-Node" class="headerlink" title="2.2 Node"></a>2.2 Node</h3><p>Docker（必要）</p>
+<p>Kubelet (必要)</p>
+<p>Flannel（非必要）</p>
+<p>Kube-Proxy (非必要)</p>
+<p>Etcd (非必要)</p>
+<h2 id="3-Start-Trip"><a href="#3-Start-Trip" class="headerlink" title="3. Start Trip"></a>3. Start Trip</h2><h3 id="3-1-下载Kubernetes（所有节点）"><a href="#3-1-下载Kubernetes（所有节点）" class="headerlink" title="3.1 下载Kubernetes（所有节点）"></a>3.1 下载Kubernetes（所有节点）</h3><ol>
+<li><p>创建并进入目录</p>
+<p> mkdir ~/kubernetes &amp;&amp; cd ~/kubernetes</p>
+</li>
+<li><p>下载Kubernetes.tar.gz (<a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/releases/tag/v1.7.6">LINK</a>)</p>
+<p> wget <a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/releases/download/v1.7.6/kubernetes.tar.gz">https://github.com/kubernetes/kubernetes/releases/download/v1.7.6/kubernetes.tar.gz</a></p>
+</li>
+<li><p>解压</p>
+<p> tar zxvf kubernetes.tar.gz</p>
+</li>
+<li><p>下载二进制包</p>
+<p> ./kubernetes/cluster/get-kube-binaries.sh</p>
+</li>
+<li><p>解压</p>
+<p> tar zxvf ./kubernetes/server/kubernetes-server-linux-amd64.tar.gz</p>
+</li>
+<li><p>添加环境变量</p>
+<p> cd ./kubernetes/server/bin<br> export PATH=`pwd`:$PATH</p>
+</li>
+<li><p>检查兼容的etcd版本</p>
+<p> [root@localhost ~]# grep TAGS kubernetes/cluster/images/etcd/Makefile</p>
+<h1 id="TAGS-2-2-1-2-3-7-3-0-17-REGISTRY-gcr-io-google-containers-ARCH-amd64-BASEIMAGE-busybox-make-buildpush"><a href="#TAGS-2-2-1-2-3-7-3-0-17-REGISTRY-gcr-io-google-containers-ARCH-amd64-BASEIMAGE-busybox-make-buildpush" class="headerlink" title="[TAGS=2.2.1 2.3.7 3.0.17] [REGISTRY=gcr.io/google_containers] [ARCH=amd64] [BASEIMAGE=busybox] make (buildpush)"></a>[TAGS=2.2.1 2.3.7 3.0.17] [REGISTRY=gcr.io/google_containers] [ARCH=amd64] [BASEIMAGE=busybox] make (buildpush)</h1><p> TAGS的值为兼容的版本，kubernetes1.7.6兼容etcd2.2.1，于是选择etcd2.2.1</p>
+</li>
+</ol>
+<h3 id="3-2-搭建etcd集群"><a href="#3-2-搭建etcd集群" class="headerlink" title="3.2 搭建etcd集群"></a>3.2 搭建etcd集群</h3><ol>
+<li><p>下载etcd2.2.1 （<a target="_blank" rel="noopener" href="https://github.com/coreos/etcd/releases/tag/v2.2.1">LINK</a>)</p>
+<p> curl -L  <a target="_blank" rel="noopener" href="https://github.com/coreos/etcd/releases/download/v2.2.1/etcd-v2.2.1-darwin-amd64.zip">https://github.com/coreos/etcd/releases/download/v2.2.1/etcd-v2.2.1-darwin-amd64.zip</a> -o etcd-v2.2.1-darwin-amd64.zip<br> unzip etcd-v2.2.1-darwin-amd64.zip<br> cd etcd-v2.2.1-darwin-amd64</p>
+</li>
+<li><p>搭建集群</p>
+<p> ###将export中的ip改为对应机器的ip###<br> #host1 ip 为192.168.46.31，执行以下命令<br> export HostIP=”192.168.46.31”<br> nohup \<br> ./etcd \</p>
+<pre><code> -name=etcd0 \\
+ -listen-client-urls=http://0.0.0.0:2379 \\
+ -advertise-client-urls=http://$&#123;HostIP&#125;:2379 \\
+ -listen-peer-urls=http://0.0.0.0:2380 \\
+ -initial-advertise-peer-urls=http://$&#123;HostIP&#125;:2380 \\
+ -initial-cluster-token etcd-cluster-1 \\
+  -initial-cluster etcd0=http://192.168.46.31:2380,etcd1=http://192.168.46.32:2380,etcd2=http://192.168.46.33:2380 \\
+  -initial-cluster-state new \\</code></pre>
+<p> &amp;</p>
+<p> #host2 ip为192.168.46.32，执行以下命令<br> export HostIP=”192.168.46.32”<br> nohup \<br> ./etcd \</p>
+<pre><code> -name=etcd1 \\
+ -listen-client-urls=http://0.0.0.0:2379 \\
+ -advertise-client-urls=http://$&#123;HostIP&#125;:2379 \\
+ -listen-peer-urls=http://0.0.0.0:2380 \\
+ -initial-advertise-peer-urls=http://$&#123;HostIP&#125;:2380 \\
+ -initial-cluster-token etcd-cluster-1 \\
+  -initial-cluster etcd0=http://192.168.46.31:2380,etcd1=http://192.168.46.32:2380,etcd2=http://192.168.46.33:2380 \\
+  -initial-cluster-state new \\</code></pre>
+<p> &amp;</p>
+<p> #host3 ip为192.168.46.33，执行以下命令<br> export HostIP=”192.168.46.33”<br> nohup \<br> ./etcd \</p>
+<pre><code> -name=etcd2 \\
+ -listen-client-urls=http://0.0.0.0:2379 \\
+ -advertise-client-urls=http://$&#123;HostIP&#125;:2379 \\
+ -listen-peer-urls=http://0.0.0.0:2380 \\
+ -initial-advertise-peer-urls=http://$&#123;HostIP&#125;:2380 \\
+ -initial-cluster-token etcd-cluster-1 \\
+  -initial-cluster etcd0=http://192.168.46.31:2380,etcd1=http://192.168.46.32:2380,etcd2=http://192.168.46.33:2380 \\
+  -initial-cluster-state new \\</code></pre>
+<p> &amp;</p>
+</li>
+<li><p>检查集群状态</p>
+<p> etcdctl member list<br> etcdctl cluster-health</p>
+</li>
+<li><p>设置flannel配置</p>
+<p> etcdctl set /coreos.com/network/config ‘{“Network”: “10.1.0.0/16”,”SubnetLen”: 24,”SubnetMin”: “10.1.0.0”,”SubnetMax”: “10.1.9.255”,”Backend”: {“Type”:”vxlan”}}’</p>
+</li>
+</ol>
+<h3 id="3-3-安装Flannel（每个node）"><a href="#3-3-安装Flannel（每个node）" class="headerlink" title="3.3 安装Flannel（每个node）"></a>3.3 安装Flannel（每个node）</h3><ol>
+<li><p>安装flannel</p>
+<p> wget <a target="_blank" rel="noopener" href="https://github.com/coreos/flannel/releases/download/v0.8.0/flanneld-amd64">https://github.com/coreos/flannel/releases/download/v0.8.0/flanneld-amd64</a> &amp;&amp; chmod +x flanneld-amd64</p>
+</li>
+<li><p>启动flannel</p>
+<p> ./flanneld-amd64 –etcd-endpoints=<a target="_blank" rel="noopener" href="http://192.168.46.31:2379/">http://192.168.46.31:2379</a></p>
+</li>
+<li><p>检查flannel运行状态</p>
+<p> [root@localhost ~]# cat /var/run/flannel/subnet.env<br> FLANNEL_NETWORK=10.1.0.0/16<br> FLANNEL_SUBNET=10.1.5.1/24<br> FLANNEL_MTU=1450<br> FLANNEL_IPMASQ=false</p>
+</li>
+</ol>
+<h3 id="3-4-安装Docker（每个node）"><a href="#3-4-安装Docker（每个node）" class="headerlink" title="3.4 安装Docker（每个node）"></a>3.4 安装Docker（每个node）</h3><ol>
+<li><p>安装Docker</p>
+<p> yum install docker -y</p>
+</li>
+<li><p>配置docker网络</p>
+<p> #修改/etc/systemd/system/docker.service文件信息如下<br> #其实就是在docker的启动命令中添加–bip和–mtu两个参数，参数信息来自flannel获取的配置<br> …<br> [Service]<br> …<br> EnvironmentFile=-/run/flannel/subnet.env (新增此行)<br> …<br> ExecStart=/usr/bin/dockerd … \</p>
+<pre><code> ... \\
+ --bip=$&#123;FLANNEL\_SUBNET&#125; --mtu=$&#123;FLANNEL\_MTU&#125; \\ (新增此行)
+ ...</code></pre>
+</li>
+<li><p>重启docker并确认网段</p>
+<p> systemctl restart docker<br> ip a<br> #输出信息docker0的网段应当落入flannel归属的网段，即配置文件中/var/run/flannel/subnet.env的FLANNEL_SUBNET</p>
+</li>
+<li><p>加载gcr必要镜像</p>
+<p> wget <a target="_blank" rel="noopener" href="https://github.com/zman2013/kubernetes-install/raw/master/docker-images/pause-amd64.tar">https://github.com/zman2013/kubernetes-install/raw/master/docker-images/pause-amd64.tar</a><br> docker load -i pause-amd64.tar<br> #Loaded image: gcr.io/google_containers/pause-amd64:3.0</p>
+</li>
+</ol>
+<h3 id="3-5-启动Apiserver（master节点）"><a href="#3-5-启动Apiserver（master节点）" class="headerlink" title="3.5 启动Apiserver（master节点）"></a>3.5 启动Apiserver（master节点）</h3><p>nohup hyperkube apiserver \<br>    –etcd-servers=<a target="_blank" rel="noopener" href="http://192.168.46.31:2379/">http://192.168.46.31:2379</a> \  #etcd集群地址<br>    –service-cluster-ip-range=10.1.0.0/16 \<br>    –storage-backend=etcd2 \<br>    –insecure-bind-address=0.0.0.0 \<br>    –admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,ResourceQuota \<br>    –v=4 &gt; apiserver.log &amp;</p>
+<h3 id="3-6-启动Scheduler（master节点）"><a href="#3-6-启动Scheduler（master节点）" class="headerlink" title="3.6 启动Scheduler（master节点）"></a>3.6 启动Scheduler（master节点）</h3><p>nohup hyperkube scheduler –master=127.0.0.1:8080 &gt; scheduler.log &amp;  #apiserver的地址</p>
+<h3 id="3-7-启动Controller-Manager（master节点）"><a href="#3-7-启动Controller-Manager（master节点）" class="headerlink" title="3.7 启动Controller Manager（master节点）"></a>3.7 启动Controller Manager（master节点）</h3><p>nohup hyperkube controller-manager –master=127.0.0.1:8080 &gt; controller-manager.log &amp; #apiserver的地址</p>
+<h3 id="3-8-启动Kubelet（每个Node）"><a href="#3-8-启动Kubelet（每个Node）" class="headerlink" title=" 3.8 启动Kubelet（每个Node）"></a> 3.8 启动Kubelet（每个Node）</h3><p>nohup hyperkube kubelet \<br>    –api-servers=<a target="_blank" rel="noopener" href="http://192.168.46.31:8080/">http://192.168.46.31:8080</a> \<br>    –hostname-override=192.168.46.32 \       #本机ip<br>    –cgroup-driver=systemd \<br>    –v=4  &gt; kubelet.log &amp;</p>
+<h3 id="3-9-启动Kube-Proxy（每个Node）"><a href="#3-9-启动Kube-Proxy（每个Node）" class="headerlink" title=" 3.9 启动Kube-Proxy（每个Node）"></a> 3.9 启动Kube-Proxy（每个Node）</h3><p>nohup hyperkube kube-proxy –master=<a target="_blank" rel="noopener" href="http://192.168.46.31:8080/">http://192.168.46.31:8080</a> &gt; kube-proxy.log &amp;</p>
+<p> </p>
+<h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><p><strong>1.</strong> Q: Error syncing pod 39d2bd89-a174-11e7-b855-0050568723c9, skipping: failed to “StartContainer” for “POD” with ErrImagePull: “image pull failed for gcr.io/google_containers/pause-amd64:3.0, this may be because there are no credentials on this request A: 获取pause-amd64镜像失败。参考步骤：3.4中4加载gcr必要镜像。  </p>
+<h3 id="LINKS"><a href="#LINKS" class="headerlink" title="LINKS"></a>LINKS</h3><ol>
+<li> <a target="_blank" rel="noopener" href="https://github.com/coreos/flannel">Flannel</a></li>
+<li> <a target="_blank" rel="noopener" href="https://github.com/coreos/flannel/blob/master/Documentation/configuration.md">Flanneld配置</a></li>
+<li> <a target="_blank" rel="noopener" href="https://github.com/coreos/etcd">Etcd</a></li>
+<li> <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/getting-started-guides/scratch/">Kubernetes从零创建</a></li>
+<li> <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/admin/kube-apiserver/">Kubernetes启动参数</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2017/09/24/wordpress/kubernetes-cluster-setup/" data-id="ckhoznqrv000mwpni331n0t62" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/etcd/" rel="tag">etcd</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flannel/" rel="tag">flannel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/" rel="tag">kubernetes</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-wordpress/container-tech" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/24/wordpress/container-tech/" class="article-date">
+  <time datetime="2017-09-24T02:49:42.000Z" itemprop="datePublished">2017-09-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/container/">container</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/24/wordpress/container-tech/">容器技术</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><em>介绍容器和容器管理相关技术</em></p>
+<h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a><strong>Docker</strong></h2><h3 id="1-特性"><a href="#1-特性" class="headerlink" title="1. 特性"></a>1. 特性</h3><p>轻量（相比VM）</p>
+<p>隔离 隔离 隔离</p>
+<p>交付完整的运行环境</p>
+<p><em>是的，就是这样几个简单、质朴的特性，颠覆互联网DevOps领域的整个交付流程。</em></p>
+<h3 id="2-Docker发展历史"><a href="#2-Docker发展历史" class="headerlink" title="2. Docker发展历史"></a>2. Docker发展历史</h3><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_history.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_history-1024x371.png" alt="docker_history"></a></p>
+<p>docker测试版本一经推出便立刻获得业界认可、热捧、支持，公司果断卖掉当前主业，全力发展docker，公司名称也改为Docker。</p>
+<p>2015年后Docker公司便一直在努力打造围绕docker容器的商业化的生态圈。至2017年3月推出了EE和CE两个系列。</p>
+<p>提及LXC，是因为docker最初的版本就是基于lxc实现的轻量容器化。</p>
+<h3 id="3-Docker-Archetecture"><a href="#3-Docker-Archetecture" class="headerlink" title="3. Docker Archetecture"></a>3. Docker Archetecture</h3><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_archetecture.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_archetecture-300x157.png" alt="docker_archetecture"></a></p>
+<p>docker真正干活的就是Docker daemon，而它的核心任务就是基于镜像创建容器。</p>
+<p>SDE通过docker client或者restful API向docker daemon发送指令，docker daemon接收、解析指令，从镜像仓库拉取镜像，基于镜像创建容器。</p>
+<h3 id="4-镜像分层"><a href="#4-镜像分层" class="headerlink" title="4 镜像分层"></a>4 镜像分层</h3><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_image.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_image-300x232.png" alt="docker_image"></a></p>
+<p>镜像是分层的，docker daemon可以基于任何一层创建容器。且镜像一旦生成就无法被更改。只有在容器内可以修改数据，如果我们想，可以把改动作为新的一层，生成一个镜像。 上层的改动是可以覆盖下层的，举例： 我们在镜像第二层安装了emacs，又在第三层卸载了emacs。 当基于第二层镜像创建容器时，容器中是有emacs的。 当基于第三层镜像创建容器时，容器中就没有emacs了。</p>
+<h3 id="5-docker基本原理"><a href="#5-docker基本原理" class="headerlink" title="5 docker基本原理"></a>5 docker基本原理</h3><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_theory.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_theory-300x225.png" alt="docker_theory"></a></p>
+<p>Docker自身有些类似拉皮条的，所有的特性都是调用操作系统内核来实现的，而核心依赖的linux技术有namespaces、cgroup、aufs。</p>
+<p>我更倾向于将namespaces理解为命名空间的隔离：进程ID、网络隔离、用户空间隔离等</p>
+<p>cgroup是纯资源隔离：cpu、memory、device、blkio。在不适合使用容器的场景下，可以很方便的使用cgroup进行资源隔离。</p>
+<p>aufs是实现镜像分层的根本技术手段</p>
+<p><strong><em>至此可以忘掉docker，如今它已经完全褪去了高大上的光环（虽然一开始就没有神秘的技术），而它的位置亦沦落为容器化的、稳定的、可信赖的工具。</em></strong></p>
+<h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h2><h3 id="1-诱人的标签"><a href="#1-诱人的标签" class="headerlink" title="1. 诱人的标签"></a>1. 诱人的标签</h3><p>Inspired and informed by Google’s experience and internal system</p>
+<p>automate deploying, automate scaling, automate operating</p>
+<p>container orchestration</p>
+<p>open-source platform</p>
+<h3 id="2-Kubernetes-Archetecture"><a href="#2-Kubernetes-Archetecture" class="headerlink" title="2. Kubernetes Archetecture"></a>2. Kubernetes Archetecture</h3><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/kubernetes_archetecture.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/kubernetes_archetecture-300x130.png" alt="kubernetes_archetecture"></a></p>
+<p>典型的Master、Node模式，Master无状态可以配置多个、Node亦是可以横向扩展。</p>
+<p>Master核心组件：</p>
+<p>ApiServer：网关</p>
+<p>Scheduler：任务调度服务</p>
+<p>Replication Controller：副本管理服务</p>
+<p>Node核心组件：</p>
+<p>Kubelet：负责节点与apiserver通信和执行指令的全部工作</p>
+<p>Kube-Proxy：网络代理和轻量负载均衡，创建service的必要组件</p>
+<p>Docker：容器组件</p>
+<h3 id="3-Kubernetes术语"><a href="#3-Kubernetes术语" class="headerlink" title="3. Kubernetes术语"></a>3. Kubernetes术语</h3><p><strong>3.1 Pod</strong></p>
+<p>Kubernetes <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/">Pods</a> are mortal. Pods in fact have a <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/">lifecycle</a>. When a worker node dies, the Pods running on the Node are also lost. A <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/user-guide/replication-controller/#what-is-a-replicationcontroller">ReplicationController</a> might then dynamically drive the cluster back to desired state via creation of new Pods to keep your application running.</p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tutorials/kubernetes-basics/expose-intro/">https://kubernetes.io/docs/tutorials/kubernetes-basics/expose-intro/</a></p>
+<p>Each Pod in a Kubernetes cluster has a unique IP address, even Pods on the same Node</p>
+<p><strong>3.2 Service</strong></p>
+<p>A Service in Kubernetes is an abstraction which defines a logical set of Pods and a policy by which to access them. Services enable a loose coupling between dependent Pods.</p>
+<p>Although each Pod has a unique IP address, those IPs are not exposed outside the cluster without a Service.</p>
+<p><strong>3.3 Deployment</strong></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-intro/">https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-intro/</a></p>
+<p>you create a Kubernetes Deploymentconfiguration. The Deployment instructs Kubernetes how to create and update instances of your application. Once you’ve created a Deployment, the Kubernetes master schedules mentioned application instances onto individual Nodes in the cluster.</p>
+<p><strong>3.4 Kubelet</strong></p>
+<p>The kubelet daemon is the primary agent that runs on each node. The kubelet daemon watches the master API server and ensures the appropriate local containers are started, remain healthy, and continue to run.</p>
+<p><strong>3.5 Kube-Proxy</strong></p>
+<p>The kube-proxy daemon runs on each node as a simple network proxy and load balancer for the services on that node.</p>
+<p><strong>3.6 Replication Controller</strong></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/#what-is-a-replicationcontroller">https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/#what-is-a-replicationcontroller</a></p>
+<p>A ReplicationController ensures that a specified number of pod replicas are running at any one time. In other words, a ReplicationController makes sure that a pod or a homogeneous set of pods is always up and available.</p>
+<p><strong>3.7 Service</strong></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tutorials/kubernetes-basics/expose-intro/">https://kubernetes.io/docs/tutorials/kubernetes-basics/expose-intro/</a></p>
+<p>A Service in Kubernetes is an abstraction which defines a logical set of Pods and a policy by which to access them. Services enable a loose coupling between dependent Pods.</p>
+<p>Although each Pod has a unique IP address, those IPs are not exposed outside the cluster without a Service. Services allow your applications to receive traffic.</p>
+<p><strong>3.8 Namespace</strong></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/">https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/</a></p>
+<p>Create a namespace so that the resources you create in this exercise are isolated from the rest of your cluster.</p>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="1-镜像层级划分"><a href="#1-镜像层级划分" class="headerlink" title="1.  镜像层级划分"></a>1.  镜像层级划分</h3><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/image_design.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/image_design.png" alt="image_design"></a></p>
+<h2 id="2-集群建设"><a href="#2-集群建设" class="headerlink" title="2. 集群建设"></a>2. 集群建设</h2><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/cluster_topology.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/cluster_topology-300x248.png" alt="cluster_topology"></a></p>
+<p>基于docker和kubernetes的特性可以很方便搭建互相隔离的集群环境。</p>
+<p>底层网络基于coreos贡献的flannel，使得集群内部的容器可以互相通信，简单好用，原理也容易理解。</p>
+<p><strong>3. DevOps流程</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/deploy_flow.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/deploy_flow-1024x334.png" alt="deploy_flow"></a></p>
+<p><strong>Link</strong></p>
+<ol>
+<li> <a target="_blank" rel="noopener" href="https://docs.docker.com/">Docker</a></li>
+<li> <a target="_blank" rel="noopener" href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html-single/resource_management_guide/">Cgroup</a></li>
+<li> <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/home/">Kubernetes</a></li>
+<li> <a target="_blank" rel="noopener" href="https://github.com/coreos/flannel">Flannel</a></li>
+</ol>
+<p>  <em>感谢读完~</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2017/09/24/wordpress/container-tech/" data-id="ckhoznqrh0006wpni08er29a2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/container/" rel="tag">container</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/devops/" rel="tag">devops</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/" rel="tag">kubernetes</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-wordpress/system-performance-optimize" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/25/wordpress/system-performance-optimize/" class="article-date">
+  <time datetime="2016-09-25T03:09:43.000Z" itemprop="datePublished">2016-09-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/performance-optimize/">performance_optimize</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/25/wordpress/system-performance-optimize/">系统性能优化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><em>在并发量一定的情况下如何对系统响应时间进行详细分析</em> <strong>1. 分析步骤</strong> 1.1 在关键点位添加日志信息 -&gt; 缩小目标范围</p>
+<p>a) 主要函数耗时</p>
+<p>b) 访问外部系统耗时：DB、MQ、Cache、FileSystem、RPC、HTTP等</p>
+<p>c) 接口内不同逻辑耗时百分比/绝对值</p>
+<p>1.2 详细分析瓶颈出现原因</p>
+<p>a) 技术层面：优先考虑</p>
+<p>b) 业务逻辑：业务逻辑改造一般影响较大、耗时较长，优先级低</p>
+<p>1.3 针对性解决问题</p>
+<p>一旦定位了问题原因，解决问题的方法都相当容易</p>
+<p><strong>2. 技术层面</strong> 2.1 代码实现</p>
+<p>a) 串行逻辑是否可以并行化</p>
+<p>b) 串行请求是否可以批量(batch)请求</p>
+<p>c) SQL是否需要优化</p>
+<p>d) 算法复杂度是否需要优化</p>
+<p>e) 语言核心库是否提供了性能更高的使用方式</p>
+<p>f) 引用的第三方库是否存在性能问题</p>
+<p>g) 每次外部请求是否都重新建立连接</p>
+<p>2.2 内核/硬件层面</p>
+<p>a) CPU使用率</p>
+<p>b) 内存使用率</p>
+<p>c) 磁盘IO状况</p>
+<p>d) 网络状况</p>
+<p>d) 瓶颈是否由调用的内核函数引起？</p>
+<p>该函数是如何工作的；新版本内核是否已经对此优化；如何调整使用方式可以更高效</p>
+<p>2.3 日志</p>
+<p>线程会争夺日志锁，在高并发情况下，同步写日志很影响性能。异步写又可能引起OOM。</p>
+<p>*2.4 垃圾回收</p>
+<p>拥有垃圾回收机制的语言，需要关注垃圾回收的情况如何。例如：jvm的gc状况。</p>
+<p><strong>3. 业务逻辑</strong></p>
+<p>随着业务的增长，接口负担的功能原来越复杂，逻辑链路越来越长，事务越来越大，性能越来越差，越来越没办法维护。（如果有人负责把控、从相对长远些的角度设计系统的迭代，这种情况本是可以避免的）</p>
+<p>优化办法只有一个就是：保留主链路，旁支链路异步化。</p>
+<p><strong>4. 常用工具</strong> 4.1 内核</p>
+<p>a) CPU: top、vmstat</p>
+<p>b) MEM: top、free</p>
+<p>c) disk IO: iostat</p>
+<p>例: iostat -kx 1 //每秒统计一次io</p>
+<p>iotop -o //查看磁盘使用率较高的进程</p>
+<p>d) 网络</p>
+<p>流量：sar -n DEV 1 3 //每秒统计一次所有网卡流量，共3次</p>
+<p>网络抓包: tmpdump，可配合tmptrace、wireshark分析</p>
+<p>TCP连接状况：netstat -an grep TIME_WAIT //client端近期关闭tcp连接数量</p>
+<p>e) 查看/proc/xxx中的系统详细信息</p>
+<p>4.2 java</p>
+<p>a) gc: jstat -gcutil pid 1s</p>
+<p>b) 性能分析工具: jprofiler</p>
+<p><strong>5. 小知识</strong></p>
+<p>a) 网络抖动引起tcp重传，一般内部系统之间的调用，linux设置的重传时间间隔为至少200ms以上。</p>
+<p>b) 服务之间通过网络调用，网络开销在500us ~ 2ms</p>
+<p>c) 机械磁盘寻址: 20ms</p>
+<p>d) 磁盘的某page中如果存在数据，程序写此page时如果不会填充整个page，内核会先载入整个page，再输出整个page，保证磁盘数据不丢。这会导致一次被动读磁盘，性能损耗会很大。否则会直接写入磁盘高速缓存，间隔固定时间刷盘一次(5s)。</p>
+<p>e) java遍历map使用map.entrys</p>
+<p>f) java字符串拼接使用stringbuilder</p>
+<p>g) 日志使用log4j2异步</p>
+<p><strong>*</strong> 随着系统并发量的增加，系统响应时间会逐步下降甚至雪崩，一般是由多线程之间、模块之间、子系统之间争夺资源（锁）引起的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2016/09/25/wordpress/system-performance-optimize/" data-id="ckhoznqsx002bwpni4c9wdjog" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/performance-optimize/" rel="tag">performance_optimize</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-wordpress/resttemplate-detailed-config" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/05/08/wordpress/resttemplate-detailed-config/" class="article-date">
+  <time datetime="2016-05-08T13:15:34.000Z" itemprop="datePublished">2016-05-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/HttpClient/">HttpClient</a>►<a class="article-category-link" href="/categories/Spring/">Spring</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/08/wordpress/resttemplate-detailed-config/">RestTemplate详细配置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>1. 配置文件如下</strong></p>
+<?xml version="1.0" encoding="UTF-8"?>
+<p><beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd"></p>
+<pre><code>&lt;!-- 声明连接池，指定大小 --&gt;
+&lt;bean id=&quot;pollingConnectionManager&quot;
+    class=&quot;org.apache.http.impl.conn.PoolingHttpClientConnectionManager&quot;&gt;
+    &lt;property name=&quot;maxTotal&quot; value=&quot;$&#123;resttemplate.http.connection.max\_total&#125;&quot; /&gt;
+    &lt;property name=&quot;defaultMaxPerRoute&quot; value=&quot;$&#123;resttemplate.http.default\_max\_per\_route&#125;&quot; /&gt;
+&lt;/bean&gt;
+
+&lt;!-- 声明http client工厂 --&gt;
+&lt;bean id=&quot;httpClientBuilder&quot; class=&quot;org.apache.http.impl.client.HttpClientBuilder&quot;
+    factory-method=&quot;create&quot;&gt;
+    &lt;property name=&quot;connectionManager&quot; ref=&quot;pollingConnectionManager&quot; /&gt;
+&lt;/bean&gt;
+
+&lt;!-- 声明http client --&gt;
+&lt;bean id=&quot;httpClient&quot; factory-bean=&quot;httpClientBuilder&quot;
+    factory-method=&quot;build&quot; /&gt;
+
+&lt;!-- 声明http rquest工厂，指定超时时间 --&gt;
+&lt;bean id=&quot;clientHttpRequestFactory&quot;
+    class=&quot;org.springframework.http.client.HttpComponentsClientHttpRequestFactory&quot;&gt;
+    &lt;constructor-arg ref=&quot;httpClient&quot; /&gt;
+    &lt;property name=&quot;connectTimeout&quot; value=&quot;$&#123;resttemplate.http.connect\_timeout&#125;&quot; /&gt;
+    &lt;property name=&quot;readTimeout&quot; value=&quot;$&#123;resttemplate.http.read\_timeout&#125;&quot; /&gt;
+&lt;/bean&gt;
+
+&lt;!-- 声明converter，指定编码 --&gt;
+&lt;bean id=&quot;utf8TextConverter&quot; class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;&gt;
+        &lt;property name=&quot;supportedMediaTypes&quot;&gt;
+            &lt;list&gt;
+                &lt;value&gt;text/html;charset=UTF-8&lt;/value&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+
+&lt;!-- 最终的RestTemplate --&gt;
+&lt;bean id=&quot;restTemplate&quot; class=&quot;org.springframework.web.client.RestTemplate&quot;&gt;
+    &lt;constructor-arg ref=&quot;clientHttpRequestFactory&quot; /&gt;
+    &lt;property name=&quot;messageConverters&quot;&gt;
+        &lt;list&gt;
+            &lt;ref bean=&quot;utf8TextConverter&quot; /&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</code></pre>
+</beans>
+
+<p> <strong>2. 封装RestTemplate</strong></p>
+<p>public class HttpClientWrapper {</p>
+<pre><code>protected Logger logger = LoggerFactory.getLogger(HttpClientWrapper.class);
+
+@Autowired
+protected RestTemplate restTemplate;
+
+protected ObjectMapper mapper = Jackson2ObjectMapperBuilder.json().build();
+
+/\*\*
+ \* 请求指定url，并获得返回对象
+ \* @param url http://google.com?key1=value1&amp;key2=value2...
+ \* @param method GET
+ \* @param tClass XXXResponse.class
+ \* @return XXXResponse instance
+ \*/
+public&lt;T&gt; T request(String url, HttpMethod method, Class&lt;T&gt; tClass) &#123;
+    JavaType returnType = TypeFactory.defaultInstance().constructType(
+            tClass);
+    String content = this.requestForString(url, method, null, null);
+    if (content != null) &#123;
+        try &#123;
+            T object = mapper.readValue(content, returnType);
+            return object;
+        &#125; catch (JsonParseException e) &#123;
+            logger.error(&quot;JSON parse exception: \\n&quot;);
+            logger.error(&quot;Content: &quot; + content);
+            logger.error(e.getMessage(), e);
+        &#125; catch (JsonMappingException e) &#123;
+            logger.error(&quot;JSON mapping exception: \\n&quot;);
+            logger.error(&quot;Content: &quot; + content);
+            logger.error(e.getMessage(), e);
+        &#125; catch (IOException e) &#123;
+            logger.error(e.getMessage(), e);
+        &#125;
+    &#125; else &#123;
+        logger.error(&quot;请求返回空, method:&#123;&#125;, url:&#123;&#125;&quot;, method, url);
+    &#125;
+
+    return null;
+
+&#125;
+
+/\*\*
+ \* 记录Request、Response内容和请求耗时
+ \*/
+private String requestForString(String url, HttpMethod method,
+        Map&lt;String, Object&gt; pathVariables, HttpEntity&lt;String&gt; httpEntity) &#123;
+    ResponseEntity&lt;String&gt; response = null;
+
+    if (httpEntity == null) &#123;
+        httpEntity = new HttpEntity&lt;String&gt;(&quot;&quot;);
+    &#125;
+
+    this.logRequest(url, method, pathVariables, httpEntity);
+    long start = System.currentTimeMillis();
+    try &#123;
+        if (pathVariables == null) &#123;
+            response = restTemplate.exchange(url, method, httpEntity,
+                    String.class);
+        &#125; else &#123;
+            response = restTemplate.exchange(url, method, httpEntity,
+                    String.class, pathVariables);
+        &#125;
+    &#125; catch (Exception e) &#123;
+        logger.error(e.getMessage(), e);
+        return null;
+    &#125;
+    long end = System.currentTimeMillis();
+    logger.info(&quot;Time: &quot; + (end - start));
+
+    if (response.getStatusCode() != HttpStatus.OK) &#123;
+        logger.error(&quot;Http response is NOT 200, URL: &quot; + method + &quot; &quot; + url
+                + &quot;; HTTP status: &quot; + response.getStatusCode());
+        return null;
+    &#125;
+
+    String content = response.getBody();
+
+    return content;
+&#125;
+
+protected void logRequest(String url, HttpMethod method,
+        Map&lt;String, Object&gt; pathVariables, HttpEntity&lt;String&gt; httpEntity) &#123;
+
+    if (pathVariables != null) &#123;
+        URI expanded = new UriTemplate(url).expand(pathVariables);
+        url = expanded.toString();
+    &#125;
+
+    logger.info(&quot;Http Invoke: &quot; + method + &quot; &quot; + url);
+    if (!StringUtils.isEmpty(httpEntity.getBody())) &#123;
+        logger.info(&quot;Body: &quot; + httpEntity.toString());
+    &#125;
+
+&#125;</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2016/05/08/wordpress/resttemplate-detailed-config/" data-id="ckhoznqse001bwpni97jd2dh4" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HttpClient/" rel="tag">HttpClient</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RestTemplate/" rel="tag">RestTemplate</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-wordpress/spring-rabbitmq" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/05/08/wordpress/spring-rabbitmq/" class="article-date">
+  <time datetime="2016-05-08T12:57:06.000Z" itemprop="datePublished">2016-05-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/MQ/">MQ</a>►<a class="article-category-link" href="/categories/Spring/">Spring</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/08/wordpress/spring-rabbitmq/">Spring RabbitMQ</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><em>spring项目使用rabbitmq</em> <strong>1. 项目依赖</strong></p>
+<!-- rabbitmq -->
+<dependency>
+    <groupId>org.springframework.amqp</groupId>
+    <artifactId>spring-amqp</artifactId>
+    <version>1.5.5.RELEASE</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.amqp</groupId>
+    <artifactId>spring-rabbit</artifactId>
+    <version>1.5.5.RELEASE</version>
+</dependency>
+
+<p> <strong>2. 配置文件</strong></p>
+<?xml version="1.0" encoding="UTF-8" ?>
+<p><beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/rabbit
+        http://www.springframework.org/schema/rabbit/spring-rabbit.xsd"></p>
+<pre><code>&lt;!-- 声明rabbitmq连接 --&gt;
+&lt;rabbit:connection-factory id=&quot;rabbitmqConnectionFactory&quot;
+                           host=&quot;$&#123;rabbitmq.host&#125;&quot;
+                           virtual-host=&quot;$&#123;rabbitmq.vhost&#125;&quot;
+                           username=&quot;$&#123;rabbitmq.username&#125;&quot;
+                           password=&quot;$&#123;rabbitmq.password&#125;&quot;/&gt;
+&lt;!-- 创建rabbitmq admin，用来管理queue、exchanger、binding --&gt;
+&lt;rabbit:admin connection-factory=&quot;rabbitmqConnectionFactory&quot;/&gt;
+
+&lt;!-- 声明队列 --&gt;
+&lt;rabbit:queue id=&quot;queue-bean-1&quot; durable=&quot;true&quot; name=&quot;$&#123;rabbitmq.queuename1&#125;&quot;/&gt;
+&lt;rabbit:queue id=&quot;queue-bean-2&quot; durable=&quot;true&quot; name=&quot;$&#123;rabbitmq.queuename2&#125;&quot;/&gt;
+
+&lt;!-- 声明exchange，这里使用的direct-exchange，与rabbitmq服务器的exchange类型对应 --&gt;
+&lt;rabbit:direct-exchange name=&quot;$&#123;rabbitmq.exchange.name&#125;&quot;&gt;
+    &lt;rabbit:bindings&gt;
+        &lt;rabbit:binding queue=&quot;queue-bean-1&quot; key=&quot;$&#123;rabbitmq.route.key1&#125;&quot;&gt;&lt;/rabbit:binding&gt;
+        &lt;rabbit:binding queue=&quot;queue-bean-2&quot; key=&quot;$&#123;rabbitmq.route.key2&#125;&quot;&gt;&lt;/rabbit:binding&gt;
+    &lt;/rabbit:bindings&gt;
+&lt;/rabbit:direct-exchange&gt;
+
+&lt;!-- 声明消息消费者（监听者） --&gt;
+&lt;bean id=&quot;rabbitmqListener1&quot; class=&quot;com.zmannotes.spring.mq.listener.RabbitMQListener1&quot;/&gt;
+&lt;bean id=&quot;rabbitmqListener2&quot; class=&quot;com.zmannotes.spring.mq.listener.RabbitMQListener2&quot;/&gt;
+
+&lt;!-- 声明消费者容器，并将queue和listener关联，此处指定自动返回ack --&gt;
+&lt;rabbit:listener-container
+        connection-factory=&quot;rabbitmqConnectionFactory&quot; acknowledge=&quot;auto&quot;&gt;
+    &lt;rabbit:listener queues=&quot;queue-bean-1&quot; ref=&quot;rabbitmqListener1&quot;
+                     method=&quot;onMessage&quot;/&gt;
+    &lt;rabbit:listener queues=&quot;queue-bean-2&quot; ref=&quot;rabbitmqListener2&quot;
+                     method=&quot;onMessage&quot;/&gt;
+&lt;/rabbit:listener-container&gt;
+
+&lt;!-- 消息生产者 --&gt;
+&lt;rabbit:template id=&quot;rabbitmqTemplate&quot; connection-factory=&quot;rabbitmqConnectionFactory&quot;
+    reply-timeout=&quot;2000&quot; routing-key=&quot;remoting.binding&quot;
+    exchange=&quot;rabbitmqExchange&quot;/&gt;</code></pre>
+</beans>
+
+<p><strong>3. 实现XXXListener</strong></p>
+<p>import org.springframework.amqp.core.Message;<br>import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;</p>
+<p>public class RabbitMQListener implements ChannelAwareMessageListener {</p>
+<pre><code>public void onMessage(Message message, Channel channel) throws Exception &#123;
+    String msg = new String(message.getBody());
+    System.out.println( msg );
+&#125;</code></pre>
+<p>}</p>
+<p><strong>4. 发送消息</strong></p>
+<p>void send(Message message) throws AmqpException;</p>
+<p>void send(String routingKey, Message message) throws AmqpException;</p>
+<p>void send(String exchange, String routingKey, Message message) throws AmqpException;</p>
+<p><strong>LINK</strong> <a target="_blank" rel="noopener" href="http://docs.spring.io/spring-amqp/reference/html/_introduction.html#quick-tour">官方文档 1</a> <a target="_blank" rel="noopener" href="http://docs.spring.io/spring-amqp/reference/html/_reference.html">官方文档 2</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2016/05/08/wordpress/spring-rabbitmq/" data-id="ckhoznqsu0024wpnig1m1gm9e" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MQ/" rel="tag">MQ</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RabbitMQ/" rel="tag">RabbitMQ</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-wordpress/spring-unit-test" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/05/08/wordpress/spring-unit-test/" class="article-date">
+  <time datetime="2016-05-08T12:12:38.000Z" itemprop="datePublished">2016-05-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Mock/">Mock</a>►<a class="article-category-link" href="/categories/Spring/">Spring</a>►<a class="article-category-link" href="/categories/Unit-Test/">Unit Test</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/08/wordpress/spring-unit-test/">Spring项目单元测试</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><em>JUnit与Spring Test、Mockito配合使用</em> <strong>1. 项目依赖</strong></p>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-test</artifactId>
+    <scope>test</scope>
+    <version>4.2.5.RELEASE</version>
+</dependency>
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.12</version>
+    <scope>test</scope>
+</dependency>
+
+<p><strong>2. 创建测试类</strong></p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)<br>//指定配置文件<br>@ContextConfiguration(locations = {“/spring/stock-session-factory.xml”})<br>//指定资源文件<br>@TestPropertySource(locations = {“/application.properties”})<br>public class StockTest {</p>
+<pre><code>@Autowired
+private StockMapper stockMapper;
+
+@Transactional
+@Test
+public void test()&#123;
+    Stock stock = new Stock();
+    stock.setCode(&quot;900001&quot;);
+    stock.setName(&quot;tcl&quot;);
+    stockMapper.insert(stock);
+&#125;</code></pre>
+<p>}</p>
+<p><strong>3. Mock</strong> 3.1 加入依赖<a target="_blank" rel="noopener" href="http://mockito.org/">Mockito</a></p>
+<!-- mock -->
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-all</artifactId>
+    <version>1.10.19</version>
+    <scope>test</scope>
+</dependency>
+
+<p>3.2 Mock数据库访问操作</p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)<br>//指定配置文件<br>@ContextConfiguration(locations = {“/spring/stock-session-factory.xml”})<br>//指定资源文件<br>@TestPropertySource(locations = {“/application.properties”})<br>public class StockTest {</p>
+<pre><code>@InjectMocks
+@Autowired
+private StockService stockService;
+@Mock
+private StockMapper stockMapperMocker;
+
+@Before
+public void setup()&#123;
+    MockitoAnnotations.initMocks(this);
+&#125;
+
+@Transactional
+@Test
+public void test()&#123;
+    Stock stock = new Stock();
+    stock.setName(&quot;露露&quot;);</code></pre>
+<p>        //如果是数据库插入操作，则直接跳过，返回1<br>        when(stockMapperMocker.insert(any(Stock.class))).thenReturn(1);<br>        //如果是数据库查询操作，则直接返回stock对象<br>    when(stockMapperMocker.selectByPrimaryKey(anyString())).thenReturn(stock);</p>
+<pre><code>    stockService.insert(null);
+    String name = stockService.selectByCode(&quot;000848&quot;);
+    System.out.println( name );
+&#125;</code></pre>
+<p>}</p>
+<p>项目源码 <a target="_blank" rel="noopener" href="https://github.com/zman2013/spring-unit-test">Github</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2016/05/08/wordpress/spring-unit-test/" data-id="ckhoznqsw0028wpnig4o64jjd" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mock/" rel="tag">Mock</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mockito/" rel="tag">Mockito</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Sprint-Test/" rel="tag">Sprint Test</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unit-Test/" rel="tag">Unit Test</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-wordpress/web-log" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/05/08/wordpress/web-log/" class="article-date">
+  <time datetime="2016-05-08T08:54:53.000Z" itemprop="datePublished">2016-05-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Spring/">Spring</a>►<a class="article-category-link" href="/categories/log/">log</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/08/wordpress/web-log/">Java Web项目添加log模块</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><em>Java EE Web项目添加log模块</em> 目前最好的Java日志组件是**<a target="_blank" rel="noopener" href="http://logging.apache.org/log4j/2.x/manual/webapp.html">Log4j 2</a><strong>，就以Log4j 2为例，且Tomcat版本&gt;=7.0.43。 **1. 项目依赖</strong></p>
+<dependencies>
+  <dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-api</artifactId>
+    <version>2.5</version>
+  </dependency>
+  <dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-core</artifactId>
+    <version>2.5</version>
+  </dependency>
+  <dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-web</artifactId>
+    <version>2.5</version>
+    <scope>runtime</scope>
+  </dependency>
+</dependencies>
+
+<p> <strong>2. 创建log配置文件log4j2.xml</strong></p>
+<p>在目录WEB-INF中创建配置文件log4j2.xml。<br>内容如下：<br><?xml version="1.0" encoding="UTF-8"?><br><Configuration monitorInterval="30"><br>    <Appenders><br>        <Console name="STDOUT" target="SYSTEM\_OUT"><br>            <PatternLayout pattern="%d{ISO8601} %-5p \[%t\] %-40.40c (%F:%L) - %m%n"/><br>        </Console><br>    </Appenders><br>    <Loggers><br>        <Root level="info"><br>            <AppenderRef ref="STDOUT"/><br>        </Root><br>    </Loggers><br></Configuration></p>
+<p><strong>3. 修改web.xml</strong> 3.1 Servlet 3.0 及以上 对于Servlet 3.0及以上的Web项目，不需要修改web.xml，LogContext会自动绑定生效。 （如果在web.xml手动配置了isLog4jAutoInitializationDisabled为true，即时是Servlet3.0，也要按Servlet2.5进行配置。原因是：这个参数导致ServletContainerInitializer没生效） 3.2 Servlet 2.5及以下</p>
+<!-- 此listener必须放在web.xml中其他listener和filter之前，保证在web初始化之前生效 -->
+<listener>
+    <listener-class>org.apache.logging.log4j.web.Log4jServletContextListener</listener-class>
+</listener>
+<!-- 此filter绑定LogContext到所有类型请求 -->
+<filter>
+    <filter-name>log4jServletFilter</filter-name>
+    <filter-class>org.apache.logging.log4j.web.Log4jServletFilter</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>log4jServletFilter</filter-name>
+    <url-pattern>/\*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+    <dispatcher>ASYNC</dispatcher><!-- Servlet 3.0 w/ disabled auto-initialization only; not supported in 2.5 -->
+</filter-mapping>
+
+<p><strong>4. 高级应用</strong> 4.1 log4j2与slf4j配合使用 <a target="_blank" rel="noopener" href="https://github.com/zman2013/Spring-web-log/blob/master/pom.xml">LINK</a> 4.2 使用Spring MVC拦截器配置全局traceId，方便快速定位  <a target="_blank" rel="noopener" href="https://github.com/zman2013/Spring-web-log/blob/master/src/main/webapp/WEB-INF/dispatcher-servlet.xml">LINK</a> 项目源码 <a target="_blank" rel="noopener" href="https://github.com/zman2013/Spring-web-log">Github</a> <strong>Q&amp;A</strong> Q：如何判断Servlet版本？ A：web.xml中web-app标签的version属性表示Servlet版本。 Q：接口ServletContainerInitializer是做什么的？ A：ServletContainerInitializer初始化Log4jServletContextListener和Log4jServletFilter。 Q：为什么tomcat版本&gt;=7.0.43？ A：Tomcat7.0.43(包含7.0.43)以上版本会自动加载Log4jServletContainerInitializer(实现ServletContainerInitializer接口)，以下版本会过滤 log4j*.jar，需要手动修改catalina.properties，在属性jarsToSkip中删除log4j*.jar。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2016/05/08/wordpress/web-log/" data-id="ckhoznqt3002pwpnigwdy5fgp" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Log4j2/" rel="tag">Log4j2</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/log/" rel="tag">log</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/HttpClient/">HttpClient</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/IoT/">IoT</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/MQ/">MQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mock/">Mock</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/RPC/">RPC</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SVN-Git/">SVN Git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Unit-Test/">Unit Test</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/WordPress/">WordPress</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/code-generator/">code generator</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/container/">container</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/log/">log</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/performance-optimize/">performance_optimize</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pull-stream/">pull-stream</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/tcp/">tcp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/unity/">unity</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/">分布式系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">开发环境</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ibd/" rel="tag">.ibd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2d/" rel="tag">2d</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ActiveMQ/" rel="tag">ActiveMQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/" rel="tag">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%B0%83%E7%94%A8Java/" rel="tag">C调用Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Demo/" rel="tag">Demo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dubbo/" rel="tag">Dubbo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dubbo%E5%8E%9F%E7%90%86/" rel="tag">Dubbo原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Finagle/" rel="tag">Finagle</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/" rel="tag">Gradle</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hessian/" rel="tag">Hessian</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HttpClient/" rel="tag">HttpClient</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JDK/" rel="tag">JDK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E6%8F%92%E4%BB%B6/" rel="tag">Java 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Log4j2/" rel="tag">Log4j2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MQ/" rel="tag">MQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/" rel="tag">Maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/" rel="tag">Mock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mockito/" rel="tag">Mockito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" rel="tag">MySQL数据恢复</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Proxy/" rel="tag">Proxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RPC/" rel="tag">RPC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RabbitMQ/" rel="tag">RabbitMQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RestTemplate/" rel="tag">RestTemplate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RocketMQ/" rel="tag">RocketMQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SPI/" rel="tag">SPI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/STS/" rel="tag">STS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVN/" rel="tag">SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Application/" rel="tag">Spring Application</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Demo/" rel="tag">Spring Demo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-MVC/" rel="tag">Spring MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Mybatis/" rel="tag">Spring Mybatis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Web/" rel="tag">Spring Web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Web%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" rel="tag">Spring Web项目搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-%E4%BE%8B%E5%AD%90/" rel="tag">Spring 例子</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-%E6%A1%86%E6%9E%B6/" rel="tag">Spring 框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" rel="tag">Spring项目搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sprint-Test/" rel="tag">Sprint Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SwitchSharp/" rel="tag">SwitchSharp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tchannel/" rel="tag">Tchannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unit-Test/" rel="tag">Unit Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VirtualBox/" rel="tag">VirtualBox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WordPress/" rel="tag">WordPress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/backpressure/" rel="tag">backpressure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/" rel="tag">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dataframe/" rel="tag">dataframe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/decrypt/" rel="tag">decrypt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/devops/" rel="tag">devops</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/" rel="tag">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flannel/" rel="tag">flannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iot/" rel="tag">iot</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jetty-run/" rel="tag">jetty:run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubectl/" rel="tag">kubectl</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/" rel="tag">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/" rel="tag">log</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE/" rel="tag">maven 全局配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/merge/" rel="tag">merge</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/" rel="tag">mybatis代码生成器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/performance-optimize/" rel="tag">performance_optimize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh%E7%9B%B4%E8%BF%9E/" rel="tag">ssh直连</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/table/" rel="tag">table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/" rel="tag">tcp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcpdump/" rel="tag">tcpdump</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wireshark/" rel="tag">wireshark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%80%E8%87%B4%E6%80%A7/" rel="tag">一致性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8D%E5%90%8C%E7%8E%AF%E5%A2%83%E6%89%93%E5%8C%85/" rel="tag">不同环境打包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%90%86/" rel="tag">代理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" rel="tag">代码版本管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/" rel="tag">免密登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">分布式系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E6%A8%A1%E5%9D%97/" rel="tag">多模块</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E9%85%8D%E7%BD%AE/" rel="tag">多配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/" rel="tag">服务治理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" rel="tag">自动挂载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%9F%E5%88%97%E9%80%89%E5%9E%8B/" rel="tag">队列选型</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ibd/" style="font-size: 10px;">.ibd</a> <a href="/tags/2d/" style="font-size: 15px;">2d</a> <a href="/tags/ActiveMQ/" style="font-size: 10px;">ActiveMQ</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/C%E8%B0%83%E7%94%A8Java/" style="font-size: 10px;">C调用Java</a> <a href="/tags/Demo/" style="font-size: 10px;">Demo</a> <a href="/tags/Dubbo/" style="font-size: 15px;">Dubbo</a> <a href="/tags/Dubbo%E5%8E%9F%E7%90%86/" style="font-size: 10px;">Dubbo原理</a> <a href="/tags/Finagle/" style="font-size: 10px;">Finagle</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Hessian/" style="font-size: 10px;">Hessian</a> <a href="/tags/HttpClient/" style="font-size: 10px;">HttpClient</a> <a href="/tags/JDK/" style="font-size: 10px;">JDK</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">Java 插件</a> <a href="/tags/Log4j2/" style="font-size: 10px;">Log4j2</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Mockito/" style="font-size: 15px;">Mockito</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" style="font-size: 10px;">MySQL数据恢复</a> <a href="/tags/Proxy/" style="font-size: 15px;">Proxy</a> <a href="/tags/RPC/" style="font-size: 20px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 15px;">RabbitMQ</a> <a href="/tags/RestTemplate/" style="font-size: 10px;">RestTemplate</a> <a href="/tags/RocketMQ/" style="font-size: 10px;">RocketMQ</a> <a href="/tags/SPI/" style="font-size: 10px;">SPI</a> <a href="/tags/STS/" style="font-size: 10px;">STS</a> <a href="/tags/SVN/" style="font-size: 10px;">SVN</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Spring-Application/" style="font-size: 10px;">Spring Application</a> <a href="/tags/Spring-Demo/" style="font-size: 10px;">Spring Demo</a> <a href="/tags/Spring-MVC/" style="font-size: 15px;">Spring MVC</a> <a href="/tags/Spring-Mybatis/" style="font-size: 10px;">Spring Mybatis</a> <a href="/tags/Spring-Web/" style="font-size: 15px;">Spring Web</a> <a href="/tags/Spring-Web%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">Spring Web项目搭建</a> <a href="/tags/Spring-%E4%BE%8B%E5%AD%90/" style="font-size: 10px;">Spring 例子</a> <a href="/tags/Spring-%E6%A1%86%E6%9E%B6/" style="font-size: 15px;">Spring 框架</a> <a href="/tags/Spring%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">Spring项目搭建</a> <a href="/tags/Sprint-Test/" style="font-size: 10px;">Sprint Test</a> <a href="/tags/SwitchSharp/" style="font-size: 10px;">SwitchSharp</a> <a href="/tags/Tchannel/" style="font-size: 10px;">Tchannel</a> <a href="/tags/Unit-Test/" style="font-size: 10px;">Unit Test</a> <a href="/tags/VirtualBox/" style="font-size: 10px;">VirtualBox</a> <a href="/tags/WordPress/" style="font-size: 10px;">WordPress</a> <a href="/tags/backpressure/" style="font-size: 10px;">backpressure</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/dataframe/" style="font-size: 10px;">dataframe</a> <a href="/tags/decrypt/" style="font-size: 10px;">decrypt</a> <a href="/tags/devops/" style="font-size: 10px;">devops</a> <a href="/tags/docker/" style="font-size: 20px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/flannel/" style="font-size: 10px;">flannel</a> <a href="/tags/iot/" style="font-size: 10px;">iot</a> <a href="/tags/jetty-run/" style="font-size: 10px;">jetty:run</a> <a href="/tags/kubectl/" style="font-size: 10px;">kubectl</a> <a href="/tags/kubernetes/" style="font-size: 20px;">kubernetes</a> <a href="/tags/log/" style="font-size: 10px;">log</a> <a href="/tags/maven-%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">maven 全局配置</a> <a href="/tags/merge/" style="font-size: 10px;">merge</a> <a href="/tags/mybatis%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/" style="font-size: 10px;">mybatis代码生成器</a> <a href="/tags/performance-optimize/" style="font-size: 10px;">performance_optimize</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/ssh%E7%9B%B4%E8%BF%9E/" style="font-size: 10px;">ssh直连</a> <a href="/tags/table/" style="font-size: 10px;">table</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/tcpdump/" style="font-size: 10px;">tcpdump</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/wireshark/" style="font-size: 10px;">wireshark</a> <a href="/tags/%E4%B8%80%E8%87%B4%E6%80%A7/" style="font-size: 10px;">一致性</a> <a href="/tags/%E4%B8%8D%E5%90%8C%E7%8E%AF%E5%A2%83%E6%89%93%E5%8C%85/" style="font-size: 10px;">不同环境打包</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" style="font-size: 10px;">代码版本管理</a> <a href="/tags/%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/" style="font-size: 10px;">免密登录</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">分布式系统设计</a> <a href="/tags/%E5%A4%9A%E6%A8%A1%E5%9D%97/" style="font-size: 10px;">多模块</a> <a href="/tags/%E5%A4%9A%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">多配置</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/" style="font-size: 15px;">服务治理</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" style="font-size: 10px;">自动挂载</a> <a href="/tags/%E9%98%9F%E5%88%97%E9%80%89%E5%9E%8B/" style="font-size: 10px;">队列选型</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/19/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/29/wordpress/vue-table-styles/">Vue table styles</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/29/wordpress/mockito-invoking-callback/">Mockito invoking callback</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/12/wordpress/package-one-runnable-jar/">Package One Runnable Jar</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/11/wordpress/a-stream-is-just-an-array-in-time/">A stream is just an array in time</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 zman<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
