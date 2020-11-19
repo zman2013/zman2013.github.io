@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>AWS IoT | zmannotes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="去年调研了所有的IoT平台，最后总结只有两家，分别是：AWS IoT和其他IoT。本文从AWS IoT Document中摘取核心功能和特点进行说明。 1 IoT是什么？IOT能够提供在设备与云端进行安全的双向通信的能力，可以进行数据的远程采集、分析、存储，并可以进行设备的远程控制。 2 功能组件  下图是阿里的，基本没差别。  3 组件介绍3.1 安全与认证3.1.1 原理任何设备都必要拥有证书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AWS IoT">
+<meta property="og:url" content="http://zman2013.github.io/2018/02/13/wordpress/iot/index.html">
+<meta property="og:site_name" content="zmannotes">
+<meta property="og:description" content="去年调研了所有的IoT平台，最后总结只有两家，分别是：AWS IoT和其他IoT。本文从AWS IoT Document中摘取核心功能和特点进行说明。 1 IoT是什么？IOT能够提供在设备与云端进行安全的双向通信的能力，可以进行数据的远程采集、分析、存储，并可以进行设备的远程控制。 2 功能组件  下图是阿里的，基本没差别。  3 组件介绍3.1 安全与认证3.1.1 原理任何设备都必要拥有证书">
+<meta property="og:locale">
+<meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot.png">
+<meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot_data_services.png">
+<meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2018/02/ali_iot_architecture.png">
+<meta property="article:published_time" content="2018-02-13T06:54:15.000Z">
+<meta property="article:modified_time" content="2020-11-19T15:35:52.320Z">
+<meta property="article:author" content="zman">
+<meta property="article:tag" content="iot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot.png">
+  
+    <link rel="alternate" href="/atom.xml" title="zmannotes" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">zmannotes</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://zman2013.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-wordpress/iot" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/02/13/wordpress/iot/" class="article-date">
+  <time datetime="2018-02-13T06:54:15.000Z" itemprop="datePublished">2018-02-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/IoT/">IoT</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      AWS IoT
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><em>去年调研了所有的IoT平台，最后总结只有两家，分别是：AWS IoT和其他IoT。本文从AWS IoT Document中摘取核心功能和特点进行说明。</em></p>
+<h2 id="1-IoT是什么？"><a href="#1-IoT是什么？" class="headerlink" title="1 IoT是什么？"></a>1 IoT是什么？</h2><p>IOT能够提供在设备与云端进行安全的双向通信的能力，可以进行数据的远程采集、分析、存储，并可以进行设备的远程控制。</p>
+<h2 id="2-功能组件"><a href="#2-功能组件" class="headerlink" title="2 功能组件"></a>2 功能组件</h2><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot.png"><img src="https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot.png" alt="aws_iot"></a> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot_data_services.png"><img src="https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot_data_services.png" alt="aws_iot_data_services"></a> 下图是阿里的，基本没差别。 <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2018/02/ali_iot_architecture.png"><img src="https://www.zmannotes.com/wp-content/uploads/2018/02/ali_iot_architecture.png" alt="ali_iot_architecture"></a></p>
+<h2 id="3-组件介绍"><a href="#3-组件介绍" class="headerlink" title="3 组件介绍"></a>3 组件介绍</h2><h3 id="3-1-安全与认证"><a href="#3-1-安全与认证" class="headerlink" title="3.1 安全与认证"></a>3.1 安全与认证</h3><h4 id="3-1-1-原理"><a href="#3-1-1-原理" class="headerlink" title="3.1.1 原理"></a>3.1.1 原理</h4><p>任何设备都必要拥有证书才能访问Broker，所有经过IOT的数据都使用TLS进行加密。IOT基于标准的TLS协议进行设备和云端双向认证来验证双方的身份。 设备需要将包含私钥的证书埋在安全可靠的地方，并且每个设备拥有唯一的证书，云端使用对应的公钥进行验证。 设备也需要将AWS的根证书加入本地可信任证书列表中，用来验证云端的身份。</p>
+<h4 id="3-1-2-证书生成方式"><a href="#3-1-2-证书生成方式" class="headerlink" title="3.1.2 证书生成方式"></a>3.1.2 证书生成方式</h4><p>证书可以在AWS控制台直接生成，也可以通过命令行，以及RESTful API进行生成。 <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cli/latest/reference/iot/create-keys-and-certificate.html">https://docs.aws.amazon.com/cli/latest/reference/iot/create-keys-and-certificate.html</a> <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/apireference/API_CreateKeysAndCertificate.html">https://docs.aws.amazon.com/iot/latest/apireference/API_CreateKeysAndCertificate.html</a></p>
+<h4 id="3-1-3-授权策略"><a href="#3-1-3-授权策略" class="headerlink" title="3.1.3 授权策略"></a>3.1.3 授权策略</h4><p>IOT授权策略使用与IAM相同的规范进行管理，通过将设备唯一标识或组与策略进行关联实现权限的控制。举例如下：</p>
+<p>{<br>    “Version”: “2012-10-17”,<br>    “Statement”: [{<br>        “Effect”: “Allow”,<br>        “Action”:[“iot:Publish”],<br>        “Resource”: [“arn:aws:iot:us-east-1:123456789012:/topic/foo/bar”]<br>    },<br>    {<br>        “Effect”: “Allow”,<br>        “Action”: [“iot:Connect”],<br>        “Resource”: [“*“]<br>        }]<br>}</p>
+<p>解释： 版本2012-10-17 允许进行发布到 us-east-1 区 topic/foo/bar 队列，同时允许连接到任何Broker。 策略列表： <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/action-resources.html">https://docs.aws.amazon.com/iot/latest/developerguide/action-resources.html</a></p>
+<p><strong>Action</strong></p>
+<p><strong>Resource</strong></p>
+<p>iot:DeleteThingShadow</p>
+<p>A thing ARN - arn:aws:iot:us-east-1:123456789012:thing/thingOne</p>
+<p>iot:Connect</p>
+<p>A client ID ARN - arn:aws:iot:us-east1:123456789012:client/myClientId</p>
+<p>iot:Publish</p>
+<p>A topic ARN - arn:aws:iot:us-east-1:123456789012:topic/myTopicName</p>
+<p>iot:Subscribe</p>
+<p>A topic filter ARN - arn:aws:iot:us-east-1:123456789012:topicfilter/myTopicFilter</p>
+<p>iot:Receive</p>
+<p>A topic ARN - arn:aws:iot:us-east-1:123456789012:topic/myTopicName</p>
+<p>iot:UpdateThingShadow</p>
+<p>A thing ARN - arn:aws:iot:us-east-1:123456789012:thing/thingOne</p>
+<h3 id="3-2-Message-Broker"><a href="#3-2-Message-Broker" class="headerlink" title="3.2 Message Broker"></a>3.2 Message Broker</h3><h4 id="3-2-1-功能"><a href="#3-2-1-功能" class="headerlink" title="3.2.1 功能"></a>3.2.1 功能</h4><p>Message Broker允许Client向某个Topic发送消息，订阅一个或多个Topic。Broker保存所有连接信息及订阅信息（这里介绍不清楚，直接影响到实现方式：所有连接信息是指当前broker上的所有连接，还是整个Broker集群的所有连接信息）。</p>
+<h4 id="3-2-2-协议"><a href="#3-2-2-协议" class="headerlink" title="3.2.2 协议"></a>3.2.2 协议</h4><h5 id="3-2-2-1-端口映射"><a href="#3-2-2-1-端口映射" class="headerlink" title="3.2.2.1 端口映射"></a>3.2.2.1 端口映射</h5><p><strong>Protocol</strong></p>
+<p><strong>Authentication</strong></p>
+<p><strong>Port</strong></p>
+<p>MQTT</p>
+<p>Client Certificate</p>
+<p>8883</p>
+<p>HTTP</p>
+<p>Client Certificate</p>
+<p>8443</p>
+<p>HTTP</p>
+<p>SigV4</p>
+<p>443</p>
+<p>MQTT + WebSocket</p>
+<p>SigV4</p>
+<p>443</p>
+<h5 id="3-2-2-2-MQTT"><a href="#3-2-2-2-MQTT" class="headerlink" title="3.2.2.2 MQTT"></a>3.2.2.2 MQTT</h5><p>AWS IOT没有完全实现MQTT协议 <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html">https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html</a> 不支持QoS2； 不支持Retained消息； 不支持session持久化存储； …</p>
+<h4 id="3-2-3-Topics"><a href="#3-2-3-Topics" class="headerlink" title="3.2.3 Topics"></a>3.2.3 Topics</h4><p>Topic用来在设备和云端之间路由消息。 ’/’用来对topic进行分层。 ‘$’表示保留topic。 <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/topics.html">https://docs.aws.amazon.com/iot/latest/developerguide/topics.html</a> 通配符功能如下：</p>
+<p><strong>Wildcard</strong></p>
+<p><strong>Description</strong></p>
+<p>#</p>
+<p>Must be the last character in the topic to which you are subscribing. Works as a wildcard by matching the current tree and all subtrees. For example, a subscription to Sensor/# will receive messages published to Sensor/,Sensor/temp, Sensor/temp/room1, but not the messages published to Sensor.</p>
+<p>+</p>
+<p>Matches exactly one item in the topic hierarchy. For example, a subscription to Sensor/+/room1 will receive messages published to Sensor/temp/room1, Sensor/moisture/room1, and so on.</p>
+<h4 id="3-2-4-事件"><a href="#3-2-4-事件" class="headerlink" title="3.2.4 事件"></a>3.2.4 事件</h4><p><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/life-cycle-events.html">https://docs.aws.amazon.com/iot/latest/developerguide/life-cycle-events.html</a> 客户端建立连接时，IOT向如下topic发送事件，业务可以监听此topic获取通知： $aws/events/presence/connected/clientId 对应内容：</p>
+<p>{<br>    “clientId”: “a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6”,<br>    “timestamp”: 1460065214626,<br>    “eventType”: “connected”,<br>    “sessionIdentifier”: “00000000-0000-0000-0000-000000000000”,<br>    “principalIdentifier”: “000000000000/ABCDEFGHIJKLMNOPQRSTU:some-user/ABCDEFGHIJKLMNOPQRSTU:some-user”<br>}</p>
+<p>连接断开时，对应的topic如下： $aws/events/presence/disconnected/<em>clientId</em> 订阅topic时： $aws/events/subscriptions/subscribed/<em>clientId</em> 取消订阅时： $aws/events/subscriptions/unsubscribed/<em>clientId</em></p>
+<h3 id="3-3-影子服务"><a href="#3-3-影子服务" class="headerlink" title="3.3 影子服务"></a>3.3 影子服务</h3><h4 id="3-3-1-定义"><a href="#3-3-1-定义" class="headerlink" title="3.3.1 定义"></a>3.3.1 定义</h4><p>设备影子是一个json串用来存储和检索设备的当前状态。</p>
+<h4 id="3-3-2-功能"><a href="#3-3-2-功能" class="headerlink" title="3.3.2 功能"></a>3.3.2 功能</h4><p>AWS IOT提供的三个方法来操作影子服务 UPDATE：更新影子服务的状态，如果目标不存在就直接创建。 GET：获取设备在影子服务中最新的快照。 DELETE：删除设备对应的影子。 <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-rest-api.html">https://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-rest-api.html</a></p>
+<h4 id="3-3-3-影子JSON内容"><a href="#3-3-3-影子JSON内容" class="headerlink" title="3.3.3 影子JSON内容"></a>3.3.3 影子JSON内容</h4><p>HTTP GET https://<em>endpoint</em>/things/<em>thingName</em>/shadow</p>
+<p>{<br>    “state”: {<br>        “desired”: {<br>            “lights”: {<br>                “color”: “RED”<br>            },<br>            “engine”: “ON”<br>        },<br>        “reported”: {<br>            “lights”: {<br>                “color”: “GREEN”<br>            },<br>            “engine”: “ON”<br>        },<br>        “delta”: {<br>            “lights”: {<br>                “color”: “RED”<br>            }<br>        }<br>    },<br>    “metadata”: {<br>        “desired”: {<br>            “lights”: {<br>                “color”: {<br>                    “timestamp”: 123456<br>                },<br>             }<br>             “engine”: {<br>                “timestamp”: 123456<br>            }<br>        },<br>        “reported”: {<br>            “lights”: {<br>                “color”: {<br>                    “timestamp”: 789012<br>                }<br>            },<br>            “engine”: {<br>                “timestamp”: 789012<br>            }<br>        },<br>        “delta”: {<br>            “lights”: {<br>                “color”: {<br>                    “timestamp”: 123456<br>                }<br>            }<br>        }<br>    },<br>    “version”: 10,<br>    “timestamp”: 123456789<br>}</p>
+<h3 id="3-4-规则引擎"><a href="#3-4-规则引擎" class="headerlink" title="3.4 规则引擎"></a>3.4 规则引擎</h3><h4 id="3-4-1-定义"><a href="#3-4-1-定义" class="headerlink" title="3.4.1 定义"></a>3.4.1 定义</h4><p>规则引擎提供一种将设备和云服务关联起来的能力。规则引擎基于mqtt topic stream来工作的。</p>
+<h4 id="3-4-2-功能"><a href="#3-4-2-功能" class="headerlink" title="3.4.2 功能"></a>3.4.2 功能</h4><p>过滤来自某一个设备的数据。 将数据路由到DynamoDB。 将数据保存到S3。 将数据路由到SQS。 将数据录入Elastic Search服务。 将数据路由到Amazon ML服务基于模型进行分析。 …</p>
+<h4 id="3-4-3-例子"><a href="#3-4-3-例子" class="headerlink" title="3.4.3 例子"></a>3.4.3 例子</h4><p>将目标为Topic ‘iot/test’ 的所有消息路由到名称为my-dynamodb-table的表中。</p>
+<p>{<br>  “sql”: “SELECT * FROM ‘iot/test’”,<br>  “ruleDisabled”: false,<br>  “awsIotSqlVersion”: “2016-03-23”,<br>  “actions”: [{<br>      “dynamoDB”: {<br>          “tableName”: “my-dynamodb-table”,<br>          “roleArn”: “arn:aws:iam::123456789012:role/my-iot-role”,<br>          “hashKeyField”: “topic”,<br>          “hashKeyValue”: “${topic(2)}”,<br>          “rangeKeyField”: “timestamp”,<br>          “rangeKeyValue”: “${timestamp()}”<br>      }<br>  }]<br>}</p>
+<p>将目标为Topic ‘some/topic’的所有消息路由到my_sqs_queue的队列中。</p>
+<p>{<br>    “rule”: {<br>        “sql”: “SELECT * FROM ‘some/topic’”,<br>        “ruleDisabled”: false,<br>        “actions”: [{<br>            “sqs”: {<br>                “queueUrl”: “<a target="_blank" rel="noopener" href="https://sqs.us-east-2.amazonaws.com/123456789012/my/_sqs/_queue&quot;">https://sqs.us-east-2.amazonaws.com/123456789012/my\_sqs\_queue&quot;</a>,<br>                “roleArn”: “arn:aws:iam::123456789012:role/aws_iot_sqs”,<br>                “useBase64”: false<br>            }<br>        }]<br>    }<br>}</p>
+<h3 id="3-5-监控"><a href="#3-5-监控" class="headerlink" title="3.5 监控"></a>3.5 监控</h3><h4 id="3-5-1-说明"><a href="#3-5-1-说明" class="headerlink" title="3.5.1 说明"></a>3.5.1 说明</h4><p>监控是IOT服务的重要组成部分，用来监测服务的稳定性、可用性、性能。</p>
+<h4 id="3-5-2-提出问题"><a href="#3-5-2-提出问题" class="headerlink" title="3.5.2 提出问题"></a>3.5.2 提出问题</h4><p><em>（AWS IoT没有指明监控如何实现，但是提出了设计监控时应当考虑的问题，挺专业的）</em> 监控的目标是什么？ 监控那些资源？ 监控的频率是多长时间？ 使用什么监控工具？ 谁来执行监控任务？ 当监控到错误时，由谁来处理？ <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html">https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html</a></p>
+<h2 id="4-费用"><a href="#4-费用" class="headerlink" title="4 费用"></a>4 费用</h2><h3 id="4-1-计费"><a href="#4-1-计费" class="headerlink" title="4.1 计费"></a>4.1 计费</h3><p>单连接每百万分钟$0.08; Broker每百万条消息$1.00; 影子服务每百万次操作$1.25; 规则引擎每百万次操作$0.15; SQS每百万条消息$0.40;</p>
+<h3 id="4-2-举例"><a href="#4-2-举例" class="headerlink" title="4.2 举例"></a>4.2 举例</h3><p>以美西区为例，一百万辆车，每分钟上报两条数据，忽略（车控指令产生的费用，读取影子服务产生的费用）经过规则引擎路由到SQS计算一年中费用： 一百万辆车保持一年长连接：0.08 * 60 * 24 * 365 一百万辆车每辆车每分钟上报两条车辆状态(↑128k)：1 * 2 * 60 * 24 * 365 一百万辆车每辆车每分钟更新两次影子服务：1.25 * 2 * 60 * 24 * 365 一百万辆车每辆车每分钟触发两次规则引擎，并执行规则（触发和执行分别计费）：0.15 * 2 * 2 * 60 * 24 * 365 一百万辆车每辆车每分钟写两条消息到SQS（消费端读单独计费）：0.4 * 2 * 2 * 60 * 24 * 365 乘以6.4汇率，一百万辆车一年的保守费用：(0.08 + 1*2 + 1.25*2 + 0.15*2*2 + 0.4*2*2) * 60 * 24 * 365 * 6.4 = 22,806,836人民币。</p>
+<h2 id="5-缺点"><a href="#5-缺点" class="headerlink" title="5 缺点"></a>5 缺点</h2><p>5.1 只能通过日志查看消息的投递状态 5.2 对接依然需要较高开发成本</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://zman2013.github.io/2018/02/13/wordpress/iot/" data-id="ckhozyb3i000fwfni7a7rhwis" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iot/" rel="tag">iot</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/10/wordpress/python-data-operations/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Python数据操作
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/09/24/wordpress/kubernetes-basic-command/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Kubernetes常用命令</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/HttpClient/">HttpClient</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/IoT/">IoT</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/MQ/">MQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mock/">Mock</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/RPC/">RPC</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SVN-Git/">SVN Git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Unit-Test/">Unit Test</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/WordPress/">WordPress</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/code-generator/">code generator</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/container/">container</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/log/">log</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/performance-optimize/">performance_optimize</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pull-stream/">pull-stream</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/tcp/">tcp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/unity/">unity</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/">分布式系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">开发环境</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ibd/" rel="tag">.ibd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2d/" rel="tag">2d</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ActiveMQ/" rel="tag">ActiveMQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/" rel="tag">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%B0%83%E7%94%A8Java/" rel="tag">C调用Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Demo/" rel="tag">Demo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dubbo/" rel="tag">Dubbo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dubbo%E5%8E%9F%E7%90%86/" rel="tag">Dubbo原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Finagle/" rel="tag">Finagle</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/" rel="tag">Gradle</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hessian/" rel="tag">Hessian</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HttpClient/" rel="tag">HttpClient</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JDK/" rel="tag">JDK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E6%8F%92%E4%BB%B6/" rel="tag">Java 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Log4j2/" rel="tag">Log4j2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MQ/" rel="tag">MQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/" rel="tag">Maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/" rel="tag">Mock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mockito/" rel="tag">Mockito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" rel="tag">MySQL数据恢复</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Proxy/" rel="tag">Proxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RPC/" rel="tag">RPC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RabbitMQ/" rel="tag">RabbitMQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RestTemplate/" rel="tag">RestTemplate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RocketMQ/" rel="tag">RocketMQ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SPI/" rel="tag">SPI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/STS/" rel="tag">STS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVN/" rel="tag">SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Application/" rel="tag">Spring Application</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Demo/" rel="tag">Spring Demo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-MVC/" rel="tag">Spring MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Mybatis/" rel="tag">Spring Mybatis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Web/" rel="tag">Spring Web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Web%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" rel="tag">Spring Web项目搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-%E4%BE%8B%E5%AD%90/" rel="tag">Spring 例子</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-%E6%A1%86%E6%9E%B6/" rel="tag">Spring 框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" rel="tag">Spring项目搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sprint-Test/" rel="tag">Sprint Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SwitchSharp/" rel="tag">SwitchSharp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tchannel/" rel="tag">Tchannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unit-Test/" rel="tag">Unit Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VirtualBox/" rel="tag">VirtualBox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WordPress/" rel="tag">WordPress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/backpressure/" rel="tag">backpressure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/" rel="tag">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dataframe/" rel="tag">dataframe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/decrypt/" rel="tag">decrypt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/devops/" rel="tag">devops</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/" rel="tag">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flannel/" rel="tag">flannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iot/" rel="tag">iot</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jetty-run/" rel="tag">jetty:run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubectl/" rel="tag">kubectl</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/" rel="tag">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/" rel="tag">log</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE/" rel="tag">maven 全局配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/merge/" rel="tag">merge</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/" rel="tag">mybatis代码生成器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/performance-optimize/" rel="tag">performance_optimize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh%E7%9B%B4%E8%BF%9E/" rel="tag">ssh直连</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/table/" rel="tag">table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/" rel="tag">tcp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcpdump/" rel="tag">tcpdump</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wireshark/" rel="tag">wireshark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%80%E8%87%B4%E6%80%A7/" rel="tag">一致性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8D%E5%90%8C%E7%8E%AF%E5%A2%83%E6%89%93%E5%8C%85/" rel="tag">不同环境打包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%90%86/" rel="tag">代理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" rel="tag">代码版本管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/" rel="tag">免密登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">分布式系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E6%A8%A1%E5%9D%97/" rel="tag">多模块</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E9%85%8D%E7%BD%AE/" rel="tag">多配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/" rel="tag">服务治理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" rel="tag">自动挂载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%9F%E5%88%97%E9%80%89%E5%9E%8B/" rel="tag">队列选型</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ibd/" style="font-size: 10px;">.ibd</a> <a href="/tags/2d/" style="font-size: 15px;">2d</a> <a href="/tags/ActiveMQ/" style="font-size: 10px;">ActiveMQ</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/C%E8%B0%83%E7%94%A8Java/" style="font-size: 10px;">C调用Java</a> <a href="/tags/Demo/" style="font-size: 10px;">Demo</a> <a href="/tags/Dubbo/" style="font-size: 15px;">Dubbo</a> <a href="/tags/Dubbo%E5%8E%9F%E7%90%86/" style="font-size: 10px;">Dubbo原理</a> <a href="/tags/Finagle/" style="font-size: 10px;">Finagle</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Hessian/" style="font-size: 10px;">Hessian</a> <a href="/tags/HttpClient/" style="font-size: 10px;">HttpClient</a> <a href="/tags/JDK/" style="font-size: 10px;">JDK</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">Java 插件</a> <a href="/tags/Log4j2/" style="font-size: 10px;">Log4j2</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Mockito/" style="font-size: 15px;">Mockito</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" style="font-size: 10px;">MySQL数据恢复</a> <a href="/tags/Proxy/" style="font-size: 15px;">Proxy</a> <a href="/tags/RPC/" style="font-size: 20px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 15px;">RabbitMQ</a> <a href="/tags/RestTemplate/" style="font-size: 10px;">RestTemplate</a> <a href="/tags/RocketMQ/" style="font-size: 10px;">RocketMQ</a> <a href="/tags/SPI/" style="font-size: 10px;">SPI</a> <a href="/tags/STS/" style="font-size: 10px;">STS</a> <a href="/tags/SVN/" style="font-size: 10px;">SVN</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Spring-Application/" style="font-size: 10px;">Spring Application</a> <a href="/tags/Spring-Demo/" style="font-size: 10px;">Spring Demo</a> <a href="/tags/Spring-MVC/" style="font-size: 15px;">Spring MVC</a> <a href="/tags/Spring-Mybatis/" style="font-size: 10px;">Spring Mybatis</a> <a href="/tags/Spring-Web/" style="font-size: 15px;">Spring Web</a> <a href="/tags/Spring-Web%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">Spring Web项目搭建</a> <a href="/tags/Spring-%E4%BE%8B%E5%AD%90/" style="font-size: 10px;">Spring 例子</a> <a href="/tags/Spring-%E6%A1%86%E6%9E%B6/" style="font-size: 15px;">Spring 框架</a> <a href="/tags/Spring%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">Spring项目搭建</a> <a href="/tags/Sprint-Test/" style="font-size: 10px;">Sprint Test</a> <a href="/tags/SwitchSharp/" style="font-size: 10px;">SwitchSharp</a> <a href="/tags/Tchannel/" style="font-size: 10px;">Tchannel</a> <a href="/tags/Unit-Test/" style="font-size: 10px;">Unit Test</a> <a href="/tags/VirtualBox/" style="font-size: 10px;">VirtualBox</a> <a href="/tags/WordPress/" style="font-size: 10px;">WordPress</a> <a href="/tags/backpressure/" style="font-size: 10px;">backpressure</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/dataframe/" style="font-size: 10px;">dataframe</a> <a href="/tags/decrypt/" style="font-size: 10px;">decrypt</a> <a href="/tags/devops/" style="font-size: 10px;">devops</a> <a href="/tags/docker/" style="font-size: 20px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/flannel/" style="font-size: 10px;">flannel</a> <a href="/tags/iot/" style="font-size: 10px;">iot</a> <a href="/tags/jetty-run/" style="font-size: 10px;">jetty:run</a> <a href="/tags/kubectl/" style="font-size: 10px;">kubectl</a> <a href="/tags/kubernetes/" style="font-size: 20px;">kubernetes</a> <a href="/tags/log/" style="font-size: 10px;">log</a> <a href="/tags/maven-%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">maven 全局配置</a> <a href="/tags/merge/" style="font-size: 10px;">merge</a> <a href="/tags/mybatis%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/" style="font-size: 10px;">mybatis代码生成器</a> <a href="/tags/performance-optimize/" style="font-size: 10px;">performance_optimize</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/ssh%E7%9B%B4%E8%BF%9E/" style="font-size: 10px;">ssh直连</a> <a href="/tags/table/" style="font-size: 10px;">table</a> <a href="/tags/tcp/" style="font-size: 10px;">tcp</a> <a href="/tags/tcpdump/" style="font-size: 10px;">tcpdump</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/wireshark/" style="font-size: 10px;">wireshark</a> <a href="/tags/%E4%B8%80%E8%87%B4%E6%80%A7/" style="font-size: 10px;">一致性</a> <a href="/tags/%E4%B8%8D%E5%90%8C%E7%8E%AF%E5%A2%83%E6%89%93%E5%8C%85/" style="font-size: 10px;">不同环境打包</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" style="font-size: 10px;">代码版本管理</a> <a href="/tags/%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/" style="font-size: 10px;">免密登录</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">分布式系统设计</a> <a href="/tags/%E5%A4%9A%E6%A8%A1%E5%9D%97/" style="font-size: 10px;">多模块</a> <a href="/tags/%E5%A4%9A%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">多配置</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/" style="font-size: 15px;">服务治理</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" style="font-size: 10px;">自动挂载</a> <a href="/tags/%E9%98%9F%E5%88%97%E9%80%89%E5%9E%8B/" style="font-size: 10px;">队列选型</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/19/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/29/wordpress/vue-table-styles/">Vue table styles</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/29/wordpress/mockito-invoking-callback/">Mockito invoking callback</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/12/wordpress/package-one-runnable-jar/">Package One Runnable Jar</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/11/wordpress/a-stream-is-just-an-array-in-time/">A stream is just an array in time</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 zman<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
