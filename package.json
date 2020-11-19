@@ -9,7 +9,7 @@
     "server": "hexo server"
   },
   "hexo": {
-    "version": ""
+    "version": "5.2.0"
   },
   "dependencies": {
     "hexo-generator-archive": "^1.0.0",
