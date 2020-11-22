@@ -7,8 +7,8 @@ categories:
 date: 2020-01-12 22:09:37
 ---
 
-# 1\. Add Maven Plugin
-
+# 1. Add Maven Plugin
+```xml
 <build>
     <plugins>
         <plugin>
@@ -37,11 +37,12 @@ date: 2020-01-12 22:09:37
         </plugin>
     </plugins>
 </build>
+```
 
 #  2. Assembly Command
 
-mvn clean && mvn package
+`mvn clean && mvn package`
 
 #  3. Run the Application
 
-java -jar xxx.jar
+`java -jar xxx.jar`

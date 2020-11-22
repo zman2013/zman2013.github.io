@@ -359,13 +359,13 @@ codeblock:
     light: default
     dark: tomorrow-night
   prism:
-    light: prism
-    dark: prism-dark
+    light: prism-vs
+    dark: prism-vs
   # Add copy button on codeblock
   copy_button:
-    enable: false
+    enable: true
     # Available values: default | flat | mac
-    style:
+    style: flat
 
 back2top:
   enable: true

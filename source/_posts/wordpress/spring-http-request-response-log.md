@@ -8,12 +8,12 @@ categories:
 date: 2019-10-28 21:13:55
 ---
 
-# 1\. Controller Log
+# 1. Controller Log
 
 ## 1.1 确认是Spring Boot项目
 
 ## 1.2 创建Filter
-
+```java
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,9 +32,9 @@ public class ApiAccessFilter extends CommonsRequestLoggingFilter {
     }
 
 }
-
+```
 ##  1.3 Java Configuration
-
+```java
 @Bean
 public CommonsRequestLoggingFilter logFilter() {
     CommonsRequestLoggingFilter filter = new ApiAccessFilter();
@@ -46,14 +46,13 @@ public CommonsRequestLoggingFilter logFilter() {
     filter.setAfterMessagePrefix("");
     return filter;
 }
-
+```
 ##  1.4 设置logback配置
-
+```xml
 <logger name="com.chehejia.iot.batch.advice.ApiAccessFilter" additivity="false">
     <level value="DEBUG"/>
 </logger>
-
- 
+```
 
 # LINK
 

@@ -8,15 +8,16 @@ categories:
 date: 2019-11-01 21:52:42
 ---
 
-# 1\. 点击屏幕选中物体
-
+# 1. 点击屏幕选中物体
+```csharp
 // 核心是坐标转化：屏幕坐标 -> 世界坐标 -> 射线碰撞
 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
 RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+```
 
-# 2\. 多个血条显示
-
+# 2. 多个血条显示
+```csharp
 // 核心是坐标转换：世界坐标转为屏幕坐标
 // GameObject所在的世界坐标转为屏幕坐标
 Vector3 position = Camera.main.WorldToScreenPoint(transform.position);
@@ -25,9 +26,10 @@ bloodGameObject.gameObject.transform.position = new Vector3(position.x-35, posit
 
 // 设置血条长度
 image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, originalSize \* percent);
+```
 
-# 3\. 移动
-
+# 3. 移动
+```csharp
 // 刚体移动使用rig.MovePosition，防止物体抖动
 // 使用MoveTowards计算移动的新位置， 防止速度过快时总是偏离目标位置
 if( Vector3.Distance(rig.position, targetPosition) > Mathf.Epsilon)
@@ -36,9 +38,9 @@ if( Vector3.Distance(rig.position, targetPosition) > Mathf.Epsilon)
    Vector3 newPosition = Vector3.MoveTowards(rig.position, targetPosition, distance);
    rig.MovePosition(newPosition);
 }
-
-# 4\. 拖拽物品
-
+```
+# 4. 拖拽物品
+```csharp
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -147,3 +149,6 @@ public class ItemDrag : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     }
 
 }
+```
+
+

@@ -9,9 +9,9 @@ categories:
 date: 2020-05-29 21:58:57
 ---
 
-\# Table样式
+# Table样式
 ## 设置边框
-\`\`\`html
+```html
 <style>
     .el-table--border:after,
     .el-table--group:after,
@@ -45,9 +45,9 @@ date: 2020-05-29 21:58:57
     border>
 </el-table>
 
-\`\`\`
+```
 ## 设置排序&默认排序
-\`\`\`html
+```html
 <el-table
     :data="dataList"
     :default-sort = "{prop: 'createtime', order: 'descending'}">
@@ -58,18 +58,18 @@ date: 2020-05-29 21:58:57
             width="200">
     </el-table-column>
 </el-table>
-\`\`\`
+```
 
 ## 根据内容适配宽度
-\`\`\`html
+```html
 <el-table
     :data="dataList"
     style="width:fit-content">
 </el-table>
-\`\`\`
+```
 
 ## 默认单元格样式
-\`\`\`html
+```html
 <el-table :data="dataList">
     <el-table-column
             prop="name"
@@ -77,10 +77,10 @@ date: 2020-05-29 21:58:57
             width="150">
     </el-table-column>
 </el-table>
-\`\`\`
+```
 
 ## 自定义单元格样式
-\`\`\`html
+```html
 <el-table :data="dataList">
     <el-table-column
             prop="version"
@@ -104,4 +104,4 @@ date: 2020-05-29 21:58:57
         </template>
     </el-table-column>
 </el-table>
-\`\`\`
+```

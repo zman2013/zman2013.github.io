@@ -9,6 +9,7 @@ categories:
 date: 2020-05-29 21:57:35
 ---
 
+```java
 @Mock
 BiConsumer<Integer, Runnable> onNext;
 
@@ -17,3 +18,4 @@ doAnswer((Answer<Void>) invocation ->{
     readNext.run();
     return null;
 }).when(onNext).accept(anyInt(), any(Runnable.class));
+```

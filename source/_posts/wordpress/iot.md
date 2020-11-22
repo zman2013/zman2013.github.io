@@ -8,7 +8,7 @@ categories:
 date: 2018-02-13 14:54:15
 ---
 
-_去年调研了所有的IoT平台，最后总结只有两家，分别是：AWS IoT和其他IoT。本文从AWS IoT Document中摘取核心功能和特点进行说明。_
+`去年调研了所有的IoT平台，最后总结只有两家，分别是：AWS IoT和其他IoT。本文从AWS IoT Document中摘取核心功能和特点进行说明。`
 
 ## 1 IoT是什么？
 
@@ -16,7 +16,10 @@ IOT能够提供在设备与云端进行安全的双向通信的能力，可以�
 
 ## 2 功能组件
 
-[![aws_iot](https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot.png)](https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot.png) [![aws_iot_data_services](https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot_data_services.png)](https://www.zmannotes.com/wp-content/uploads/2018/02/aws_iot_data_services.png) 下图是阿里的，基本没差别。 [![ali_iot_architecture](https://www.zmannotes.com/wp-content/uploads/2018/02/ali_iot_architecture.png)](https://www.zmannotes.com/wp-content/uploads/2018/02/ali_iot_architecture.png)
+[![aws_iot](./aws_iot.png)](./aws_iot.png)
+[![aws_iot_data_services](./aws_iot_data_services.png)](./aws_iot_data_services.png) 
+下图是阿里的，基本没差别。 
+[![ali_iot_architecture](./ali_iot_architecture.png)](https://www.zmannotes.com/wp-content/uploads/2018/02/ali_iot_architecture.png)
 
 ## 3 组件介绍
 
@@ -28,27 +31,30 @@ IOT能够提供在设备与云端进行安全的双向通信的能力，可以�
 
 #### 3.1.2 证书生成方式
 
-证书可以在AWS控制台直接生成，也可以通过命令行，以及RESTful API进行生成。 [https://docs.aws.amazon.com/cli/latest/reference/iot/create-keys-and-certificate.html](https://docs.aws.amazon.com/cli/latest/reference/iot/create-keys-and-certificate.html) [https://docs.aws.amazon.com/iot/latest/apireference/API\_CreateKeysAndCertificate.html](https://docs.aws.amazon.com/iot/latest/apireference/API_CreateKeysAndCertificate.html)
+证书可以在AWS控制台直接生成，也可以通过命令行，以及RESTful API进行生成。 
+[https://docs.aws.amazon.com/cli/latest/reference/iot/create-keys-and-certificate.html](https://docs.aws.amazon.com/cli/latest/reference/iot/create-keys-and-certificate.html) 
+[https://docs.aws.amazon.com/iot/latest/apireference/API_CreateKeysAndCertificate.html](https://docs.aws.amazon.com/iot/latest/apireference/API_CreateKeysAndCertificate.html)
 
 #### 3.1.3 授权策略
 
 IOT授权策略使用与IAM相同的规范进行管理，通过将设备唯一标识或组与策略进行关联实现权限的控制。举例如下：
-
+```json
 {
     "Version": "2012-10-17",
-    "Statement": \[{
+    "Statement": [{
         "Effect": "Allow",
-        "Action":\["iot:Publish"\],
-        "Resource": \["arn:aws:iot:us-east-1:123456789012:/topic/foo/bar"\]
+        "Action":["iot:Publish"],
+        "Resource": ["arn:aws:iot:us-east-1:123456789012:/topic/foo/bar"]
     },
     {
         "Effect": "Allow",
-        "Action": \["iot:Connect"\],
-        "Resource": \["\*"\]
-        }\]
+        "Action": ["iot:Connect"],
+        "Resource": ["*"]
+        }]
 }
-
-解释： 版本2012-10-17 允许进行发布到 us-east-1 区 topic/foo/bar 队列，同时允许连接到任何Broker。 策略列表： [https://docs.aws.amazon.com/iot/latest/developerguide/action-resources.html](https://docs.aws.amazon.com/iot/latest/developerguide/action-resources.html)
+```
+解释： 版本2012-10-17 允许进行发布到 us-east-1 区 topic/foo/bar 队列，同时允许连接到任何Broker。 
+策略列表： [https://docs.aws.amazon.com/iot/latest/developerguide/action-resources.html](https://docs.aws.amazon.com/iot/latest/developerguide/action-resources.html)
 
 **Action**
 
@@ -88,60 +94,41 @@ Message Broker允许Client向某个Topic发送消息，订阅一个或多个Topi
 
 ##### 3.2.2.1 端口映射
 
-**Protocol**
-
-**Authentication**
-
-**Port**
-
-MQTT
-
-Client Certificate
-
-8883
-
-HTTP
-
-Client Certificate
-
-8443
-
-HTTP
-
-SigV4
-
-443
-
-MQTT + WebSocket
-
-SigV4
-
-443
+**Protocol**|**Authentication**|**Port**
+--- | --- | ---
+MQTT | Client Certificate | 8883
+HTTP | Client Certificate | 8443
+HTTPS | SigV4 | 443
+MQTT + WebSocket | SigV4 | 443
 
 ##### 3.2.2.2 MQTT
 
-AWS IOT没有完全实现MQTT协议 [https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html](https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html) 不支持QoS2； 不支持Retained消息； 不支持session持久化存储； …
+AWS IOT没有完全实现MQTT协议 [aws protocols](https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html) 不支持QoS2； 不支持Retained消息； 不支持session持久化存储； …
 
 #### 3.2.3 Topics
 
-Topic用来在设备和云端之间路由消息。 ’/’用来对topic进行分层。 ‘$’表示保留topic。 [https://docs.aws.amazon.com/iot/latest/developerguide/topics.html](https://docs.aws.amazon.com/iot/latest/developerguide/topics.html) 通配符功能如下：
+Topic用来在设备和云端之间路由消息。 `/`用来对topic进行分层。 `$`表示保留topic。 
+[https://docs.aws.amazon.com/iot/latest/developerguide/topics.html](https://docs.aws.amazon.com/iot/latest/developerguide/topics.html) 
+通配符功能如下：
 
 **Wildcard**
 
 **Description**
-
+`
 #
-
+`
 Must be the last character in the topic to which you are subscribing. Works as a wildcard by matching the current tree and all subtrees. For example, a subscription to Sensor/# will receive messages published to Sensor/,Sensor/temp, Sensor/temp/room1, but not the messages published to Sensor.
-
+`
 +
-
+`
 Matches exactly one item in the topic hierarchy. For example, a subscription to Sensor/+/room1 will receive messages published to Sensor/temp/room1, Sensor/moisture/room1, and so on.
+
 
 #### 3.2.4 事件
 
-[https://docs.aws.amazon.com/iot/latest/developerguide/life-cycle-events.html](https://docs.aws.amazon.com/iot/latest/developerguide/life-cycle-events.html) 客户端建立连接时，IOT向如下topic发送事件，业务可以监听此topic获取通知： $aws/events/presence/connected/clientId 对应内容：
-
+[https://docs.aws.amazon.com/iot/latest/developerguide/life-cycle-events.html](https://docs.aws.amazon.com/iot/latest/developerguide/life-cycle-events.html) 
+客户端建立连接时，IOT向如下topic发送事件，业务可以监听此topic获取通知： $aws/events/presence/connected/clientId 对应内容：
+```json
 {
     "clientId": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
     "timestamp": 1460065214626,
@@ -149,8 +136,13 @@ Matches exactly one item in the topic hierarchy. For example, a subscription to�
     "sessionIdentifier": "00000000-0000-0000-0000-000000000000",
     "principalIdentifier": "000000000000/ABCDEFGHIJKLMNOPQRSTU:some-user/ABCDEFGHIJKLMNOPQRSTU:some-user"
 }
-
-连接断开时，对应的topic如下： $aws/events/presence/disconnected/_clientId_ 订阅topic时： $aws/events/subscriptions/subscribed/_clientId_ 取消订阅时： $aws/events/subscriptions/unsubscribed/_clientId_
+```
+连接断开时，对应的topic如下： 
+`$aws/events/presence/disconnected/_clientId_ `
+订阅topic时： 
+`$aws/events/subscriptions/subscribed/_clientId_`
+取消订阅时： 
+`$aws/events/subscriptions/unsubscribed/_clientId_`
 
 ### 3.3 影子服务
 
@@ -160,12 +152,16 @@ Matches exactly one item in the topic hierarchy. For example, a subscription to�
 
 #### 3.3.2 功能
 
-AWS IOT提供的三个方法来操作影子服务 UPDATE：更新影子服务的状态，如果目标不存在就直接创建。 GET：获取设备在影子服务中最新的快照。 DELETE：删除设备对应的影子。 [https://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-rest-api.html](https://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-rest-api.html)
+AWS IOT提供的三个方法来操作影子服务 
+UPDATE：更新影子服务的状态，如果目标不存在就直接创建。 
+GET：获取设备在影子服务中最新的快照。 
+DELETE：删除设备对应的影子。 
+[https://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-rest-api.html](https://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-rest-api.html)
 
 #### 3.3.3 影子JSON内容
 
 HTTP GET https://_endpoint_/things/_thingName_/shadow
-
+```json
 {
     "state": {
         "desired": {
@@ -218,7 +214,7 @@ HTTP GET https://_endpoint_/things/_thingName_/shadow
     "version": 10,
     "timestamp": 123456789
 }
-
+```
 ### 3.4 规则引擎
 
 #### 3.4.1 定义
@@ -232,12 +228,12 @@ HTTP GET https://_endpoint_/things/_thingName_/shadow
 #### 3.4.3 例子
 
 将目标为Topic ‘iot/test’ 的所有消息路由到名称为my-dynamodb-table的表中。
-
+```json
 {
-  "sql": "SELECT \* FROM 'iot/test'",
+  "sql": "SELECT * FROM 'iot/test'",
   "ruleDisabled": false,
   "awsIotSqlVersion": "2016-03-23",
-  "actions": \[{
+  "actions": [{
       "dynamoDB": {
           "tableName": "my-dynamodb-table",
           "roleArn": "arn:aws:iam::123456789012:role/my-iot-role",
@@ -246,24 +242,25 @@ HTTP GET https://_endpoint_/things/_thingName_/shadow
           "rangeKeyField": "timestamp",
           "rangeKeyValue": "${timestamp()}"
       }
-  }\]
+  }]
 }
-
-将目标为Topic ‘some/topic’的所有消息路由到my\_sqs\_queue的队列中。
-
+``
+将目标为Topic ‘some/topic’的所有消息路由到my_sqs_queue的队列中。
+```json
 {
     "rule": {
-        "sql": "SELECT \* FROM 'some/topic'", 
+        "sql": "SELECT * FROM 'some/topic'", 
         "ruleDisabled": false, 
-        "actions": \[{
+        "actions": [{
             "sqs": {
-                "queueUrl": "https://sqs.us-east-2.amazonaws.com/123456789012/my\_sqs\_queue", 
-                "roleArn": "arn:aws:iam::123456789012:role/aws\_iot\_sqs", 
+                "queueUrl": "https://sqs.us-east-2.amazonaws.com/123456789012/my_sqs_queue", 
+                "roleArn": "arn:aws:iam::123456789012:role/aws_iot_sqs", 
                 "useBase64": false
             }
-        }\]
+        }]
     }
 }
+```
 
 ### 3.5 监控
 
@@ -273,7 +270,8 @@ HTTP GET https://_endpoint_/things/_thingName_/shadow
 
 #### 3.5.2 提出问题
 
-_（AWS IoT没有指明监控如何实现，但是提出了设计监控时应当考虑的问题，挺专业的）_ 监控的目标是什么？ 监控那些资源？ 监控的频率是多长时间？ 使用什么监控工具？ 谁来执行监控任务？ 当监控到错误时，由谁来处理？ [https://docs.aws.amazon.com/iot/latest/developerguide/monitoring\_overview.html](https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html)
+AWS IoT没有指明监控如何实现，但是提出了设计监控时应当考虑的问题，挺专业的）_ 监控的目标是什么？ 监控那些资源？ 监控的频率是多长时间？ 使用什么监控工具？ 谁来执行监控任务？ 当监控到错误时，由谁来处理？ 
+[https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html](https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html)
 
 ## 4 费用
 
@@ -283,8 +281,10 @@ _（AWS IoT没有指明监控如何实现，但是提出了设计监控时应当
 
 ### 4.2 举例
 
-以美西区为例，一百万辆车，每分钟上报两条数据，忽略（车控指令产生的费用，读取影子服务产生的费用）经过规则引擎路由到SQS计算一年中费用： 一百万辆车保持一年长连接：0.08 \* 60 \* 24 \* 365 一百万辆车每辆车每分钟上报两条车辆状态(↑128k)：1 \* 2 \* 60 \* 24 \* 365 一百万辆车每辆车每分钟更新两次影子服务：1.25 \* 2 \* 60 \* 24 \* 365 一百万辆车每辆车每分钟触发两次规则引擎，并执行规则（触发和执行分别计费）：0.15 \* 2 \* 2 \* 60 \* 24 \* 365 一百万辆车每辆车每分钟写两条消息到SQS（消费端读单独计费）：0.4 \* 2 \* 2 \* 60 \* 24 \* 365 乘以6.4汇率，一百万辆车一年的保守费用：(0.08 + 1\*2 + 1.25\*2 + 0.15\*2\*2 + 0.4\*2\*2) \* 60 \* 24 \* 365 \* 6.4 = 22,806,836人民币。
+以美西区为例，一百万辆车，每分钟上报两条数据，忽略（车控指令产生的费用，读取影子服务产生的费用）经过规则引擎路由到SQS计算一年中费用： 一百万辆车保持一年长连接：0.08 * 60 * 24 * 365 一百万辆车每辆车每分钟上报两条车辆状态(↑128k)：1 * 2 * 60 * 24 * 365 一百万辆车每辆车每分钟更新两次影子服务：1.25 * 2 * 60 * 24 * 365 一百万辆车每辆车每分钟触发两次规则引擎，并执行规则（触发和执行分别计费）：0.15 * 2 * 2 * 60 * 24 * 365 一百万辆车每辆车每分钟写两条消息到SQS（消费端读单独计费）：0.4 * 2 * 2 * 60 * 24 * 365 乘以6.4汇率，一百万辆车一年的保守费用：(0.08 + 1*2 + 1.25*2 + 0.15*2*2 + 0.4*2*2) * 60 * 24 * 365 * 6.4 = 22,806,836人民币。
 
 ## 5 缺点
 
 5.1 只能通过日志查看消息的投递状态 5.2 对接依然需要较高开发成本
+
+
