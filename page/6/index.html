@@ -21,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":true,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
   <meta property="og:type" content="website">
@@ -249,7 +249,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-22 21:00:43" itemprop="dateModified" datetime="2020-11-22T21:00:43+08:00">2020-11-22</time>
+        <time title="Modified: 2020-11-22 22:51:03" itemprop="dateModified" datetime="2020-11-22T22:51:03+08:00">2020-11-22</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,110 +271,138 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="1-点击屏幕选中物体"><a href="#1-点击屏幕选中物体" class="headerlink" title="1. 点击屏幕选中物体"></a>1. 点击屏幕选中物体</h1><p>// 核心是坐标转化：屏幕坐标 -&gt; 世界坐标 -&gt; 射线碰撞<br>Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);<br>Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);<br>RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);</p>
-<h1 id="2-多个血条显示"><a href="#2-多个血条显示" class="headerlink" title="2. 多个血条显示"></a>2. 多个血条显示</h1><p>// 核心是坐标转换：世界坐标转为屏幕坐标<br>// GameObject所在的世界坐标转为屏幕坐标<br>Vector3 position = Camera.main.WorldToScreenPoint(transform.position);<br>// 设置血条的位置，并调整偏移量<br>bloodGameObject.gameObject.transform.position = new Vector3(position.x-35, position.y + 110, position.z);</p>
-<p>// 设置血条长度<br>image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, originalSize * percent);</p>
-<h1 id="3-移动"><a href="#3-移动" class="headerlink" title="3. 移动"></a>3. 移动</h1><p>// 刚体移动使用rig.MovePosition，防止物体抖动<br>// 使用MoveTowards计算移动的新位置， 防止速度过快时总是偏离目标位置<br>if( Vector3.Distance(rig.position, targetPosition) &gt; Mathf.Epsilon)<br>{<br>   float distance = attackMoveSpeed * Time.deltaTime;<br>   Vector3 newPosition = Vector3.MoveTowards(rig.position, targetPosition, distance);<br>   rig.MovePosition(newPosition);<br>}</p>
-<h1 id="4-拖拽物品"><a href="#4-拖拽物品" class="headerlink" title="4. 拖拽物品"></a>4. 拖拽物品</h1><p>using System.Collections;<br>using System.Collections.Generic;<br>using UnityEngine;<br>using UnityEngine.EventSystems;<br>using UnityEngine.UI;</p>
-<p>public class ItemDrag : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler<br>{</p>
-<pre><code>// 鼠标起点
-private Vector2 originalLocalPointerPosition;
-// 面板起点
-private Vector3 originalLocalPanelPosition;
-// 当前物体
-private RectTransform panelRectTransform;
-// 父节点
-private RectTransform parentRectTransform;
+          <h1 id="1-点击屏幕选中物体"><a href="#1-点击屏幕选中物体" class="headerlink" title="1. 点击屏幕选中物体"></a>1. 点击屏幕选中物体</h1><pre class="language-csharp" data-language="csharp"><code class="language-csharp">&#x2F;&#x2F; 核心是坐标转化：屏幕坐标 -&gt; 世界坐标 -&gt; 射线碰撞
+Vector3 mousePos &#x3D; Camera.main.ScreenToWorldPoint(Input.mousePosition);
+Vector2 mousePos2D &#x3D; new Vector2(mousePos.x, mousePos.y);
+RaycastHit2D hit &#x3D; Physics2D.Raycast(mousePos2D, Vector2.zero);</code></pre>
 
-// 格子列表, 在gridList上一层添加一个新的空对象作为父节点
-private GameObject gridManager;
-// 记录物品拖拽前的位置
-private GameObject originalGrid;
+<h1 id="2-多个血条显示"><a href="#2-多个血条显示" class="headerlink" title="2. 多个血条显示"></a>2. 多个血条显示</h1><pre class="language-csharp" data-language="csharp"><code class="language-csharp">&#x2F;&#x2F; 核心是坐标转换：世界坐标转为屏幕坐标
+&#x2F;&#x2F; GameObject所在的世界坐标转为屏幕坐标
+Vector3 position &#x3D; Camera.main.WorldToScreenPoint(transform.position);
+&#x2F;&#x2F; 设置血条的位置，并调整偏移量
+bloodGameObject.gameObject.transform.position &#x3D; new Vector3(position.x-35, position.y + 110, position.z);
 
-private static int siblingIndex = 0;
+&#x2F;&#x2F; 设置血条长度
+image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, originalSize \* percent);</code></pre>
 
-
-void Awake()
+<h1 id="3-移动"><a href="#3-移动" class="headerlink" title="3. 移动"></a>3. 移动</h1><pre class="language-csharp" data-language="csharp"><code class="language-csharp">&#x2F;&#x2F; 刚体移动使用rig.MovePosition，防止物体抖动
+&#x2F;&#x2F; 使用MoveTowards计算移动的新位置， 防止速度过快时总是偏离目标位置
+if( Vector3.Distance(rig.position, targetPosition) &gt; Mathf.Epsilon)
 &#123;
-    panelRectTransform = transform as RectTransform;
-    parentRectTransform = GameObject.FindGameObjectWithTag(&quot;ScrollRect&quot;).GetComponent&lt;RectTransform&gt;() as RectTransform;
-    gridManager = GameObject.Find(&quot;GridManager&quot;);
+   float distance &#x3D; attackMoveSpeed \* Time.deltaTime;
+   Vector3 newPosition &#x3D; Vector3.MoveTowards(rig.position, targetPosition, distance);
+   rig.MovePosition(newPosition);
+&#125;</code></pre>
+<h1 id="4-拖拽物品"><a href="#4-拖拽物品" class="headerlink" title="4. 拖拽物品"></a>4. 拖拽物品</h1><pre class="language-csharp" data-language="csharp"><code class="language-csharp">using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-&#125;
-
-// 按下鼠标
-public void OnPointerDown(PointerEventData eventData)
+public class ItemDrag : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 &#123;
-    // 记录物品当前所在格子信息
-    originalGrid = panelRectTransform.parent.gameObject;
-    // 将物品设置在gridManager下，并设置层级，保证物品显示在整个背包之上
-    panelRectTransform.SetParent(parentRectTransform.transform);
-    siblingIndex = 10;
-    panelRectTransform.SetSiblingIndex(siblingIndex);
-    // 记录当前物品的起点位置
-    originalLocalPanelPosition = panelRectTransform.localPosition;
 
-    // 通过屏幕中的鼠标点，获取在父节点中的鼠标点
-    // parentRectTransform 父节点
-    // data.position当前鼠标位置
-    // data.pressEventCamera当前事件的摄像机
-    // originalLocalPointerPosition获取当前鼠标起点
-    RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRectTransform, eventData.position, eventData.pressEventCamera,
-        out originalLocalPointerPosition);
+    &#x2F;&#x2F; 鼠标起点
+    private Vector2 originalLocalPointerPosition;
+    &#x2F;&#x2F; 面板起点
+    private Vector3 originalLocalPanelPosition;
+    &#x2F;&#x2F; 当前物体
+    private RectTransform panelRectTransform;
+    &#x2F;&#x2F; 父节点
+    private RectTransform parentRectTransform;
 
-    Debug.Log(originalLocalPointerPosition.x + &quot; : &quot; + originalLocalPointerPosition.y);
-&#125;
+    &#x2F;&#x2F; 格子列表, 在gridList上一层添加一个新的空对象作为父节点
+    private GameObject gridManager;
+    &#x2F;&#x2F; 记录物品拖拽前的位置
+    private GameObject originalGrid;
 
-// 拖动
-public void OnDrag(PointerEventData eventData)
-&#123;
-    if(panelRectTransform == null  parentRectTransform == null)
+    private static int siblingIndex &#x3D; 0;
+
+
+    void Awake()
     &#123;
-        return;
+        panelRectTransform &#x3D; transform as RectTransform;
+        parentRectTransform &#x3D; GameObject.FindGameObjectWithTag(&quot;ScrollRect&quot;).GetComponent&lt;RectTransform&gt;() as RectTransform;
+        gridManager &#x3D; GameObject.Find(&quot;GridManager&quot;);
+
     &#125;
 
-    Vector2 localPointerPosition;
-    // 获取鼠标本地位置
-    if( RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRectTransform, eventData.position, eventData.pressEventCamera,
-        out localPointerPosition))
+    &#x2F;&#x2F; 按下鼠标
+    public void OnPointerDown(PointerEventData eventData)
     &#123;
-        // 移动位置 = 本地鼠标位置 - 鼠标起点位置
-        Vector3 offsetToOriginal = localPointerPosition - originalLocalPointerPosition;
-        // 当前物品位置 = 当前物品起点位置 + 移动位置
-        panelRectTransform.transform.localPosition = originalLocalPanelPosition + offsetToOriginal;
+        &#x2F;&#x2F; 记录物品当前所在格子信息
+        originalGrid &#x3D; panelRectTransform.parent.gameObject;
+        &#x2F;&#x2F; 将物品设置在gridManager下，并设置层级，保证物品显示在整个背包之上
+        panelRectTransform.SetParent(parentRectTransform.transform);
+        siblingIndex &#x3D; 10;
+        panelRectTransform.SetSiblingIndex(siblingIndex);
+        &#x2F;&#x2F; 记录当前物品的起点位置
+        originalLocalPanelPosition &#x3D; panelRectTransform.localPosition;
+
+        &#x2F;&#x2F; 通过屏幕中的鼠标点，获取在父节点中的鼠标点
+        &#x2F;&#x2F; parentRectTransform 父节点
+        &#x2F;&#x2F; data.position当前鼠标位置
+        &#x2F;&#x2F; data.pressEventCamera当前事件的摄像机
+        &#x2F;&#x2F; originalLocalPointerPosition获取当前鼠标起点
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRectTransform, eventData.position, eventData.pressEventCamera,
+            out originalLocalPointerPosition);
+
+        Debug.Log(originalLocalPointerPosition.x + &quot; : &quot; + originalLocalPointerPosition.y);
     &#125;
-&#125;
 
-
-
-public void OnPointerUp(PointerEventData eventData)
-&#123;
-    RaycastHit2D hit = Physics2D.Raycast(Input.mousePosition, -Vector2.up);
-
-    if( hit.collider != null)
+    &#x2F;&#x2F; 拖动
+    public void OnDrag(PointerEventData eventData)
     &#123;
-
-        GameObject g = hit.transform.gameObject;
-        Debug.Log(&quot; hit &quot; + g.tag + &quot; &quot;);
-        Debug.Log(g.transform.Find(&quot;Item(Clone)&quot;));
-        if ( hit.collider.gameObject.tag == &quot;Grid&quot; &amp;&amp; hit.collider.gameObject.transform.Find(&quot;Item(Clone)&quot;)==null)
+        if(panelRectTransform &#x3D;&#x3D; null  parentRectTransform &#x3D;&#x3D; null)
         &#123;
-            transform.SetParent(hit.transform);
+            return;
+        &#125;
+
+        Vector2 localPointerPosition;
+        &#x2F;&#x2F; 获取鼠标本地位置
+        if( RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRectTransform, eventData.position, eventData.pressEventCamera,
+            out localPointerPosition))
+        &#123;
+            &#x2F;&#x2F; 移动位置 &#x3D; 本地鼠标位置 - 鼠标起点位置
+            Vector3 offsetToOriginal &#x3D; localPointerPosition - originalLocalPointerPosition;
+            &#x2F;&#x2F; 当前物品位置 &#x3D; 当前物品起点位置 + 移动位置
+            panelRectTransform.transform.localPosition &#x3D; originalLocalPanelPosition + offsetToOriginal;
+        &#125;
+    &#125;
+
+    
+
+    public void OnPointerUp(PointerEventData eventData)
+    &#123;
+        RaycastHit2D hit &#x3D; Physics2D.Raycast(Input.mousePosition, -Vector2.up);
+        
+        if( hit.collider !&#x3D; null)
+        &#123;
+
+            GameObject g &#x3D; hit.transform.gameObject;
+            Debug.Log(&quot; hit &quot; + g.tag + &quot; &quot;);
+            Debug.Log(g.transform.Find(&quot;Item(Clone)&quot;));
+            if ( hit.collider.gameObject.tag &#x3D;&#x3D; &quot;Grid&quot; &amp;&amp; hit.collider.gameObject.transform.Find(&quot;Item(Clone)&quot;)&#x3D;&#x3D;null)
+            &#123;
+                transform.SetParent(hit.transform);
+            &#125;
+            else
+            &#123;
+                transform.SetParent(originalGrid.transform);
+            &#125;
         &#125;
         else
         &#123;
+            Debug.Log(&quot;not hit&quot;);
             transform.SetParent(originalGrid.transform);
         &#125;
+        &#x2F;&#x2F; 重置物品位置
+        transform.localPosition &#x3D; Vector3.zero;
     &#125;
-    else
-    &#123;
-        Debug.Log(&quot;not hit&quot;);
-        transform.SetParent(originalGrid.transform);
-    &#125;
-    // 重置物品位置
-    transform.localPosition = Vector3.zero;
+
 &#125;</code></pre>
-<p>}</p>
+
+
 
       
     </div>
@@ -451,6 +479,8 @@ public void OnPointerUp(PointerEventData eventData)
 
   
   <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/components/prism-core.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   

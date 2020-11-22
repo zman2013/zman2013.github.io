@@ -21,18 +21,18 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":true,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="1. 层级关系2D世界的物体都在Z轴同一位面（z&#x3D;0），摄像机在z&#x3D;-10进行拍摄。物体之间的层级关系通过Y轴的高地来进行计算遮挡关系，从而产生立体感。 设置步骤： 1. 设置根据Y轴进行排序 Edit -&gt; Project Setting -&gt; Graphics -&gt; Camera Settings -&gt; Transparent Sort Mode &#x3D;&gt; (x&#x3D;0,">
+  <meta name="description" content="1. 层级关系2D世界的物体都在Z轴同一位面（z&#x3D;0），摄像机在z&#x3D;-10进行拍摄。物体之间的层级关系通过Y轴的高地来进行计算遮挡关系，从而产生立体感。 设置步骤：   设置根据Y轴进行排序Edit -&gt; Project Setting -&gt; Graphics -&gt; Camera Settings -&gt; Transparent Sort Mode &#x3D;&gt; (x&#x3D;0,y&#x3D;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Unity 2D 基础知识">
 <meta property="og:url" content="http://zman2013.github.io/2019/11/01/wordpress/unity-2d-core-knowledge/index.html">
 <meta property="og:site_name" content="zmannotes">
-<meta property="og:description" content="1. 层级关系2D世界的物体都在Z轴同一位面（z&#x3D;0），摄像机在z&#x3D;-10进行拍摄。物体之间的层级关系通过Y轴的高地来进行计算遮挡关系，从而产生立体感。 设置步骤： 1. 设置根据Y轴进行排序 Edit -&gt; Project Setting -&gt; Graphics -&gt; Camera Settings -&gt; Transparent Sort Mode &#x3D;&gt; (x&#x3D;0,">
+<meta property="og:description" content="1. 层级关系2D世界的物体都在Z轴同一位面（z&#x3D;0），摄像机在z&#x3D;-10进行拍摄。物体之间的层级关系通过Y轴的高地来进行计算遮挡关系，从而产生立体感。 设置步骤：   设置根据Y轴进行排序Edit -&gt; Project Setting -&gt; Graphics -&gt; Camera Settings -&gt; Transparent Sort Mode &#x3D;&gt; (x&#x3D;0,y&#x3D;">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2019-11-01T13:39:02.000Z">
-<meta property="article:modified_time" content="2020-11-22T13:00:43.083Z">
+<meta property="article:modified_time" content="2020-11-22T14:51:03.627Z">
 <meta property="article:author" content="zman">
 <meta property="article:tag" content="2d">
 <meta name="twitter:card" content="summary">
@@ -255,7 +255,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-22 21:00:43" itemprop="dateModified" datetime="2020-11-22T21:00:43+08:00">2020-11-22</time>
+        <time title="Modified: 2020-11-22 22:51:03" itemprop="dateModified" datetime="2020-11-22T22:51:03+08:00">2020-11-22</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -277,8 +277,17 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h1 id="1-层级关系"><a href="#1-层级关系" class="headerlink" title="1. 层级关系"></a>1. 层级关系</h1><p>2D世界的物体都在Z轴同一位面（z=0），摄像机在z=-10进行拍摄。物体之间的层级关系通过Y轴的高地来进行计算遮挡关系，从而产生立体感。 设置步骤： 1. 设置根据Y轴进行排序 Edit -&gt; Project Setting -&gt; Graphics -&gt; Camera Settings -&gt; Transparent Sort Mode =&gt; (x=0,y=1,z=0) 2. 设置排序为Sprite中心点 Inspector -&gt; Sprite Render -&gt; Sprite Sort Point -&gt; Pivot 3. 调整Sprite的中心点 Assets -&gt; 选中目标Sprite -&gt; Edit Sprite -&gt; 调整Pivot</p>
-<h1 id="2-刚体、碰撞"><a href="#2-刚体、碰撞" class="headerlink" title="2. 刚体、碰撞"></a>2. 刚体、碰撞</h1><p>UnityEngine模拟了物理世界基本定律：可以通过给GameObject添加刚体（Rigidbody 2D）组件，GameObject便开始收到物理定律的影响（记得把Gravity置为0）。通过添加Collider2D实现碰撞效果。 1. 防止GameObject沿Z轴旋转 Inspector -&gt; Rigidbody 2D -&gt; Constraints -&gt; Freeze Rotation -&gt; 勾选z 2. Collider调整到物体下半部分效果比较真实，即正好是物体的占地面积。 3. OnTriggerEnter2D 任意一方勾选了Collider的trigger属性，使用此方法。物体之间可以发生碰撞，同时可以互相进入对方空间内部。 OnCollisionEnter2D不勾选trigger时使用，物体之间发生碰撞，无法进入对方空间。</p>
+        <h1 id="1-层级关系"><a href="#1-层级关系" class="headerlink" title="1. 层级关系"></a>1. 层级关系</h1><p>2D世界的物体都在Z轴同一位面（z=0），摄像机在z=-10进行拍摄。物体之间的层级关系通过Y轴的高地来进行计算遮挡关系，从而产生立体感。 设置步骤： </p>
+<ol>
+<li>设置根据Y轴进行排序<br>Edit -&gt; Project Setting -&gt; Graphics -&gt; Camera Settings -&gt; Transparent Sort Mode =&gt; (x=0,y=1,z=0) </li>
+<li>设置排序为Sprite中心点<br>Inspector -&gt; Sprite Render -&gt; Sprite Sort Point -&gt; Pivot 3. 调整Sprite的中心点 Assets -&gt; 选中目标Sprite -&gt; Edit Sprite -&gt; 调整Pivot</li>
+</ol>
+<h1 id="2-刚体、碰撞"><a href="#2-刚体、碰撞" class="headerlink" title="2. 刚体、碰撞"></a>2. 刚体、碰撞</h1><p>UnityEngine模拟了物理世界基本定律：可以通过给GameObject添加刚体（Rigidbody 2D）组件，GameObject便开始收到物理定律的影响（记得把Gravity置为0）。通过添加Collider2D实现碰撞效果。 </p>
+<ol>
+<li>防止GameObject沿Z轴旋转<br>Inspector -&gt; Rigidbody 2D -&gt; Constraints -&gt; Freeze Rotation -&gt; 勾选z </li>
+<li>Collider调整到物体下半部分效果比较真实，即正好是物体的占地面积。 </li>
+<li>OnTriggerEnter2D 任意一方勾选了Collider的trigger属性，使用此方法。物体之间可以发生碰撞，同时可以互相进入对方空间内部。 OnCollisionEnter2D不勾选trigger时使用，物体之间发生碰撞，无法进入对方空间。</li>
+</ol>
 <h1 id="3-动画"><a href="#3-动画" class="headerlink" title="3. 动画"></a>3. 动画</h1><p>Animation -&gt; 动画（内容） Animator -&gt; GameObject的Component Animation Controller -&gt; 动画状态控制器，可以从一个状态转变为另一个状态 Blend State 挺有趣的（组合多个状态进行叠加）</p>
 <h1 id="4-声音"><a href="#4-声音" class="headerlink" title="4. 声音"></a>4. 声音</h1><p>Audio Source -&gt; 声源 Audio Listener -&gt; 喇叭 Audio Clip -&gt; 声音内容 Clip 放到 Source 中进行播放，Listener负责接收</p>
 <h1 id="5-RectTransform"><a href="#5-RectTransform" class="headerlink" title="5. RectTransform"></a>5. RectTransform</h1><p>UI对象的中心点(Pivot) -&gt; Unity开始渲染图像时从中心点开始渲染 UI对象的锚点(Anchor) -&gt; 与父对象的相对位置是通过计算与Anchor的相对位置计算的 UI的对象在Screen坐标中，不在World坐标，需要进行转换。</p>
@@ -368,6 +377,8 @@
 
   
   <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/components/prism-core.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   

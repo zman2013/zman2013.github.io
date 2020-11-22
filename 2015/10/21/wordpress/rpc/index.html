@@ -21,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":true,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
   <meta name="description" content="详细介绍基于RPC的系统与本地调用程序、常用的网络系统的区别，和基本的RPC系统如何实现。 RPC是什么RPC（Remote Procedure Call）从字面理解就是远程过程调用，即像调用本地方法一样调用网络另一端系统中的一段逻辑。我们常说的RPC指的是RPC框架，一个把网络请求、数据编码都封装好的框架或者lib库，内部逻辑对开发人员是透明的，开发人员只关心调用了一个（远程）方法，然后得到了结">
@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2015/10/%E8%AF%A6%E7%BB%86RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%842.jpg">
 <meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%861.jpg">
 <meta property="article:published_time" content="2015-10-21T23:22:47.000Z">
-<meta property="article:modified_time" content="2020-11-22T13:00:43.083Z">
+<meta property="article:modified_time" content="2020-11-22T14:51:03.623Z">
 <meta property="article:author" content="zman">
 <meta property="article:tag" content="Proxy">
 <meta property="article:tag" content="RPC">
@@ -265,7 +265,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-22 21:00:43" itemprop="dateModified" datetime="2020-11-22T21:00:43+08:00">2020-11-22</time>
+        <time title="Modified: 2020-11-22 22:51:03" itemprop="dateModified" datetime="2020-11-22T22:51:03+08:00">2020-11-22</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -507,6 +507,8 @@ public synchronized &lt;T&gt; T getProxy(final Class&lt;T&gt; inteface) &#123;
 
   
   <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/components/prism-core.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   

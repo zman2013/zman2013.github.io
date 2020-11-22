@@ -21,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":true,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
   <meta property="og:type" content="website">
@@ -249,7 +249,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-22 21:00:43" itemprop="dateModified" datetime="2020-11-22T21:00:43+08:00">2020-11-22</time>
+        <time title="Modified: 2020-11-22 22:51:03" itemprop="dateModified" datetime="2020-11-22T22:51:03+08:00">2020-11-22</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,71 +271,86 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p># Table样式</p>
-<h2 id="设置边框"><a href="#设置边框" class="headerlink" title="设置边框"></a>设置边框</h2><p>```html</p>
-<style>
+          <h1 id="Table样式"><a href="#Table样式" class="headerlink" title="Table样式"></a>Table样式</h1><h2 id="设置边框"><a href="#设置边框" class="headerlink" title="设置边框"></a>设置边框</h2><pre class="language-html" data-language="html"><code class="language-html">&lt;style&gt;
     .el-table--border:after,
     .el-table--group:after,
-    .el-table:before {
+    .el-table:before &#123;
         background-color: #cccccc;
-    }
+    &#125;
 
     .el-table--border,
-    .el-table--group {
+    .el-table--group &#123;
         border-color: #cccccc;
-    }
+    &#125;
 
     .el-table td,
-    .el-table th.is-leaf {
+    .el-table th.is-leaf &#123;
         border-bottom: 1px solid #cccccc;
-    }
+    &#125;
 
     .el-table--border th,
-    .el-table--border th.gutter:last-of-type {
+    .el-table--border th.gutter:last-of-type &#123;
         border-bottom: 1px solid #cccccc;
-    }
+    &#125;
 
     .el-table--border td,
-    .el-table--border th {
+    .el-table--border th &#123;
         border-right: 1px solid #cccccc;
-    }
-</style>
+    &#125;
+&lt;&#x2F;style&gt;
 
-<p><el-table
-    :data="dataList"
-    border><br></el-table></p>
-<p>```</p>
-<h2 id="设置排序-amp-默认排序"><a href="#设置排序-amp-默认排序" class="headerlink" title="设置排序&amp;默认排序"></a>设置排序&amp;默认排序</h2><p>```html<br><el-table
-    :data="dataList"
-    :default-sort = "{prop: 'createtime', order: 'descending'}"><br>    <el-table-column
-            prop="createtime"
-            label="创建时间"
+&lt;el-table
+    :data&#x3D;&quot;dataList&quot;
+    border&gt;
+&lt;&#x2F;el-table&gt;
+</code></pre>
+<h2 id="设置排序-amp-默认排序"><a href="#设置排序-amp-默认排序" class="headerlink" title="设置排序&amp;默认排序"></a>设置排序&amp;默认排序</h2><pre class="language-html" data-language="html"><code class="language-html">&lt;el-table
+    :data&#x3D;&quot;dataList&quot;
+    :default-sort &#x3D; &quot;&#123;prop: &#39;createtime&#39;, order: &#39;descending&#39;&#125;&quot;&gt;
+    &lt;el-table-column
+            prop&#x3D;&quot;createtime&quot;
+            label&#x3D;&quot;创建时间&quot;
             sortable
-            width="200"><br>    </el-table-column><br></el-table><br>```</p>
-<h2 id="根据内容适配宽度"><a href="#根据内容适配宽度" class="headerlink" title="根据内容适配宽度"></a>根据内容适配宽度</h2><p>```html<br><el-table
-    :data="dataList"
-    style="width:fit-content"><br></el-table><br>```</p>
-<h2 id="默认单元格样式"><a href="#默认单元格样式" class="headerlink" title="默认单元格样式"></a>默认单元格样式</h2><p>```html<br><el-table :data="dataList"><br>    <el-table-column
-            prop="name"
-            label="名称"
-            width="150"><br>    </el-table-column><br></el-table><br>```</p>
-<h2 id="自定义单元格样式"><a href="#自定义单元格样式" class="headerlink" title="自定义单元格样式"></a>自定义单元格样式</h2><p>```html<br><el-table :data="dataList"><br>    <el-table-column
-            prop="version"
-            label="版本"
-            width="150"><br>        <template slot-scope="scope"><br>            <el-input v-model="scope.row.version"></el-input><br>        </template><br>    </el-table-column><br></el-table></p>
-<el-table :data="dataList">
-    <el-table-column
-            label="操作"
-            width="100">
-        <template slot-scope="scope">
-            <el-button
-                    size="mini"
-                    type="danger"
-                    @click="deleteEcu(scope.$index, scope.row)">删除</el-button>
-        </template>
-    </el-table-column>
-</el-table>
-\`\`\`
+            width&#x3D;&quot;200&quot;&gt;
+    &lt;&#x2F;el-table-column&gt;
+&lt;&#x2F;el-table&gt;</code></pre>
+
+<h2 id="根据内容适配宽度"><a href="#根据内容适配宽度" class="headerlink" title="根据内容适配宽度"></a>根据内容适配宽度</h2><pre class="language-html" data-language="html"><code class="language-html">&lt;el-table
+    :data&#x3D;&quot;dataList&quot;
+    style&#x3D;&quot;width:fit-content&quot;&gt;
+&lt;&#x2F;el-table&gt;</code></pre>
+
+<h2 id="默认单元格样式"><a href="#默认单元格样式" class="headerlink" title="默认单元格样式"></a>默认单元格样式</h2><pre class="language-html" data-language="html"><code class="language-html">&lt;el-table :data&#x3D;&quot;dataList&quot;&gt;
+    &lt;el-table-column
+            prop&#x3D;&quot;name&quot;
+            label&#x3D;&quot;名称&quot;
+            width&#x3D;&quot;150&quot;&gt;
+    &lt;&#x2F;el-table-column&gt;
+&lt;&#x2F;el-table&gt;</code></pre>
+
+<h2 id="自定义单元格样式"><a href="#自定义单元格样式" class="headerlink" title="自定义单元格样式"></a>自定义单元格样式</h2><pre class="language-html" data-language="html"><code class="language-html">&lt;el-table :data&#x3D;&quot;dataList&quot;&gt;
+    &lt;el-table-column
+            prop&#x3D;&quot;version&quot;
+            label&#x3D;&quot;版本&quot;
+            width&#x3D;&quot;150&quot;&gt;
+        &lt;template slot-scope&#x3D;&quot;scope&quot;&gt;
+            &lt;el-input v-model&#x3D;&quot;scope.row.version&quot;&gt;&lt;&#x2F;el-input&gt;
+        &lt;&#x2F;template&gt;
+    &lt;&#x2F;el-table-column&gt;
+&lt;&#x2F;el-table&gt;
+
+&lt;el-table :data&#x3D;&quot;dataList&quot;&gt;
+    &lt;el-table-column
+            label&#x3D;&quot;操作&quot;
+            width&#x3D;&quot;100&quot;&gt;
+        &lt;template slot-scope&#x3D;&quot;scope&quot;&gt;
+            &lt;el-button
+                    size&#x3D;&quot;mini&quot;
+                    type&#x3D;&quot;danger&quot;
+                    @click&#x3D;&quot;deleteEcu(scope.$index, scope.row)&quot;&gt;删除&lt;&#x2F;el-button&gt;
+        &lt;&#x2F;template&gt;
+    &lt;&#x2F;el-table-column&gt;
+&lt;&#x2F;el-table&gt;</code></pre>
       
     </div>
 
@@ -411,6 +426,8 @@
 
   
   <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/components/prism-core.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   

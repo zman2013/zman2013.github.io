@@ -21,18 +21,18 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":true,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="There is a deeper, platonic abstraction, where a streams is just an array in time, instead of in space. And all the various streaming “abstractions” are just crude implementations of this abstract ide">
+  <meta name="description" content="There is a deeper, platonic abstraction, where a streams is just an array in time, instead of in space. And all the various streaming &quot;abstractions&quot; are just crude implementations of this ab">
 <meta property="og:type" content="article">
 <meta property="og:title" content="A stream is just an array in time">
 <meta property="og:url" content="http://zman2013.github.io/2019/11/11/wordpress/a-stream-is-just-an-array-in-time/index.html">
 <meta property="og:site_name" content="zmannotes">
-<meta property="og:description" content="There is a deeper, platonic abstraction, where a streams is just an array in time, instead of in space. And all the various streaming “abstractions” are just crude implementations of this abstract ide">
+<meta property="og:description" content="There is a deeper, platonic abstraction, where a streams is just an array in time, instead of in space. And all the various streaming &quot;abstractions&quot; are just crude implementations of this ab">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2019-11-11T15:27:36.000Z">
-<meta property="article:modified_time" content="2020-11-22T13:00:43.079Z">
+<meta property="article:modified_time" content="2020-11-22T14:51:03.619Z">
 <meta property="article:author" content="zman">
 <meta property="article:tag" content="backpressure">
 <meta name="twitter:card" content="summary">
@@ -254,7 +254,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-22 21:00:43" itemprop="dateModified" datetime="2020-11-22T21:00:43+08:00">2020-11-22</time>
+        <time title="Modified: 2020-11-22 22:51:03" itemprop="dateModified" datetime="2020-11-22T22:51:03+08:00">2020-11-22</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -280,46 +280,98 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p><em>There is a deeper, platonic abstraction, where a streams is just an array in time, instead of in space. And all the various streaming “abstractions” are just crude implementations of this abstract idea.</em> <em>-- pull-stream</em>   如果Stream可以分版本，我理解目前是2.1。 Stream 1.0 是一个有限集合，消费者通过foreach遍历集合内部元素。 Stream 2.0 是一个无限集合，集合内部的元素随着时间不断产生，由生产者不断推向消费者，消费者被动接收。 Stream 2.1 解决了2.0实际使用中出现的backpressure和error propagation问题，元素传递的决策权交由消费者进行控制。 Stream 2.1有两个组织分别提出了不同的解决思路：reactive-streams、pull-stream。RxJava采用的是reactive-streams，JDK9的Flow基于reactive-streams。IPFS采用了pull-stream。 reactive-streams提出了一套规范，并且声明主要目标就是解决backpressure问题，核心思路是Subscriber声明自己能承受的请求数量n，Publisher根据n决定推送元素的个数。 <strong>pull-stream实在是只有天才的大脑才能想出来，两个函数搞定~</strong> 主要想介绍这两个函数，因为实在憋不住不分享出来。</p>
-<p>var n = 5;</p>
-<p>// random is a source 5 of random numbers.<br>function random (end, cb) {<br>  if(end) return cb(end)<br>  // only read n times, then stop.<br>  if(0 &gt; –n) return cb(true)<br>  cb(null, Math.random())<br>}</p>
-<p>// logger reads a source and logs it.<br>function logger (read) {<br>  read(null, function next(end, data) {<br>    if(end === true) return<br>    if(end) throw end</p>
-<pre><code>console.log(data)
-read(null, next)</code></pre>
-<p>  })<br>}</p>
-<p>logger(random) //“pipe” the streams.</p>
-<p>上面两个函数random为source（publisher/observer/producer），logger为sink（subscriber/consumer），实现了logger主动从random中读取一个随机数，并且”是否读取“、”何时终止“都由logger控制，例子中logger的逻辑会一直读取到random最后一个元素。</p>
-<p><strong>翻译成Java</strong></p>
-<p>private int n = 5;<br>…<br>// 每次读取，提供一个随机数<br>public void read(boolean end, BiConsumer&lt;Boolean, Integer&gt; cb){<br>    if(end){  // 结束<br>        cb.accept(end, null);<br>        return;<br>    }</p>
-<pre><code>if( n-- &lt; 0 )&#123;  // 读完所有元素
-    cb.accept(true, null);
-    return;
+        <p><code>There is a deeper, platonic abstraction, where a streams is just an array in time, instead of in space. And all the various streaming &quot;abstractions&quot; are just crude implementations of this abstract idea.</code> <em>-- pull-stream</em>   </p>
+<p>如果Stream可以分版本，我理解目前是2.1。<br>Stream 1.0 是一个有限集合，消费者通过foreach遍历集合内部元素。<br>Stream 2.0 是一个无限集合，集合内部的元素随着时间不断产生，由生产者不断推向消费者，消费者被动接收。<br>Stream 2.1 解决了2.0实际使用中出现的backpressure和error propagation问题，元素传递的决策权交由消费者进行控制。 Stream 2.1有两个组织分别提出了不同的解决思路：reactive-streams、pull-stream。RxJava采用的是reactive-streams，JDK9的Flow基于reactive-streams。IPFS采用了pull-stream。 reactive-streams提出了一套规范，并且声明主要目标就是解决backpressure问题，核心思路是Subscriber声明自己能承受的请求数量n，Publisher根据n决定推送元素的个数。 </p>
+<p><strong>pull-stream实在是只有天才的大脑才能想出来，两个函数搞定~</strong> 主要想介绍这两个函数，因为实在憋不住不分享出来。</p>
+<pre class="language-js" data-language="js"><code class="language-js">var n &#x3D; 5;
+
+&#x2F;&#x2F; random is a source 5 of random numbers.
+function random (end, cb) &#123;
+  if(end) return cb(end)
+  &#x2F;&#x2F; only read n times, then stop.
+  if(0 &gt; --n) return cb(true)
+  cb(null, Math.random())
 &#125;
 
-cb.accept(false, new Random().nextInt());  // 回调</code></pre>
-<p>}</p>
-<p>// 从read中读取并打印所有数据<br>public void logger(BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; read){</p>
-<pre><code>Holder&lt;BiConsumer&lt;Boolean, Integer&gt;&gt; holder = new Holder&lt;&gt;();
-holder.value  = (end, data) -&gt; &#123;
-    if( end )   return;
+&#x2F;&#x2F; logger reads a source and logs it.
+function logger (read) &#123;
+  read(null, function next(end, data) &#123;
+    if(end &#x3D;&#x3D;&#x3D; true) return
+    if(end) throw end
 
-    System.out.println(data);
-    read.accept(false, holder.value);  // 递归
-&#125;;
+    console.log(data)
+    read(null, next)
+  &#125;)
+&#125;
 
-read.accept(false, holder.value);</code></pre>
-<p>}<br>…<br>logger(this::read);  // pipe</p>
+logger(random) &#x2F;&#x2F;&quot;pipe&quot; the streams.</code></pre>
+
+<p>上面两个函数random为source（publisher/observer/producer），logger为sink（subscriber/consumer），实现了logger主动从random中读取一个随机数，并且”是否读取“、”何时终止“都由logger控制，例子中logger的逻辑会一直读取到random最后一个元素。</p>
+<p><strong>翻译成Java</strong></p>
+<pre class="language-java" data-language="java"><code class="language-java">private int n &#x3D; 5;
+...
+&#x2F;&#x2F; 每次读取，提供一个随机数
+public void read(boolean end, BiConsumer&lt;Boolean, Integer&gt; cb)&#123;
+    if(end)&#123;  &#x2F;&#x2F; 结束
+        cb.accept(end, null);
+        return;
+    &#125;
+
+    if( n-- &lt; 0 )&#123;  &#x2F;&#x2F; 读完所有元素
+        cb.accept(true, null);
+        return;
+    &#125;
+
+    cb.accept(false, new Random().nextInt());  &#x2F;&#x2F; 回调
+&#125;
+
+&#x2F;&#x2F; 从read中读取并打印所有数据
+public void logger(BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; read)&#123;
+
+    Holder&lt;BiConsumer&lt;Boolean, Integer&gt;&gt; holder &#x3D; new Holder&lt;&gt;();
+    holder.value  &#x3D; (end, data) -&gt; &#123;
+        if( end )   return;
+
+        System.out.println(data);
+        read.accept(false, holder.value);  &#x2F;&#x2F; 递归
+    &#125;;
+
+    read.accept(false, holder.value);
+&#125;
+...
+logger(this::read);  &#x2F;&#x2F; pipe</code></pre>
+
 <p>基于pull-stream思想，可以很简洁的写出rxJava和jdk-lambda的核心功能，比如.map</p>
-<p>// 所有元素*3<br>public BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; triple(<br>            BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; readable) {</p>
-<pre><code>return (end, f) -&gt;
-    readable.accept(end, (isEnd, data) -&gt;
-        f.accept(isEnd, isEnd ? null :3 \* data) // 所有元素\*3
-    );</code></pre>
-<p>}<br>…<br>logger( this.triple(this::read) );</p>
+<pre class="language-java" data-language="java"><code class="language-java">&#x2F;&#x2F; 所有元素\*3
+public BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; triple(
+            BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; readable) &#123;
+
+    return (end, f) -&gt;
+        readable.accept(end, (isEnd, data) -&gt;
+            f.accept(isEnd, isEnd ? null :3 \* data) &#x2F;&#x2F; 所有元素\*3
+        );
+&#125;
+...
+logger( this.triple(this::read) );</code></pre>
+
 <p>上面的调用可读性已经比较差了，优化一下：</p>
-<p>public class Pull{<br>    // 从source读取数据，经through转换后，由sink存储<br>    public static void pull(BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; source,<br>                     Function&lt;BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt;,<br>                             BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt;&gt; through,<br>                     Consumer&lt;BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt;&gt; sink<br>                     ){<br>        sink.accept(through.apply(source));<br>    }<br>}<br>…<br>// 随机数 -&gt; * 3 -&gt; 输出到stdio<br>Pull.pull(this::read, this::triple, this::logger);</p>
+<pre class="language-java" data-language="java"><code class="language-java">public class Pull&#123;
+    &#x2F;&#x2F; 从source读取数据，经through转换后，由sink存储
+    public static void pull(BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; source,
+                     Function&lt;BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt;,
+                             BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt;&gt; through,
+                     Consumer&lt;BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt;&gt; sink
+                     )&#123;
+        sink.accept(through.apply(source));
+    &#125;
+&#125;
+...
+&#x2F;&#x2F; 随机数 -&gt; \* 3 -&gt; 输出到stdio
+Pull.pull(this::read, this::triple, this::logger);</code></pre>
+
 <p>这样调用起来就便捷多了，在接口设计上一定站在使用方的角度去思考。</p>
-<p>  另外，你很可能遇到reactivex.io，reactivex目标是提供便捷的reactive API。reactive-streams != ReactiveX，rx内的工具主要是2.0规范，比如rxjs没有实现backpressure，而rxjava遵从reactive-streams实现了backpressure。 <strong>官方</strong> <a target="_blank" rel="noopener" href="https://pull-stream.github.io/">https://pull-stream.github.io/</a> <a target="_blank" rel="noopener" href="http://www.reactive-streams.org/">http://www.reactive-streams.org/</a>   公众号写的一篇直接搬过来了 欢迎订阅：赫拉迪姆</p>
+<p>  另外，你很可能遇到reactivex.io，reactivex目标是提供便捷的reactive API。reactive-streams != ReactiveX，rx内的工具主要是2.0规范，比如rxjs没有实现backpressure，而rxjava遵从reactive-streams实现了backpressure。 </p>
+<p><strong>官方</strong><br><a target="_blank" rel="noopener" href="https://pull-stream.github.io/">https://pull-stream.github.io/</a><br><a target="_blank" rel="noopener" href="http://www.reactive-streams.org/">http://www.reactive-streams.org/</a>   </p>
 
     </div>
 
@@ -405,6 +457,8 @@ read.accept(false, holder.value);</code></pre>
 
   
   <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/components/prism-core.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   

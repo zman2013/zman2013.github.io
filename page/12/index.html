@@ -21,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":true,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
   <meta property="og:type" content="website">
@@ -249,7 +249,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-22 21:00:43" itemprop="dateModified" datetime="2020-11-22T21:00:43+08:00">2020-11-22</time>
+        <time title="Modified: 2020-11-22 22:51:03" itemprop="dateModified" datetime="2020-11-22T22:51:03+08:00">2020-11-22</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,52 +271,49 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="核心命令"><a href="#核心命令" class="headerlink" title="核心命令"></a>核心命令</h3><p>kubectl get - list resources</p>
-<p>kubectl describe - show detailed information about a resource</p>
-<p>kubectl logs - print the logs from a container in a pod</p>
-<p>kubectl exec - execute a command on a contain in a pod</p>
-<h3 id="1-get"><a href="#1-get" class="headerlink" title="1. get"></a>1. get</h3><p>    1.1 查看nodes</p>
-<p>        kubectl get nodes</p>
-<p>    1.2 查看pod</p>
-<p>        kubectl get pod</p>
-<p>    1.3 查看deployment</p>
-<p>        kubectl get deployments</p>
-<h3 id="2-describe"><a href="#2-describe" class="headerlink" title="2. describe"></a>2. describe</h3><p>    2.1 查看详情</p>
-<p>        kubectl describe pods</p>
-<p>            kubectl describe pods $POD_NAME</p>
-<p>        kubectl describe nodes</p>
-<h3 id="3-exec"><a href="#3-exec" class="headerlink" title="3. exec"></a>3. exec</h3><p>    3.1 调用pod内部命令</p>
-<p>        kubectl exec -ti $POD_NAME curl localhost:8080</p>
-<p>    3.2 启动容器bash</p>
-<p>        kubectl exec -ti $POD_NAME bash    （退出：exit）</p>
-<h3 id="4-删除service"><a href="#4-删除service" class="headerlink" title="4. 删除service"></a>4. 删除service</h3><p>kubectl delete service -l run=kubernetes-bootcamp</p>
-<h3 id="5-查看版本"><a href="#5-查看版本" class="headerlink" title="5. 查看版本"></a>5. 查看版本</h3><p>kubectl version</p>
-<h3 id="6-查看集群信息"><a href="#6-查看集群信息" class="headerlink" title="6. 查看集群信息"></a>6. 查看集群信息</h3><p>kubectl cluster-info</p>
-<h3 id="7-创建一个deployment"><a href="#7-创建一个deployment" class="headerlink" title="7. 创建一个deployment"></a>7. 创建一个deployment</h3><p>kubectl run kubernetes-bootcamp –image=docker.io/jocatalin/kubernetes-bootcamp:v1 –port=8080</p>
-<h3 id="8-暴露服务到外网（即：创建一个service）"><a href="#8-暴露服务到外网（即：创建一个service）" class="headerlink" title="8. 暴露服务到外网（即：创建一个service）"></a>8. 暴露服务到外网（即：创建一个service）</h3><p>    8.1 创建service</p>
-<p>        kubectl expose deployment/kubernetes-bootcamp –type=”NodePort” –port 8080    (port: 为pod监听的端口）</p>
-<p>    8.2 查看service</p>
-<p>        kubectl describe service</p>
-<p>        kubectl describe services/kubernetes-bootcamp</p>
-<p>    8.3 删除service</p>
-<p>        kubectl delete service $SERVICE_NAME</p>
-<p>        kubectl delete service -l run=kubernetes-bootcamp</p>
-<h3 id="9-标签的使用（label）"><a href="#9-标签的使用（label）" class="headerlink" title="9. 标签的使用（label）"></a>9. 标签的使用（label）</h3><p>    9.1 打标签</p>
-<p>        kubectl label pod $POD_NAME app=v1</p>
-<p>    9.2 使用标签过滤</p>
-<p>        kubectl get pods -l app=v1</p>
-<h3 id="10-scale"><a href="#10-scale" class="headerlink" title="10. scale"></a>10. scale</h3><p>kubectl scale deployments/kubernetes-bootcamp –replicas=2</p>
-<h3 id="11-平滑升级、回滚"><a href="#11-平滑升级、回滚" class="headerlink" title="11. 平滑升级、回滚"></a>11. 平滑升级、回滚</h3><p>    11.1 <strong>升级</strong></p>
-<p>        kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2</p>
-<p>    11.2 <strong>检查状态</strong></p>
-<p>        11.2.1 通过service访问服务接口</p>
-<p>        11.2.2 kubectl rollout status deployments/kubernetes-bootcamp</p>
-<p>    11.3 <strong>回滚</strong></p>
-<p>        kubectl rollout undo deployments/kubernetes-bootcamp</p>
+          <h3 id="核心命令"><a href="#核心命令" class="headerlink" title="核心命令"></a>核心命令</h3><pre class="language-shell" data-language="shell"><code class="language-shell">kubectl get - list resources
+
+kubectl describe - show detailed information about a resource
+
+kubectl logs - print the logs from a container in a pod
+
+kubectl exec - execute a command on a contain in a pod</code></pre>
+<h3 id="1-get"><a href="#1-get" class="headerlink" title="1. get"></a>1. get</h3><p>1.1 查看nodes<br><code>kubectl get nodes</code></p>
+<p>1.2 查看pod</p>
+<p><code>kubectl get pod</code></p>
+<p>1.3 查看deployment</p>
+<p><code>kubectl get deployments</code></p>
+<h3 id="2-describe"><a href="#2-describe" class="headerlink" title="2. describe"></a>2. describe</h3><p>2.1 查看详情</p>
+<pre class="language-shell" data-language="shell"><code class="language-shell">kubectl describe pods
+
+kubectl describe pods $POD_NAME
+
+kubectl describe nodes</code></pre>
+<h3 id="3-exec"><a href="#3-exec" class="headerlink" title="3. exec"></a>3. exec</h3><p>3.1 调用pod内部命令</p>
+<p><code>kubectl exec -ti $POD_NAME curl localhost:8080</code></p>
+<p>3.2 启动容器bash</p>
+<p><code>kubectl exec -ti $POD_NAME bash    （退出：exit）</code></p>
+<h3 id="4-删除service"><a href="#4-删除service" class="headerlink" title="4. 删除service"></a>4. 删除service</h3><p><code>kubectl delete service -l run=kubernetes-bootcamp</code></p>
+<h3 id="5-查看版本"><a href="#5-查看版本" class="headerlink" title="5. 查看版本"></a>5. 查看版本</h3><p><code>kubectl version</code></p>
+<h3 id="6-查看集群信息"><a href="#6-查看集群信息" class="headerlink" title="6. 查看集群信息"></a>6. 查看集群信息</h3><p><code>kubectl cluster-info</code></p>
+<h3 id="7-创建一个deployment"><a href="#7-创建一个deployment" class="headerlink" title="7. 创建一个deployment"></a>7. 创建一个deployment</h3><p><code>kubectl run kubernetes-bootcamp --image=docker.io/jocatalin/kubernetes-bootcamp:v1 --port=8080</code></p>
+<h3 id="8-暴露服务到外网（即：创建一个service）"><a href="#8-暴露服务到外网（即：创建一个service）" class="headerlink" title="8. 暴露服务到外网（即：创建一个service）"></a>8. 暴露服务到外网（即：创建一个service）</h3><p>8.1 创建service<br><code>kubectl expose deployment/kubernetes-bootcamp --type=&quot;NodePort&quot; --port 8080    (port: 为pod监听的端口）</code><br>8.2 查看service</p>
+<pre class="language-shell" data-language="shell"><code class="language-shell">kubectl describe service
+kubectl describe services&#x2F;kubernetes-bootcamp</code></pre>
+
+<p>8.3 删除service</p>
+<pre class="language-shell" data-language="shell"><code class="language-shell">kubectl delete service $SERVICE_NAME
+
+kubectl delete service -l run&#x3D;kubernetes-bootcamp</code></pre>
+
+<h3 id="9-标签的使用（label）"><a href="#9-标签的使用（label）" class="headerlink" title="9. 标签的使用（label）"></a>9. 标签的使用（label）</h3><p>9.1 打标签<br><code>kubectl label pod $POD_NAME app=v1</code></p>
+<p>9.2 使用标签过滤<br><code>kubectl get pods -l app=v1</code></p>
+<h3 id="10-scale"><a href="#10-scale" class="headerlink" title="10. scale"></a>10. scale</h3><p><code>kubectl scale deployments/kubernetes-bootcamp --replicas=2</code></p>
+<h3 id="11-平滑升级、回滚"><a href="#11-平滑升级、回滚" class="headerlink" title="11. 平滑升级、回滚"></a>11. 平滑升级、回滚</h3><p>11.1 <strong>升级</strong><br><code>kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2</code></p>
+<p>11.2 <strong>检查状态</strong><br>11.2.1 通过service访问服务接口<br>11.2.2 kubectl rollout status deployments/kubernetes-bootcamp<br>11.3 <strong>回滚</strong><br><code>kubectl rollout undo deployments/kubernetes-bootcamp</code></p>
 <h3 id="12-namespace"><a href="#12-namespace" class="headerlink" title="12. namespace"></a>12. namespace</h3><p>kubectl create namespace mem-example</p>
 <p>kubectl create -f <a target="_blank" rel="noopener" href="https://k8s.io/docs/tasks/configure-pod-container/memory-request-limit.yaml">https://k8s.io/docs/tasks/configure-pod-container/memory-request-limit.yaml</a> –namespace=mem-example</p>
-<p>kubectl get pod memory-demo –namespace=mem-example</p>
-<p> LINK <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/user-guide/kubectl/v1.7/">Kubectl API</a></p>
+<p><code>kubectl get pod memory-demo --namespace=mem-example</code><br> LINK <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/user-guide/kubectl/v1.7/">Kubectl API</a></p>
 
       
     </div>
@@ -393,6 +390,8 @@
 
   
   <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/components/prism-core.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   

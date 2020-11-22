@@ -21,28 +21,28 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":true,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="解密TLS报文1. 预备知识  拥有服务器端证书对应的私钥  加密算法不能使DHE、ECDHE  报文必须完整，从TCP握手开始  2. 操作步骤2.1 抓取报文2.1.1 Linux服务器上抓取tcp报文tcpdump -i eth0  port 10176 -w server.cap -C 50 -i 指定网卡名-w 输出到文件 -C 文件分割大小，单位Mport 指定监听端口2.1.2 An">
+  <meta name="description" content="解密TLS报文1. 预备知识  拥有服务器端证书对应的私钥  加密算法不能使DHE、ECDHE  报文必须完整，从TCP握手开始  2. 操作步骤2.1 抓取报文2.1.1 Linux服务器上抓取tcp报文tcpdump -i eth0  port 10176 -w server.cap -C 50 # -i 指定网卡名 # -w 输出到文件  # -C 文件分割大小，单位M # port 指定监">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Wireshark解密TLS报文">
 <meta property="og:url" content="http://zman2013.github.io/2019/05/01/wordpress/wireshark-decrypt-tls/index.html">
 <meta property="og:site_name" content="zmannotes">
-<meta property="og:description" content="解密TLS报文1. 预备知识  拥有服务器端证书对应的私钥  加密算法不能使DHE、ECDHE  报文必须完整，从TCP握手开始  2. 操作步骤2.1 抓取报文2.1.1 Linux服务器上抓取tcp报文tcpdump -i eth0  port 10176 -w server.cap -C 50 -i 指定网卡名-w 输出到文件 -C 文件分割大小，单位Mport 指定监听端口2.1.2 An">
+<meta property="og:description" content="解密TLS报文1. 预备知识  拥有服务器端证书对应的私钥  加密算法不能使DHE、ECDHE  报文必须完整，从TCP握手开始  2. 操作步骤2.1 抓取报文2.1.1 Linux服务器上抓取tcp报文tcpdump -i eth0  port 10176 -w server.cap -C 50 # -i 指定网卡名 # -w 输出到文件  # -C 文件分割大小，单位M # port 指定监">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2019/05/Screen-Shot-2019-05-01-at-8.56.23-PM-300x220.png">
-<meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2019/05/Screen-Shot-2019-05-01-at-9.17.41-PM-300x219.png">
-<meta property="og:image" content="https://www.zmannotes.com/wp-content/uploads/2019/05/Screen-Shot-2019-05-01-at-9.29.36-PM-300x180.png">
+<meta property="og:image" content="http://zman2013.github.io/2019/05/01/wordpress/wireshark-decrypt-tls/Screen-Shot-2019-05-01-at-8.56.23-PM-750x410.png">
+<meta property="og:image" content="http://zman2013.github.io/2019/05/01/wordpress/wireshark-decrypt-tls/Screen-Shot-2019-05-01-at-9.17.41-PM-750x410.png">
+<meta property="og:image" content="http://zman2013.github.io/2019/05/01/wordpress/wireshark-decrypt-tls/Screen-Shot-2019-05-01-at-9.29.36-PM-750x410.png">
 <meta property="article:published_time" content="2019-05-01T13:51:57.000Z">
-<meta property="article:modified_time" content="2020-11-22T13:00:43.083Z">
+<meta property="article:modified_time" content="2020-11-22T14:51:03.627Z">
 <meta property="article:author" content="zman">
 <meta property="article:tag" content="decrypt">
 <meta property="article:tag" content="tcp">
 <meta property="article:tag" content="tcpdump">
 <meta property="article:tag" content="wireshark">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.zmannotes.com/wp-content/uploads/2019/05/Screen-Shot-2019-05-01-at-8.56.23-PM-300x220.png">
+<meta name="twitter:image" content="http://zman2013.github.io/2019/05/01/wordpress/wireshark-decrypt-tls/Screen-Shot-2019-05-01-at-8.56.23-PM-750x410.png">
 
 
 <link rel="canonical" href="http://zman2013.github.io/2019/05/01/wordpress/wireshark-decrypt-tls/">
@@ -181,7 +181,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86TLS%E6%8A%A5%E6%96%87"><span class="nav-number">1.</span> <span class="nav-text">解密TLS报文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">1. 预备知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.2.</span> <span class="nav-text">2. 操作步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%8A%93%E5%8F%96%E6%8A%A5%E6%96%87"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 抓取报文</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E6%8A%93%E5%8F%96tcp%E6%8A%A5%E6%96%87"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">2.1.1 Linux服务器上抓取tcp报文</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#i-%E6%8C%87%E5%AE%9A%E7%BD%91%E5%8D%A1%E5%90%8D"><span class="nav-number">2.</span> <span class="nav-text">-i 指定网卡名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#w-%E8%BE%93%E5%87%BA%E5%88%B0%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">-w 输出到文件 </span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-%E6%96%87%E4%BB%B6%E5%88%86%E5%89%B2%E5%A4%A7%E5%B0%8F%EF%BC%8C%E5%8D%95%E4%BD%8DM"><span class="nav-number">4.</span> <span class="nav-text">-C 文件分割大小，单位M</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#port-%E6%8C%87%E5%AE%9A%E7%9B%91%E5%90%AC%E7%AB%AF%E5%8F%A3"><span class="nav-number">5.</span> <span class="nav-text">port 指定监听端口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-2-Android%E4%B8%8A%E6%8A%93%E5%8F%96tcp%E6%8A%A5%E6%96%87%EF%BC%88%E5%A6%82%E6%9E%9C%E6%97%A0%E7%89%B9%E6%AE%8A%E9%9C%80%E8%A6%81%E6%8A%93%E4%B8%80%E6%96%B9%E7%9A%84%E6%8A%A5%E6%96%87%E5%B0%B1%E5%A4%9F%E4%BA%86%EF%BC%89"><span class="nav-number">5.0.0.1.</span> <span class="nav-text">2.1.2 Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vv-%E8%BE%93%E5%87%BA%E8%AF%A6%E7%BB%86%E6%8A%A5%E6%96%87"><span class="nav-number">6.</span> <span class="nav-text">-vv  输出详细报文</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#s-0-%E4%B8%8D%E6%88%AA%E5%8F%96%E6%95%B0%E6%8D%AE%E5%8C%85"><span class="nav-number">7.</span> <span class="nav-text">-s 0 不截取数据包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E8%AE%BE%E7%BD%AEWireshark%EF%BC%88v3-0-1%EF%BC%89"><span class="nav-number">7.0.1.</span> <span class="nav-text">2.2 设置Wireshark（v3.0.1）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-%E6%B7%BB%E5%8A%A0%E8%AF%81%E4%B9%A6%E7%A7%81%E9%92%A5"><span class="nav-number">7.0.1.1.</span> <span class="nav-text">2.2.1 添加证书私钥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-%E4%BD%BF%E7%94%A8Wireshark%E6%89%93%E5%BC%80-pcap%E6%96%87%E4%BB%B6"><span class="nav-number">7.0.1.2.</span> <span class="nav-text">2.2.2 使用Wireshark打开.pcap文件</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%92%E6%9F%A5%E7%BD%91%E7%BB%9C%E4%B8%A2%E5%8C%85%E3%80%81%E5%BC%82%E5%B8%B8%E6%95%B0%E6%8D%AE"><span class="nav-number">8.</span> <span class="nav-text">排查网络丢包、异常数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%A6%81%E6%AD%A2Wireshark%E9%87%8D%E6%8E%92TCP-seq%E5%92%8Cack"><span class="nav-number">8.1.</span> <span class="nav-text">1. 禁止Wireshark重排TCP seq和ack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-client%E5%92%8Cserver%E7%9B%B8%E5%90%8C%E6%97%B6%E9%97%B4%E6%AE%B5%E5%86%85%E6%8A%93%E5%8C%85"><span class="nav-number">8.2.</span> <span class="nav-text">2. client和server相同时间段内抓包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%AF%B9%E6%AF%94client%E5%92%8Cserver%E7%9A%84%E6%8A%A5%E6%96%87"><span class="nav-number">8.3.</span> <span class="nav-text">3. 对比client和server的报文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Go-on"><span class="nav-number">8.4.</span> <span class="nav-text">4. Go on</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Q-amp-A"><span class="nav-number">9.</span> <span class="nav-text">Q&amp;A</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86TLS%E6%8A%A5%E6%96%87"><span class="nav-number">1.</span> <span class="nav-text">解密TLS报文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">1. 预备知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.2.</span> <span class="nav-text">2. 操作步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%8A%93%E5%8F%96%E6%8A%A5%E6%96%87"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 抓取报文</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E6%8A%93%E5%8F%96tcp%E6%8A%A5%E6%96%87"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">2.1.1 Linux服务器上抓取tcp报文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-2-Android%E4%B8%8A%E6%8A%93%E5%8F%96tcp%E6%8A%A5%E6%96%87%EF%BC%88%E5%A6%82%E6%9E%9C%E6%97%A0%E7%89%B9%E6%AE%8A%E9%9C%80%E8%A6%81%E6%8A%93%E4%B8%80%E6%96%B9%E7%9A%84%E6%8A%A5%E6%96%87%E5%B0%B1%E5%A4%9F%E4%BA%86%EF%BC%89"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">2.1.2 Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E8%AE%BE%E7%BD%AEWireshark%EF%BC%88v3-0-1%EF%BC%89"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 设置Wireshark（v3.0.1）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-%E6%B7%BB%E5%8A%A0%E8%AF%81%E4%B9%A6%E7%A7%81%E9%92%A5"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">2.2.1 添加证书私钥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-%E4%BD%BF%E7%94%A8Wireshark%E6%89%93%E5%BC%80-pcap%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">2.2.2 使用Wireshark打开.pcap文件</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%92%E6%9F%A5%E7%BD%91%E7%BB%9C%E4%B8%A2%E5%8C%85%E3%80%81%E5%BC%82%E5%B8%B8%E6%95%B0%E6%8D%AE"><span class="nav-number">2.</span> <span class="nav-text">排查网络丢包、异常数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%A6%81%E6%AD%A2Wireshark%E9%87%8D%E6%8E%92TCP-seq%E5%92%8Cack"><span class="nav-number">2.1.</span> <span class="nav-text">1. 禁止Wireshark重排TCP seq和ack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-client%E5%92%8Cserver%E7%9B%B8%E5%90%8C%E6%97%B6%E9%97%B4%E6%AE%B5%E5%86%85%E6%8A%93%E5%8C%85"><span class="nav-number">2.2.</span> <span class="nav-text">2. client和server相同时间段内抓包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%AF%B9%E6%AF%94client%E5%92%8Cserver%E7%9A%84%E6%8A%A5%E6%96%87"><span class="nav-number">2.3.</span> <span class="nav-text">3. 对比client和server的报文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Go-on"><span class="nav-number">2.4.</span> <span class="nav-text">4. Go on</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Q-amp-A"><span class="nav-number">3.</span> <span class="nav-text">Q&amp;A</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Links%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">Links：</span></a></li></ol></div>
         </section>
         <!--/noindex-->
 
@@ -262,7 +262,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-22 21:00:43" itemprop="dateModified" datetime="2020-11-22T21:00:43+08:00">2020-11-22</time>
+        <time title="Modified: 2020-11-22 22:51:03" itemprop="dateModified" datetime="2020-11-22T22:51:03+08:00">2020-11-22</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -289,31 +289,63 @@
 <li> 加密算法不能使DHE、ECDHE</li>
 <li> 报文必须完整，从TCP握手开始</li>
 </ol>
-<h2 id="2-操作步骤"><a href="#2-操作步骤" class="headerlink" title="2. 操作步骤"></a>2. 操作步骤</h2><h3 id="2-1-抓取报文"><a href="#2-1-抓取报文" class="headerlink" title="2.1 抓取报文"></a>2.1 抓取报文</h3><h4 id="2-1-1-Linux服务器上抓取tcp报文"><a href="#2-1-1-Linux服务器上抓取tcp报文" class="headerlink" title="2.1.1 Linux服务器上抓取tcp报文"></a>2.1.1 Linux服务器上抓取tcp报文</h4><p>tcpdump -i eth0  port 10176 -w server.cap -C 50</p>
-<h1 id="i-指定网卡名"><a href="#i-指定网卡名" class="headerlink" title="-i 指定网卡名"></a>-i 指定网卡名</h1><h1 id="w-输出到文件"><a href="#w-输出到文件" class="headerlink" title="-w 输出到文件 "></a>-w 输出到文件 </h1><h1 id="C-文件分割大小，单位M"><a href="#C-文件分割大小，单位M" class="headerlink" title="-C 文件分割大小，单位M"></a>-C 文件分割大小，单位M</h1><h1 id="port-指定监听端口"><a href="#port-指定监听端口" class="headerlink" title="port 指定监听端口"></a>port 指定监听端口</h1><h4 id="2-1-2-Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）"><a href="#2-1-2-Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）" class="headerlink" title="2.1.2 Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）"></a>2.1.2 Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）</h4><p>tcpdump -i any -p port 8883 -vv -s 0 -w sdcard/client.pcap<br># -i   指定网卡名<br># -w   输出到文件 <br># -C   文件分割大小，单位M<br># port 指定监听端口</p>
-<h1 id="vv-输出详细报文"><a href="#vv-输出详细报文" class="headerlink" title="-vv  输出详细报文"></a>-vv  输出详细报文</h1><h1 id="s-0-不截取数据包"><a href="#s-0-不截取数据包" class="headerlink" title="-s 0 不截取数据包"></a>-s 0 不截取数据包</h1><h3 id="2-2-设置Wireshark（v3-0-1）"><a href="#2-2-设置Wireshark（v3-0-1）" class="headerlink" title="2.2 设置Wireshark（v3.0.1）"></a>2.2 设置Wireshark（v3.0.1）</h3><h4 id="2-2-1-添加证书私钥"><a href="#2-2-1-添加证书私钥" class="headerlink" title="2.2.1 添加证书私钥"></a>2.2.1 添加证书私钥</h4><p>如果是nginx做的反向代理，一般证书会配置在nginx这一层。 Preferences -&gt; Protocols -&gt; TLS <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2019/05/Screen-Shot-2019-05-01-at-8.56.23-PM.png"><img src="https://www.zmannotes.com/wp-content/uploads/2019/05/Screen-Shot-2019-05-01-at-8.56.23-PM-300x220.png" alt="wireshark_tls"></a></p>
-<p>添加私钥参数 IP Address   服务器IP Port               服务器端口 Protocol        http（如果是http：小写，非https） Key File        选择key文件，格式pem       <strong>注意</strong>：私钥格式为pem，样式如下： —–BEGIN RSA PRIVATE KEY—– … —–END RSA PRIVATE KEY—–</p>
-<h4 id="2-2-2-使用Wireshark打开-pcap文件"><a href="#2-2-2-使用Wireshark打开-pcap文件" class="headerlink" title="2.2.2 使用Wireshark打开.pcap文件"></a>2.2.2 使用Wireshark打开.pcap文件</h4><p>如果tcp报文完整（从tcp握手开始），并且私钥正确，而且加密算法不是DHE/ECDHE，你应该已经看到解密后的内容了。 -</p>
+<h2 id="2-操作步骤"><a href="#2-操作步骤" class="headerlink" title="2. 操作步骤"></a>2. 操作步骤</h2><h3 id="2-1-抓取报文"><a href="#2-1-抓取报文" class="headerlink" title="2.1 抓取报文"></a>2.1 抓取报文</h3><h4 id="2-1-1-Linux服务器上抓取tcp报文"><a href="#2-1-1-Linux服务器上抓取tcp报文" class="headerlink" title="2.1.1 Linux服务器上抓取tcp报文"></a>2.1.1 Linux服务器上抓取tcp报文</h4><pre class="language-shell" data-language="shell"><code class="language-shell">tcpdump -i eth0  port 10176 -w server.cap -C 50
+# -i 指定网卡名
+# -w 输出到文件 
+# -C 文件分割大小，单位M
+# port 指定监听端口</code></pre>
+
+<h4 id="2-1-2-Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）"><a href="#2-1-2-Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）" class="headerlink" title="2.1.2 Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）"></a>2.1.2 Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）</h4><pre class="language-shell" data-language="shell"><code class="language-shell">tcpdump -i any -p port 8883 -vv -s 0 -w sdcard&#x2F;client.pcap
+# -i   指定网卡名
+# -w   输出到文件 
+# -C   文件分割大小，单位M
+# port 指定监听端口
+# -vv  输出详细报文
+# -s 0 不截取数据包</code></pre>
+
+<h3 id="2-2-设置Wireshark（v3-0-1）"><a href="#2-2-设置Wireshark（v3-0-1）" class="headerlink" title="2.2 设置Wireshark（v3.0.1）"></a>2.2 设置Wireshark（v3.0.1）</h3><h4 id="2-2-1-添加证书私钥"><a href="#2-2-1-添加证书私钥" class="headerlink" title="2.2.1 添加证书私钥"></a>2.2.1 添加证书私钥</h4><p>如果是nginx做的反向代理，一般证书会配置在nginx这一层。 Preferences -&gt; Protocols -&gt; TLS<br><a href="./Screen-Shot-2019-05-01-at-8.56.23-PM.png"><img src="./Screen-Shot-2019-05-01-at-8.56.23-PM-750x410.png" alt="wireshark_tls"></a></p>
+<p>添加私钥参数 IP Address, 服务器IP Port, 服务器端口 Protocol http（如果是http：小写，非https, Key File 选择key文件，格式pem      <br><strong>注意</strong>：私钥格式为pem，样式如下： </p>
+<pre class="language-none"><code class="language-none">-----BEGIN RSA PRIVATE KEY----- 
+... 
+-----END RSA PRIVATE KEY-----</code></pre>
+
+<h4 id="2-2-2-使用Wireshark打开-pcap文件"><a href="#2-2-2-使用Wireshark打开-pcap文件" class="headerlink" title="2.2.2 使用Wireshark打开.pcap文件"></a>2.2.2 使用Wireshark打开.pcap文件</h4><p>如果tcp报文完整（从tcp握手开始），并且私钥正确，而且加密算法不是DHE/ECDHE，你应该已经看到解密后的内容了。 </p>
 <h1 id="排查网络丢包、异常数据"><a href="#排查网络丢包、异常数据" class="headerlink" title="排查网络丢包、异常数据"></a>排查网络丢包、异常数据</h1><p><em>有时遇到网络丢包的情况，也可能遇到client收到server异常数据的情况，两者的处理方式是一样的</em></p>
-<h2 id="1-禁止Wireshark重排TCP-seq和ack"><a href="#1-禁止Wireshark重排TCP-seq和ack" class="headerlink" title="1. 禁止Wireshark重排TCP seq和ack"></a>1. 禁止Wireshark重排TCP seq和ack</h2><p>Preferences -&gt; Protocols -&gt; TLS <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2019/05/Screen-Shot-2019-05-01-at-9.17.41-PM.png"><img src="https://www.zmannotes.com/wp-content/uploads/2019/05/Screen-Shot-2019-05-01-at-9.17.41-PM-300x219.png" alt="wireshadow_tcp"></a></p>
+<h2 id="1-禁止Wireshark重排TCP-seq和ack"><a href="#1-禁止Wireshark重排TCP-seq和ack" class="headerlink" title="1. 禁止Wireshark重排TCP seq和ack"></a>1. 禁止Wireshark重排TCP seq和ack</h2><p>Preferences -&gt; Protocols -&gt; TLS <a href="./Screen-Shot-2019-05-01-at-9.17.41-PM.png"><img src="./Screen-Shot-2019-05-01-at-9.17.41-PM-750x410.png" alt="wireshadow_tcp"></a></p>
 <h2 id="2-client和server相同时间段内抓包"><a href="#2-client和server相同时间段内抓包" class="headerlink" title="2. client和server相同时间段内抓包"></a>2. client和server相同时间段内抓包</h2><h2 id="3-对比client和server的报文"><a href="#3-对比client和server的报文" class="headerlink" title="3. 对比client和server的报文"></a>3. 对比client和server的报文</h2><ol>
 <li> 在一端定位到异常报文，获取tcp对应seq</li>
 <li> 在另一端查询是否有相同seq的数据且时间相同</li>
 </ol>
 <h2 id="4-Go-on"><a href="#4-Go-on" class="headerlink" title="4. Go on"></a>4. Go on</h2><p>剩下的就是根据报文内容具体分析了：比如会不会是连接超时，http2 server主动发送了goaway，然后断开了连接。 -</p>
-<h1 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h1><p>Q1：如何判断当前TLS使用的加密算法 A：在TLS的Server Hello报文中查Cipher Suite，如下图 <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2019/05/Screen-Shot-2019-05-01-at-9.29.36-PM.png"><img src="https://www.zmannotes.com/wp-content/uploads/2019/05/Screen-Shot-2019-05-01-at-9.29.36-PM-300x180.png" alt="tls_cipher_suite"></a> Q2：如何指定TLS使用的加密算法 A1：客户端指定，客户端可以通过参数的方式设定，以okhttpclient为例</p>
-<p>OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();<br>ConnectionSpec spec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)<br>                .tlsVersions(TlsVersion.TLS_1_2)<br>                .cipherSuites(<br>                        CipherSuite.TLS_RSA_WITH_AES_128_GCM_SHA256,<br>                        CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA,<br>                        CipherSuite.TLS_RSA_WITH_AES_256_CBC_SHA,<br>                        CipherSuite.TLS_RSA_WITH_3DES_EDE_CBC_SHA)<br>                .build();<br>        okHttpClientBuilder.connectionSpecs(Collections.singletonList(spec));</p>
-<p>OkHttpClient okHttpClient = okHttpClientBuilder.build();</p>
+<h1 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h1><p>Q1：如何判断当前TLS使用的加密算法<br>A：在TLS的Server Hello报文中查Cipher Suite，如下图 <a href="./Screen-Shot-2019-05-01-at-9.29.36-PM.png"><img src="./Screen-Shot-2019-05-01-at-9.29.36-PM-750x410.png" alt="tls_cipher_suite"></a> </p>
+<p>Q2：如何指定TLS使用的加密算法<br>A1：客户端指定，客户端可以通过参数的方式设定，以okhttpclient为例</p>
+<pre class="language-java" data-language="java"><code class="language-java">OkHttpClient.Builder okHttpClientBuilder &#x3D; new OkHttpClient.Builder();
+ConnectionSpec spec &#x3D; new ConnectionSpec.Builder(ConnectionSpec.MODERN\_TLS)
+                .tlsVersions(TlsVersion.TLS\_1\_2)
+                .cipherSuites(
+                        CipherSuite.TLS\_RSA\_WITH\_AES\_128\_GCM\_SHA256,
+                        CipherSuite.TLS\_RSA\_WITH\_AES\_128\_CBC\_SHA,
+                        CipherSuite.TLS\_RSA\_WITH\_AES\_256\_CBC\_SHA,
+                        CipherSuite.TLS\_RSA\_WITH\_3DES\_EDE\_CBC\_SHA)
+                .build();
+        okHttpClientBuilder.connectionSpecs(Collections.singletonList(spec));
+
+OkHttpClient okHttpClient &#x3D; okHttpClientBuilder.build();</code></pre>
+
 <p>A2：服务端通过配置的方式设定，以nginx为例</p>
-<p>ssl_prefer_server_ciphers on;<br>ssl_ciphers AES128-GCM-SHA256;</p>
-<p>Q3：nginx http2_module连接空闲超时时间是多少？ A：3min Q4：如何判断wireshark解密成功了？ A：观察是否http请求的url已经变成明文；http payload也是明文了（界面下方可以切换tab） Q5：DHE算法为什么不能解密？ A：DHE算法符合完全正向保密协议，中间人即使得到私钥也破解不了密文。 Links：</p>
-<ol>
-<li> <a target="_blank" rel="noopener" href="https://www.tcpdump.org/manpages/tcpdump.1.html">tcpdump https://www.tcpdump.org/manpages/tcpdump.1.html</a></li>
+<pre class="language-none"><code class="language-none">ssl\_prefer\_server\_ciphers on;
+ssl\_ciphers AES128-GCM-SHA256;</code></pre>
+
+<p>Q3：nginx http2_module连接空闲超时时间是多少？<br>A：3min </p>
+<p>Q4：如何判断wireshark解密成功了？<br>A：观察是否http请求的url已经变成明文；http payload也是明文了（界面下方可以切换tab） </p>
+<p>Q5：DHE算法为什么不能解密？<br>A：DHE算法符合完全正向保密协议，中间人即使得到私钥也破解不了密文。 </p>
+<h1 id="Links："><a href="#Links：" class="headerlink" title="Links："></a>Links：</h1><ol>
+<li> <a target="_blank" rel="noopener" href="https://www.tcpdump.org/manpages/tcpdump.1.html">tcpdump command</a></li>
 <li> <a target="_blank" rel="noopener" href="https://packetpushers.net/using-wireshark-to-decode-ssltls-packets/">https://packetpushers.net/using-wireshark-to-decode-ssltls-packets/</a></li>
-<li> <a target="_blank" rel="noopener" href="https://www.openssl.org/docs/man1.0.2/man1/ciphers.html">openssl ciphers https://www.openssl.org/docs/man1.0.2/man1/ciphers.html</a></li>
-<li> <a target="_blank" rel="noopener" href="https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.1.0/com.ibm.zos.v2r1.halu101/constatus.htm">tcp status https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.1.0/com.ibm.zos.v2r1.halu101/constatus.htm</a></li>
-<li> <a target="_blank" rel="noopener" href="https://http2.github.io/http2-spec/#GOAWAY">http2 goaway https://http2.github.io/http2-spec/#GOAWAY</a></li>
-<li> <a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_v2_module.html#http2_idle_timeout">nginx http2 module http://nginx.org/en/docs/http/ngx_http_v2_module.html#http2_idle_timeout</a></li>
+<li> <a target="_blank" rel="noopener" href="https://www.openssl.org/docs/man1.0.2/man1/ciphers.html">openssl ciphers</a></li>
+<li> <a target="_blank" rel="noopener" href="https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.1.0/com.ibm.zos.v2r1.halu101/constatus.htm">tcp status</a></li>
+<li> <a target="_blank" rel="noopener" href="https://http2.github.io/http2-spec/#GOAWAY">http2 goaway</a></li>
+<li> <a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_v2_module.html#http2_idle_timeout">nginx http2 module</a></li>
 </ol>
 
     </div>
@@ -403,6 +435,8 @@
 
   
   <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/components/prism-core.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   

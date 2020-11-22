@@ -21,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":true,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
   <meta property="og:type" content="website">
@@ -249,7 +249,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-22 21:00:43" itemprop="dateModified" datetime="2020-11-22T21:00:43+08:00">2020-11-22</time>
+        <time title="Modified: 2020-11-22 22:51:03" itemprop="dateModified" datetime="2020-11-22T22:51:03+08:00">2020-11-22</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,58 +271,164 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="1-时间"><a href="#1-时间" class="headerlink" title="1. 时间"></a>1. 时间</h1><h2 id="1-1-日期转化"><a href="#1-1-日期转化" class="headerlink" title="1.1 日期转化"></a>1.1 日期转化</h2><p>import time, datetime<br>import pandas as pd</p>
-<h1 id="今天"><a href="#今天" class="headerlink" title="今天"></a>今天</h1><p>today = datetime.datetime.today().date()</p>
-<h1 id="时间格式化"><a href="#时间格式化" class="headerlink" title="时间格式化"></a>时间格式化</h1><p>date_point_formatted = date_point.strftime(‘%Y%m%d’)</p>
-<h1 id="字符串转化日期"><a href="#字符串转化日期" class="headerlink" title="字符串转化日期"></a>字符串转化日期</h1><p>date = ‘20190101’<br>date = datetime.datetime.strptime(str(date), ‘%Y%m%d’).date()</p>
-<h1 id="各种结构转化为日期：integer-float-string-datetime-list-tuple-1-d-array-Series"><a href="#各种结构转化为日期：integer-float-string-datetime-list-tuple-1-d-array-Series" class="headerlink" title="各种结构转化为日期：integer, float, string, datetime, list, tuple, 1-d array, Series"></a>各种结构转化为日期：integer, float, string, datetime, list, tuple, 1-d array, Series</h1><p>date = pd.to_datetime(str(date), format=’%Y%m%d’)</p>
-<h2 id="1-2-日期加减、比较"><a href="#1-2-日期加减、比较" class="headerlink" title="1.2 日期加减、比较"></a>1.2 日期加减、比较</h2><p>import datetime</p>
-<p>today = datetime.datetime.today().date()</p>
-<h1 id="五年前"><a href="#五年前" class="headerlink" title="五年前"></a>五年前</h1><p>delta_year = 5<br>start_date = datetime.date(today.year - delta_year, today.month, today.day)</p>
-<h1 id="七天前"><a href="#七天前" class="headerlink" title="七天前"></a>七天前</h1><p>day_delta = datetime.timedelta(days=-7)</p>
-<h1 id="大小比较"><a href="#大小比较" class="headerlink" title="大小比较"></a>大小比较</h1><p>today &gt; start_date</p>
-<h1 id="2-基本操作"><a href="#2-基本操作" class="headerlink" title="2. 基本操作"></a>2. 基本操作</h1><h2 id="2-1字符串"><a href="#2-1字符串" class="headerlink" title="2.1字符串"></a>2.1字符串</h2><p># 转为字符串<br>price = 12<br>price = str(12)</p>
-<h1 id="转为int"><a href="#转为int" class="headerlink" title="转为int"></a>转为int</h1><p>price = int(price)</p>
-<h1 id="分割"><a href="#分割" class="headerlink" title="分割"></a>分割</h1><p>text = “600690.SH”<br>tmp = text.split(“.”)<br>print(tmp[1]+tmp[0])</p>
-<h1 id="大小写"><a href="#大小写" class="headerlink" title="大小写"></a>大小写</h1><p>text = text.lower()<br>text = text.upper()</p>
-<h2 id="2-2-列表"><a href="#2-2-列表" class="headerlink" title=" 2.2 列表"></a> 2.2 列表</h2><p> 1. 遍历 元素<br>for item in list:</p>
-<ol start="2">
-<li>遍历 索引, 元素<br>for index, item in enumerate(list):</li>
-</ol>
-<h2 id="2-3-HTTP请求设置代理"><a href="#2-3-HTTP请求设置代理" class="headerlink" title="2.3 HTTP请求设置代理"></a>2.3 HTTP请求设置代理</h2><p>r = requests.post(url, params=para, headers=header, proxies={<br>    ‘http’: ‘<a href="http://127.0.0.1:1086&#39;">http://127.0.0.1:1086&#39;</a>,<br>    ‘https’: ‘<a href="https://127.0.0.1:1086&#39;">https://127.0.0.1:1086&#39;</a><br>})</p>
-<h1 id="3-DataFrame"><a href="#3-DataFrame" class="headerlink" title="3. DataFrame"></a>3. DataFrame</h1><h2 id="3-1-设置index"><a href="#3-1-设置index" class="headerlink" title="3.1 设置index"></a>3.1 设置index</h2><p>date_index = pd.to_datetime(df[‘trade_date’], format=’%Y%m%d’)<br>df.set_index(date_index, inplace=True)<br>df = df.sort_index(ascending=True)</p>
-<h2 id="3-2-去重"><a href="#3-2-去重" class="headerlink" title=" 3.2 去重"></a> 3.2 去重</h2><p># 去重<br>df = df.drop_duplicates(subset=’trade_date’, keep=’first’)</p>
-<h2 id="3-3-拼接"><a href="#3-3-拼接" class="headerlink" title=" 3.3 拼接"></a> 3.3 拼接</h2><p># 拼接<br>df = df.append(old_df, ignore_index=True)</p>
-<h1 id="merge-on"><a href="#merge-on" class="headerlink" title="merge on"></a>merge on</h1><p>df = pd.merge(income_df, balancesheet_df, on=’end_date’)</p>
-<h1 id="merge"><a href="#merge" class="headerlink" title="merge"></a>merge</h1><p>merged_df = pd.merge(stock_price_df, finance_df, left_index=True, right_index=True, how=’left’)</p>
-<h2 id="3-4-遍历、删除"><a href="#3-4-遍历、删除" class="headerlink" title=" 3.4 遍历、删除"></a> 3.4 遍历、删除</h2><p># 按index值进行遍历，并删除大于起始时间的<br>for index in df.index:<br>  print(index)<br>  if index.date() &gt; start_date:<br>    df.drop(index=index)</p>
-<h1 id="按下标进行遍历"><a href="#按下标进行遍历" class="headerlink" title="按下标进行遍历"></a>按下标进行遍历</h1><p>for index in range(0, len(pe_df), 1):<br>  line = pe_df.iloc[index]</p>
-<h1 id="直接遍历line"><a href="#直接遍历line" class="headerlink" title="直接遍历line"></a>直接遍历line</h1><p>for index, line in df.iterrows():</p>
-<h2 id="3-5-获取column中最大、最小值"><a href="#3-5-获取column中最大、最小值" class="headerlink" title=" 3.5 获取column中最大、最小值"></a> 3.5 获取column中最大、最小值</h2><p>max_line = data.loc[data[‘profitRate’].idxmax()]<br>min_line = data.loc[data[‘profitRate’].idxmin()]</p>
-<h2 id="3-6-cell操作"><a href="#3-6-cell操作" class="headerlink" title=" 3.6 cell操作"></a> 3.6 cell操作</h2><p># 字符串化<br>df[‘trade_date’] = df[‘trade_date’].apply(str)</p>
-<h1 id="日志操作"><a href="#日志操作" class="headerlink" title="日志操作"></a>日志操作</h1><p>df[‘end_date’] = df[‘end_date’].apply(lambda x: x[2:6])</p>
-<h1 id="单元格操作"><a href="#单元格操作" class="headerlink" title="单元格操作"></a>单元格操作</h1><p>df[‘trade_date’] = df[‘trade_date’].apply(lambda x: ajust_date_to_quarter(x))</p>
-<h1 id="读取-row-column-的内容"><a href="#读取-row-column-的内容" class="headerlink" title="读取[row, column]的内容"></a>读取[row, column]的内容</h1><p>df.at[row, column]</p>
-<h2 id="3-7-loc-iloc区别"><a href="#3-7-loc-iloc区别" class="headerlink" title=" 3.7 loc/iloc区别"></a> 3.7 loc/iloc区别</h2><p># 下标方式获取df段<br>data = pe_df[index: index + 480]</p>
-<h1 id="loc根据index获取，index-value-真实值，比如20190101、20190102"><a href="#loc根据index获取，index-value-真实值，比如20190101、20190102" class="headerlink" title="loc根据index获取，index_value: 真实值，比如20190101、20190102"></a>loc根据index获取，index_value: 真实值，比如20190101、20190102</h1><p>line = pe_df.loc[index_value]</p>
-<h1 id="iloc根据下标获取，index-0、1、2、3"><a href="#iloc根据下标获取，index-0、1、2、3" class="headerlink" title="iloc根据下标获取，index: 0、1、2、3"></a>iloc根据下标获取，index: 0、1、2、3</h1><p>line = pe_df.iloc[index]</p>
-<p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2019/03/Screen-Shot-2019-10-06-at-8.54.08-PM.png"><img src="https://www.zmannotes.com/wp-content/uploads/2019/03/Screen-Shot-2019-10-06-at-8.54.08-PM-1024x337.png" alt="DataFrame Selection"></a> <a target="_blank" rel="noopener" href="https://pandas.pydata.org/pandas-docs/stable/getting_started/dsintro.html#indexing-selection">https://pandas.pydata.org/pandas-docs/stable/getting_started/dsintro.html#indexing-selection</a></p>
-<h2 id="3-8-保存、加载"><a href="#3-8-保存、加载" class="headerlink" title=" 3.8 保存、加载"></a> 3.8 保存、加载</h2><p># 写文件<br>df.to_csv(file_path, index=False)</p>
-<h1 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h1><p>df = pd.read_csv(dir_path+index_code)</p>
-<h1 id="第一列作为index"><a href="#第一列作为index" class="headerlink" title="第一列作为index"></a>第一列作为index</h1><p>df = pd.read_csv(file_path, index_col=0)</p>
-<h2 id="3-9-日期操作"><a href="#3-9-日期操作" class="headerlink" title="3.9 日期操作"></a>3.9 日期操作</h2><p>from pandas.tseries.offsets import *<br>today = ‘20190101’<br>today = pd.Timestamp(today)</p>
-<h1 id="本季度末"><a href="#本季度末" class="headerlink" title="本季度末"></a>本季度末</h1><p>this_quarter = (today - QuarterEnd(n=0))<br>print(this_quarter.strftime(“%Y%m%d”))</p>
-<h1 id="上一个季度末"><a href="#上一个季度末" class="headerlink" title="上一个季度末"></a>上一个季度末</h1><p>last_quarter = (today - QuarterEnd(n=1))<br>print(last_quarter.strftime(“%Y%m%d”))</p>
-<h2 id="3-9-其它"><a href="#3-9-其它" class="headerlink" title="3.9 其它"></a>3.9 其它</h2><p>df = df[[‘total_revenue’, ‘total_profit’, ‘n_income’]]<br>df = df.fillna(value=0)<br>df = df.round(2)</p>
-<h1 id="重命名"><a href="#重命名" class="headerlink" title="重命名"></a>重命名</h1><p>df = df.rename(columns={‘n_income’: ‘净利润’, ‘total_profit’: ‘总利润’})</p>
-<h1 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h1><p>finance_df.insert(0, ‘类目’, finance_df.index)</p>
-<h1 id="所有column名称"><a href="#所有column名称" class="headerlink" title="所有column名称"></a>所有column名称</h1><p>finance_df.columns.values.tolist()</p>
-<h1 id="group"><a href="#group" class="headerlink" title="group"></a>group</h1><p>df_max = df.groupby(‘trade_date’).max().rename(columns={‘close’: ‘max’})</p>
-<h1 id="转置"><a href="#转置" class="headerlink" title="转置"></a>转置</h1><p>finance_df = finance_df.transpose()</p>
-<h1 id="是否存在某个row"><a href="#是否存在某个row" class="headerlink" title="是否存在某个row"></a>是否存在某个row</h1><p>result = row_name in analysed_stocks.index</p>
-<h1 id="4-异常"><a href="#4-异常" class="headerlink" title="4. 异常"></a>4. 异常</h1><h2 id="4-1-异常栈"><a href="#4-1-异常栈" class="headerlink" title="4.1 异常栈"></a>4.1 异常栈</h2><p>import traceback</p>
-<p>try:</p>
-<p>except Exception as e:<br>  traceback.print_exc()</p>
+          <h1 id="1-时间"><a href="#1-时间" class="headerlink" title="1. 时间"></a>1. 时间</h1><h2 id="1-1-日期转化"><a href="#1-1-日期转化" class="headerlink" title="1.1 日期转化"></a>1.1 日期转化</h2><pre class="language-python" data-language="python"><code class="language-python">import time, datetime
+import pandas as pd
+
+# 今天
+today &#x3D; datetime.datetime.today().date()
+
+# 时间格式化
+date_point_formatted &#x3D; date_point.strftime(&#39;%Y%m%d&#39;)
+
+# 字符串转化日期
+date &#x3D; &#39;20190101&#39;
+date &#x3D; datetime.datetime.strptime(str(date), &#39;%Y%m%d&#39;).date()
+
+# 各种结构转化为日期：integer, float, string, datetime, list, tuple, 1-d array, Series
+date &#x3D; pd.to_datetime(str(date), format&#x3D;&#39;%Y%m%d&#39;)</code></pre>
+
+<h2 id="1-2-日期加减、比较"><a href="#1-2-日期加减、比较" class="headerlink" title="1.2 日期加减、比较"></a>1.2 日期加减、比较</h2><pre class="language-python" data-language="python"><code class="language-python">import datetime
+
+today &#x3D; datetime.datetime.today().date()
+
+# 五年前
+delta_year &#x3D; 5
+start_date &#x3D; datetime.date(today.year - delta_year, today.month, today.day)
+
+# 七天前
+day_delta &#x3D; datetime.timedelta(days&#x3D;-7)
+
+# 大小比较
+today &gt; start_date</code></pre>
+
+<h1 id="2-基本操作"><a href="#2-基本操作" class="headerlink" title="2. 基本操作"></a>2. 基本操作</h1><h2 id="2-1字符串"><a href="#2-1字符串" class="headerlink" title="2.1字符串"></a>2.1字符串</h2><pre class="language-python" data-language="python"><code class="language-python"># 转为字符串
+price &#x3D; 12
+price &#x3D; str(12)
+
+# 转为int
+price &#x3D; int(price)
+
+# 分割
+text &#x3D; &quot;600690.SH&quot;
+tmp &#x3D; text.split(&quot;.&quot;)
+print(tmp[1]+tmp[0])
+
+# 大小写
+text &#x3D; text.lower()
+text &#x3D; text.upper()</code></pre>
+
+<h2 id="2-2-列表"><a href="#2-2-列表" class="headerlink" title=" 2.2 列表"></a> 2.2 列表</h2><pre class="language-python" data-language="python"><code class="language-python"> 1. 遍历 元素
+for item in list:
+ 
+2. 遍历 索引, 元素
+for index, item in enumerate(list):</code></pre>
+
+<h2 id="2-3-HTTP请求设置代理"><a href="#2-3-HTTP请求设置代理" class="headerlink" title="2.3 HTTP请求设置代理"></a>2.3 HTTP请求设置代理</h2><pre class="language-python" data-language="python"><code class="language-python">r &#x3D; requests.post(url, params&#x3D;para, headers&#x3D;header, proxies&#x3D;&#123;
+    &#39;http&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:1086&#39;,
+    &#39;https&#39;: &#39;https:&#x2F;&#x2F;127.0.0.1:1086&#39;
+&#125;)</code></pre>
+<h1 id="3-DataFrame"><a href="#3-DataFrame" class="headerlink" title="3. DataFrame"></a>3. DataFrame</h1><h2 id="3-1-设置index"><a href="#3-1-设置index" class="headerlink" title="3.1 设置index"></a>3.1 设置index</h2><pre class="language-python" data-language="python"><code class="language-python">date_index &#x3D; pd.to_datetime(df[&#39;trade_date&#39;], format&#x3D;&#39;%Y%m%d&#39;)
+df.set_index(date_index, inplace&#x3D;True)
+df &#x3D; df.sort_index(ascending&#x3D;True)</code></pre>
+
+<h2 id="3-2-去重"><a href="#3-2-去重" class="headerlink" title=" 3.2 去重"></a> 3.2 去重</h2><pre class="language-python" data-language="python"><code class="language-python"># 去重
+df &#x3D; df.drop_duplicates(subset&#x3D;&#39;trade_date&#39;, keep&#x3D;&#39;first&#39;)</code></pre>
+
+<h2 id="3-3-拼接"><a href="#3-3-拼接" class="headerlink" title=" 3.3 拼接"></a> 3.3 拼接</h2><pre class="language-python" data-language="python"><code class="language-python"># 拼接
+df &#x3D; df.append(old_df, ignore_index&#x3D;True)
+
+# merge on
+df &#x3D; pd.merge(income_df, balancesheet_df, on&#x3D;&#39;end_date&#39;)
+
+# merge
+merged_df &#x3D; pd.merge(stock_price_df, finance_df, left_index&#x3D;True, right_index&#x3D;True, how&#x3D;&#39;left&#39;)</code></pre>
+
+<h2 id="3-4-遍历、删除"><a href="#3-4-遍历、删除" class="headerlink" title=" 3.4 遍历、删除"></a> 3.4 遍历、删除</h2><pre class="language-python" data-language="python"><code class="language-python"># 按index值进行遍历，并删除大于起始时间的
+for index in df.index:
+  print(index)
+  if index.date() &gt; start_date:
+    df.drop(index&#x3D;index)
+
+# 按下标进行遍历
+for index in range(0, len(pe_df), 1):
+  line &#x3D; pe_df.iloc[index]
+
+# 直接遍历line
+for index, line in df.iterrows():</code></pre>
+
+<h2 id="3-5-获取column中最大、最小值"><a href="#3-5-获取column中最大、最小值" class="headerlink" title=" 3.5 获取column中最大、最小值"></a> 3.5 获取column中最大、最小值</h2><pre class="language-python" data-language="python"><code class="language-python">max_line &#x3D; data.loc[data[&#39;profitRate&#39;].idxmax()]
+min_line &#x3D; data.loc[data[&#39;profitRate&#39;].idxmin()]</code></pre>
+
+<h2 id="3-6-cell操作"><a href="#3-6-cell操作" class="headerlink" title=" 3.6 cell操作"></a> 3.6 cell操作</h2><pre class="language-python" data-language="python"><code class="language-python"># 字符串化
+df[&#39;trade_date&#39;] &#x3D; df[&#39;trade_date&#39;].apply(str)
+
+# 日志操作
+df[&#39;end_date&#39;] &#x3D; df[&#39;end_date&#39;].apply(lambda x: x[2:6])
+
+# 单元格操作
+df[&#39;trade_date&#39;] &#x3D; df[&#39;trade_date&#39;].apply(lambda x: ajust_date_to_quarter(x))
+
+# 读取[row, column]的内容
+df.at[row, column]</code></pre>
+
+<h2 id="3-7-loc-iloc区别"><a href="#3-7-loc-iloc区别" class="headerlink" title=" 3.7 loc/iloc区别"></a> 3.7 loc/iloc区别</h2><pre class="language-python" data-language="python"><code class="language-python"># 下标方式获取df段
+data &#x3D; pe_df[index: index + 480]
+
+# loc根据index获取，index_value: 真实值，比如20190101、20190102
+line &#x3D; pe_df.loc[index_value]
+
+# iloc根据下标获取，index: 0、1、2、3
+line &#x3D; pe_df.iloc[index]</code></pre>
+
+<p><a href="./Screen-Shot-2019-10-06-at-8.54.08-PM.png"><img src="./Screen-Shot-2019-10-06-at-8.54.08-PM-1024x337.png" alt="DataFrame Selection"></a><br><a target="_blank" rel="noopener" href="https://pandas.pydata.org/pandas-docs/stable/getting_started/dsintro.html#indexing-selection">https://pandas.pydata.org/pandas-docs/stable/getting_started/dsintro.html#indexing-selection</a></p>
+<h2 id="3-8-保存、加载"><a href="#3-8-保存、加载" class="headerlink" title=" 3.8 保存、加载"></a> 3.8 保存、加载</h2><pre class="language-python" data-language="python"><code class="language-python"># 写文件
+df.to_csv(file_path, index&#x3D;False)
+
+# 读文件
+df &#x3D; pd.read_csv(dir_path+index_code)
+
+# 第一列作为index
+df &#x3D; pd.read_csv(file_path, index_col&#x3D;0)</code></pre>
+
+<h2 id="3-9-日期操作"><a href="#3-9-日期操作" class="headerlink" title="3.9 日期操作"></a>3.9 日期操作</h2><pre class="language-python" data-language="python"><code class="language-python">from pandas.tseries.offsets import *
+today &#x3D; &#39;20190101&#39;
+today &#x3D; pd.Timestamp(today)
+# 本季度末
+this_quarter &#x3D; (today - QuarterEnd(n&#x3D;0))
+print(this_quarter.strftime(&quot;%Y%m%d&quot;))
+# 上一个季度末
+last_quarter &#x3D; (today - QuarterEnd(n&#x3D;1))
+print(last_quarter.strftime(&quot;%Y%m%d&quot;))</code></pre>
+
+<h2 id="3-9-其它"><a href="#3-9-其它" class="headerlink" title="3.9 其它"></a>3.9 其它</h2><pre class="language-python" data-language="python"><code class="language-python">df &#x3D; df[[&#39;total_revenue&#39;, &#39;total_profit&#39;, &#39;n_income&#39;]]
+df &#x3D; df.fillna(value&#x3D;0)
+df &#x3D; df.round(2)
+# 重命名
+df &#x3D; df.rename(columns&#x3D;&#123;&#39;n_income&#39;: &#39;净利润&#39;, &#39;total_profit&#39;: &#39;总利润&#39;&#125;)
+
+# 插入
+finance_df.insert(0, &#39;类目&#39;, finance_df.index)
+
+# 所有column名称
+finance_df.columns.values.tolist()
+
+# group
+df_max &#x3D; df.groupby(&#39;trade_date&#39;).max().rename(columns&#x3D;&#123;&#39;close&#39;: &#39;max&#39;&#125;)
+
+# 转置
+finance_df &#x3D; finance_df.transpose()
+
+# 是否存在某个row
+result &#x3D; row_name in analysed_stocks.index</code></pre>
+
+<h1 id="4-异常"><a href="#4-异常" class="headerlink" title="4. 异常"></a>4. 异常</h1><h2 id="4-1-异常栈"><a href="#4-1-异常栈" class="headerlink" title="4.1 异常栈"></a>4.1 异常栈</h2><pre class="language-python" data-language="python"><code class="language-python">import traceback
+
+try:
+  
+except Exception as e:
+  traceback.print_exc()</code></pre>
+
+
 
       
     </div>
@@ -399,6 +505,8 @@
 
   
   <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/components/prism-core.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
