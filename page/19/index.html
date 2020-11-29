@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">38</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">37</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/05/08/wordpress/spring-rabbitmq/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/05/08/wordpress/spring-unit-test/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/05/08/wordpress/spring-rabbitmq/" class="post-title-link" itemprop="url">Spring RabbitMQ</a>
+            <a href="/2016/05/08/wordpress/spring-unit-test/" class="post-title-link" itemprop="url">Spring项目单元测试</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2016-05-08 20:57:06" itemprop="dateCreated datePublished" datetime="2016-05-08T20:57:06+08:00">2016-05-08</time>
+      <time title="Created: 2016-05-08 20:12:38" itemprop="dateCreated datePublished" datetime="2016-05-08T20:12:38+08:00">2016-05-08</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-29 22:25:58" itemprop="dateModified" datetime="2020-11-29T22:25:58+08:00">2020-11-29</time>
+        <time title="Modified: 2020-11-29 23:09:23" itemprop="dateModified" datetime="2020-11-29T23:09:23+08:00">2020-11-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,11 +257,15 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
         </span>
           , 
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+          <a href="/categories/Unit-Test/" itemprop="url" rel="index"><span itemprop="name">Unit Test</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Mock/" itemprop="url" rel="index"><span itemprop="name">Mock</span></a>
         </span>
     </span>
 
@@ -275,80 +279,68 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>spring项目使用rabbitmq</em> <strong>1. 项目依赖</strong></p>
-<!-- rabbitmq -->
+          <p><em>JUnit与Spring Test、Mockito配合使用</em> <strong>1. 项目依赖</strong></p>
 <dependency>
-    <groupId>org.springframework.amqp</groupId>
-    <artifactId>spring-amqp</artifactId>
-    <version>1.5.5.RELEASE</version>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-test</artifactId>
+    <scope>test</scope>
+    <version>4.2.5.RELEASE</version>
 </dependency>
 <dependency>
-    <groupId>org.springframework.amqp</groupId>
-    <artifactId>spring-rabbit</artifactId>
-    <version>1.5.5.RELEASE</version>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.12</version>
+    <scope>test</scope>
 </dependency>
 
-<p> <strong>2. 配置文件</strong></p>
-<?xml version="1.0" encoding="UTF-8" ?>
-<p><beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/rabbit
-        http://www.springframework.org/schema/rabbit/spring-rabbit.xsd"></p>
-<pre><code>&lt;!-- 声明rabbitmq连接 --&gt;
-&lt;rabbit:connection-factory id=&quot;rabbitmqConnectionFactory&quot;
-                           host=&quot;$&#123;rabbitmq.host&#125;&quot;
-                           virtual-host=&quot;$&#123;rabbitmq.vhost&#125;&quot;
-                           username=&quot;$&#123;rabbitmq.username&#125;&quot;
-                           password=&quot;$&#123;rabbitmq.password&#125;&quot;/&gt;
-&lt;!-- 创建rabbitmq admin，用来管理queue、exchanger、binding --&gt;
-&lt;rabbit:admin connection-factory=&quot;rabbitmqConnectionFactory&quot;/&gt;
+<p><strong>2. 创建测试类</strong></p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)<br>//指定配置文件<br>@ContextConfiguration(locations = {“/spring/stock-session-factory.xml”})<br>//指定资源文件<br>@TestPropertySource(locations = {“/application.properties”})<br>public class StockTest {</p>
+<pre><code>@Autowired
+private StockMapper stockMapper;
 
-&lt;!-- 声明队列 --&gt;
-&lt;rabbit:queue id=&quot;queue-bean-1&quot; durable=&quot;true&quot; name=&quot;$&#123;rabbitmq.queuename1&#125;&quot;/&gt;
-&lt;rabbit:queue id=&quot;queue-bean-2&quot; durable=&quot;true&quot; name=&quot;$&#123;rabbitmq.queuename2&#125;&quot;/&gt;
-
-&lt;!-- 声明exchange，这里使用的direct-exchange，与rabbitmq服务器的exchange类型对应 --&gt;
-&lt;rabbit:direct-exchange name=&quot;$&#123;rabbitmq.exchange.name&#125;&quot;&gt;
-    &lt;rabbit:bindings&gt;
-        &lt;rabbit:binding queue=&quot;queue-bean-1&quot; key=&quot;$&#123;rabbitmq.route.key1&#125;&quot;&gt;&lt;/rabbit:binding&gt;
-        &lt;rabbit:binding queue=&quot;queue-bean-2&quot; key=&quot;$&#123;rabbitmq.route.key2&#125;&quot;&gt;&lt;/rabbit:binding&gt;
-    &lt;/rabbit:bindings&gt;
-&lt;/rabbit:direct-exchange&gt;
-
-&lt;!-- 声明消息消费者（监听者） --&gt;
-&lt;bean id=&quot;rabbitmqListener1&quot; class=&quot;com.zmannotes.spring.mq.listener.RabbitMQListener1&quot;/&gt;
-&lt;bean id=&quot;rabbitmqListener2&quot; class=&quot;com.zmannotes.spring.mq.listener.RabbitMQListener2&quot;/&gt;
-
-&lt;!-- 声明消费者容器，并将queue和listener关联，此处指定自动返回ack --&gt;
-&lt;rabbit:listener-container
-        connection-factory=&quot;rabbitmqConnectionFactory&quot; acknowledge=&quot;auto&quot;&gt;
-    &lt;rabbit:listener queues=&quot;queue-bean-1&quot; ref=&quot;rabbitmqListener1&quot;
-                     method=&quot;onMessage&quot;/&gt;
-    &lt;rabbit:listener queues=&quot;queue-bean-2&quot; ref=&quot;rabbitmqListener2&quot;
-                     method=&quot;onMessage&quot;/&gt;
-&lt;/rabbit:listener-container&gt;
-
-&lt;!-- 消息生产者 --&gt;
-&lt;rabbit:template id=&quot;rabbitmqTemplate&quot; connection-factory=&quot;rabbitmqConnectionFactory&quot;
-    reply-timeout=&quot;2000&quot; routing-key=&quot;remoting.binding&quot;
-    exchange=&quot;rabbitmqExchange&quot;/&gt;</code></pre>
-</beans>
-
-<p><strong>3. 实现XXXListener</strong></p>
-<p>import org.springframework.amqp.core.Message;<br>import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;</p>
-<p>public class RabbitMQListener implements ChannelAwareMessageListener {</p>
-<pre><code>public void onMessage(Message message, Channel channel) throws Exception &#123;
-    String msg = new String(message.getBody());
-    System.out.println( msg );
+@Transactional
+@Test
+public void test()&#123;
+    Stock stock = new Stock();
+    stock.setCode(&quot;900001&quot;);
+    stock.setName(&quot;tcl&quot;);
+    stockMapper.insert(stock);
 &#125;</code></pre>
 <p>}</p>
-<p><strong>4. 发送消息</strong></p>
-<p>void send(Message message) throws AmqpException;</p>
-<p>void send(String routingKey, Message message) throws AmqpException;</p>
-<p>void send(String exchange, String routingKey, Message message) throws AmqpException;</p>
-<p><strong>LINK</strong> <a target="_blank" rel="noopener" href="http://docs.spring.io/spring-amqp/reference/html/_introduction.html#quick-tour">官方文档 1</a> <a target="_blank" rel="noopener" href="http://docs.spring.io/spring-amqp/reference/html/_reference.html">官方文档 2</a></p>
+<p><strong>3. Mock</strong> 3.1 加入依赖<a target="_blank" rel="noopener" href="http://mockito.org/">Mockito</a></p>
+<!-- mock -->
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-all</artifactId>
+    <version>1.10.19</version>
+    <scope>test</scope>
+</dependency>
+
+<p>3.2 Mock数据库访问操作</p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)<br>//指定配置文件<br>@ContextConfiguration(locations = {“/spring/stock-session-factory.xml”})<br>//指定资源文件<br>@TestPropertySource(locations = {“/application.properties”})<br>public class StockTest {</p>
+<pre><code>@InjectMocks
+@Autowired
+private StockService stockService;
+@Mock
+private StockMapper stockMapperMocker;
+
+@Before
+public void setup()&#123;
+    MockitoAnnotations.initMocks(this);
+&#125;
+
+@Transactional
+@Test
+public void test()&#123;
+    Stock stock = new Stock();
+    stock.setName(&quot;露露&quot;);</code></pre>
+<p>        //如果是数据库插入操作，则直接跳过，返回1<br>        when(stockMapperMocker.insert(any(Stock.class))).thenReturn(1);<br>        //如果是数据库查询操作，则直接返回stock对象<br>    when(stockMapperMocker.selectByPrimaryKey(anyString())).thenReturn(stock);</p>
+<pre><code>    stockService.insert(null);
+    String name = stockService.selectByCode(&quot;000848&quot;);
+    System.out.println( name );
+&#125;</code></pre>
+<p>}</p>
+<p>项目源码 <a target="_blank" rel="noopener" href="https://github.com/zman2013/spring-unit-test">Github</a></p>
 
       
     </div>
@@ -370,7 +362,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/18/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/20/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/18/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><span class="space">&hellip;</span><a class="page-number" href="/page/37/">37</a><a class="extend next" rel="next" href="/page/20/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

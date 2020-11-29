@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">38</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">37</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2019/11/01/wordpress/unity-2d-core-knowledge/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2019/10/28/wordpress/spring-http-request-response-log/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2019/11/01/wordpress/unity-2d-core-knowledge/" class="post-title-link" itemprop="url">Unity 2D 基础知识</a>
+            <a href="/2019/10/28/wordpress/spring-http-request-response-log/" class="post-title-link" itemprop="url">Spring HTTP Request & Response Log</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2019-11-01 21:39:02" itemprop="dateCreated datePublished" datetime="2019-11-01T21:39:02+08:00">2019-11-01</time>
+      <time title="Created: 2019-10-28 21:13:55" itemprop="dateCreated datePublished" datetime="2019-10-28T21:13:55+08:00">2019-10-28</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-29 22:25:58" itemprop="dateModified" datetime="2020-11-29T22:25:58+08:00">2020-11-29</time>
+        <time title="Modified: 2020-11-29 23:09:23" itemprop="dateModified" datetime="2020-11-29T23:09:23+08:00">2020-11-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,7 +257,11 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/unity/" itemprop="url" rel="index"><span itemprop="name">unity</span></a>
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/log/" itemprop="url" rel="index"><span itemprop="name">log</span></a>
         </span>
     </span>
 
@@ -271,21 +275,42 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="1-层级关系"><a href="#1-层级关系" class="headerlink" title="1. 层级关系"></a>1. 层级关系</h1><p>2D世界的物体都在Z轴同一位面（z=0），摄像机在z=-10进行拍摄。物体之间的层级关系通过Y轴的高地来进行计算遮挡关系，从而产生立体感。 设置步骤： </p>
-<ol>
-<li>设置根据Y轴进行排序<br>Edit -&gt; Project Setting -&gt; Graphics -&gt; Camera Settings -&gt; Transparent Sort Mode =&gt; (x=0,y=1,z=0) </li>
-<li>设置排序为Sprite中心点<br>Inspector -&gt; Sprite Render -&gt; Sprite Sort Point -&gt; Pivot 3. 调整Sprite的中心点 Assets -&gt; 选中目标Sprite -&gt; Edit Sprite -&gt; 调整Pivot</li>
+          <h1 id="1-Controller-Log"><a href="#1-Controller-Log" class="headerlink" title="1. Controller Log"></a>1. Controller Log</h1><h2 id="1-1-确认是Spring-Boot项目"><a href="#1-1-确认是Spring-Boot项目" class="headerlink" title="1.1 确认是Spring Boot项目"></a>1.1 确认是Spring Boot项目</h2><h2 id="1-2-创建Filter"><a href="#1-2-创建Filter" class="headerlink" title="1.2 创建Filter"></a>1.2 创建Filter</h2><pre class="language-java" data-language="java"><code class="language-java">import org.springframework.web.filter.CommonsRequestLoggingFilter;
+
+import javax.servlet.http.HttpServletRequest;
+
+public class ApiAccessFilter extends CommonsRequestLoggingFilter &#123;
+
+
+    @Override
+    protected void beforeRequest(HttpServletRequest request, String message) &#123;
+        super.beforeRequest(request, &quot;recevied http request&quot;);
+    &#125;
+
+    @Override
+    protected String createMessage(HttpServletRequest request, String prefix, String suffix) &#123;
+        return request.getMethod() + &quot; &quot; + super.createMessage(request, prefix, suffix);
+    &#125;
+
+&#125;</code></pre>
+<h2 id="1-3-Java-Configuration"><a href="#1-3-Java-Configuration" class="headerlink" title=" 1.3 Java Configuration"></a> 1.3 Java Configuration</h2><pre class="language-java" data-language="java"><code class="language-java">@Bean
+public CommonsRequestLoggingFilter logFilter() &#123;
+    CommonsRequestLoggingFilter filter &#x3D; new ApiAccessFilter();
+    filter.setIncludeQueryString(true);
+    filter.setIncludePayload(true);
+    filter.setIncludeClientInfo(false);
+    filter.setMaxPayloadLength(1000);
+    filter.setIncludeHeaders(true);
+    filter.setAfterMessagePrefix(&quot;&quot;);
+    return filter;
+&#125;</code></pre>
+<h2 id="1-4-设置logback配置"><a href="#1-4-设置logback配置" class="headerlink" title=" 1.4 设置logback配置"></a> 1.4 设置logback配置</h2><pre class="language-xml" data-language="xml"><code class="language-xml">&lt;logger name&#x3D;&quot;com.chehejia.iot.batch.advice.ApiAccessFilter&quot; additivity&#x3D;&quot;false&quot;&gt;
+    &lt;level value&#x3D;&quot;DEBUG&quot;&#x2F;&gt;
+&lt;&#x2F;logger&gt;</code></pre>
+
+<h1 id="LINK"><a href="#LINK" class="headerlink" title="LINK"></a>LINK</h1><ol>
+<li> <a target="_blank" rel="noopener" href="https://www.baeldung.com/spring-http-logging">https://www.baeldung.com/spring-http-logging</a></li>
 </ol>
-<h1 id="2-刚体、碰撞"><a href="#2-刚体、碰撞" class="headerlink" title="2. 刚体、碰撞"></a>2. 刚体、碰撞</h1><p>UnityEngine模拟了物理世界基本定律：可以通过给GameObject添加刚体（Rigidbody 2D）组件，GameObject便开始收到物理定律的影响（记得把Gravity置为0）。通过添加Collider2D实现碰撞效果。 </p>
-<ol>
-<li>防止GameObject沿Z轴旋转<br>Inspector -&gt; Rigidbody 2D -&gt; Constraints -&gt; Freeze Rotation -&gt; 勾选z </li>
-<li>Collider调整到物体下半部分效果比较真实，即正好是物体的占地面积。 </li>
-<li>OnTriggerEnter2D 任意一方勾选了Collider的trigger属性，使用此方法。物体之间可以发生碰撞，同时可以互相进入对方空间内部。 OnCollisionEnter2D不勾选trigger时使用，物体之间发生碰撞，无法进入对方空间。</li>
-</ol>
-<h1 id="3-动画"><a href="#3-动画" class="headerlink" title="3. 动画"></a>3. 动画</h1><p>Animation -&gt; 动画（内容） Animator -&gt; GameObject的Component Animation Controller -&gt; 动画状态控制器，可以从一个状态转变为另一个状态 Blend State 挺有趣的（组合多个状态进行叠加）</p>
-<h1 id="4-声音"><a href="#4-声音" class="headerlink" title="4. 声音"></a>4. 声音</h1><p>Audio Source -&gt; 声源 Audio Listener -&gt; 喇叭 Audio Clip -&gt; 声音内容 Clip 放到 Source 中进行播放，Listener负责接收</p>
-<h1 id="5-RectTransform"><a href="#5-RectTransform" class="headerlink" title="5. RectTransform"></a>5. RectTransform</h1><p>UI对象的中心点(Pivot) -&gt; Unity开始渲染图像时从中心点开始渲染 UI对象的锚点(Anchor) -&gt; 与父对象的相对位置是通过计算与Anchor的相对位置计算的 UI的对象在Screen坐标中，不在World坐标，需要进行转换。</p>
-<h1 id="6-Tile"><a href="#6-Tile" class="headerlink" title="6. Tile"></a>6. Tile</h1><p>Tile的依存关系： Grid - TileMap1 - Tile1 - Tile2 - TileMap2 - Tile3 这样组织场景会比较方便管理。 Pallete挺好用的，尤其RulePallete、RandomPallete、LinePallete。</p>
 
       
     </div>
@@ -307,7 +332,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/37/">37</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

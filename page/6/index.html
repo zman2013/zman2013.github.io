@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">38</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">37</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2019/11/11/wordpress/a-stream-is-just-an-array-in-time/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2019/11/01/wordpress/unity-2d-skills/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2019/11/11/wordpress/a-stream-is-just-an-array-in-time/" class="post-title-link" itemprop="url">A stream is just an array in time</a>
+            <a href="/2019/11/01/wordpress/unity-2d-skills/" class="post-title-link" itemprop="url">Unity 2D 常用技巧</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2019-11-11 23:27:36" itemprop="dateCreated datePublished" datetime="2019-11-11T23:27:36+08:00">2019-11-11</time>
+      <time title="Created: 2019-11-01 21:52:42" itemprop="dateCreated datePublished" datetime="2019-11-01T21:52:42+08:00">2019-11-01</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-29 22:25:58" itemprop="dateModified" datetime="2020-11-29T22:25:58+08:00">2020-11-29</time>
+        <time title="Modified: 2020-11-29 23:09:23" itemprop="dateModified" datetime="2020-11-29T23:09:23+08:00">2020-11-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,11 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/pull-stream/" itemprop="url" rel="index"><span itemprop="name">pull-stream</span></a>
+          <a href="/categories/unity/" itemprop="url" rel="index"><span itemprop="name">unity</span></a>
         </span>
     </span>
 
@@ -275,98 +271,138 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><code>There is a deeper, platonic abstraction, where a streams is just an array in time, instead of in space. And all the various streaming &quot;abstractions&quot; are just crude implementations of this abstract idea.</code> <em>-- pull-stream</em>   </p>
-<p>如果Stream可以分版本，我理解目前是2.1。<br>Stream 1.0 是一个有限集合，消费者通过foreach遍历集合内部元素。<br>Stream 2.0 是一个无限集合，集合内部的元素随着时间不断产生，由生产者不断推向消费者，消费者被动接收。<br>Stream 2.1 解决了2.0实际使用中出现的backpressure和error propagation问题，元素传递的决策权交由消费者进行控制。 Stream 2.1有两个组织分别提出了不同的解决思路：reactive-streams、pull-stream。RxJava采用的是reactive-streams，JDK9的Flow基于reactive-streams。IPFS采用了pull-stream。 reactive-streams提出了一套规范，并且声明主要目标就是解决backpressure问题，核心思路是Subscriber声明自己能承受的请求数量n，Publisher根据n决定推送元素的个数。 </p>
-<p><strong>pull-stream实在是只有天才的大脑才能想出来，两个函数搞定~</strong> 主要想介绍这两个函数，因为实在憋不住不分享出来。</p>
-<pre class="language-js" data-language="js"><code class="language-js">var n &#x3D; 5;
+          <h1 id="1-点击屏幕选中物体"><a href="#1-点击屏幕选中物体" class="headerlink" title="1. 点击屏幕选中物体"></a>1. 点击屏幕选中物体</h1><pre class="language-csharp" data-language="csharp"><code class="language-csharp">&#x2F;&#x2F; 核心是坐标转化：屏幕坐标 -&gt; 世界坐标 -&gt; 射线碰撞
+Vector3 mousePos &#x3D; Camera.main.ScreenToWorldPoint(Input.mousePosition);
+Vector2 mousePos2D &#x3D; new Vector2(mousePos.x, mousePos.y);
+RaycastHit2D hit &#x3D; Physics2D.Raycast(mousePos2D, Vector2.zero);</code></pre>
 
-&#x2F;&#x2F; random is a source 5 of random numbers.
-function random (end, cb) &#123;
-  if(end) return cb(end)
-  &#x2F;&#x2F; only read n times, then stop.
-  if(0 &gt; --n) return cb(true)
-  cb(null, Math.random())
-&#125;
+<h1 id="2-多个血条显示"><a href="#2-多个血条显示" class="headerlink" title="2. 多个血条显示"></a>2. 多个血条显示</h1><pre class="language-csharp" data-language="csharp"><code class="language-csharp">&#x2F;&#x2F; 核心是坐标转换：世界坐标转为屏幕坐标
+&#x2F;&#x2F; GameObject所在的世界坐标转为屏幕坐标
+Vector3 position &#x3D; Camera.main.WorldToScreenPoint(transform.position);
+&#x2F;&#x2F; 设置血条的位置，并调整偏移量
+bloodGameObject.gameObject.transform.position &#x3D; new Vector3(position.x-35, position.y + 110, position.z);
 
-&#x2F;&#x2F; logger reads a source and logs it.
-function logger (read) &#123;
-  read(null, function next(end, data) &#123;
-    if(end &#x3D;&#x3D;&#x3D; true) return
-    if(end) throw end
+&#x2F;&#x2F; 设置血条长度
+image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, originalSize \* percent);</code></pre>
 
-    console.log(data)
-    read(null, next)
-  &#125;)
-&#125;
+<h1 id="3-移动"><a href="#3-移动" class="headerlink" title="3. 移动"></a>3. 移动</h1><pre class="language-csharp" data-language="csharp"><code class="language-csharp">&#x2F;&#x2F; 刚体移动使用rig.MovePosition，防止物体抖动
+&#x2F;&#x2F; 使用MoveTowards计算移动的新位置， 防止速度过快时总是偏离目标位置
+if( Vector3.Distance(rig.position, targetPosition) &gt; Mathf.Epsilon)
+&#123;
+   float distance &#x3D; attackMoveSpeed \* Time.deltaTime;
+   Vector3 newPosition &#x3D; Vector3.MoveTowards(rig.position, targetPosition, distance);
+   rig.MovePosition(newPosition);
+&#125;</code></pre>
+<h1 id="4-拖拽物品"><a href="#4-拖拽物品" class="headerlink" title="4. 拖拽物品"></a>4. 拖拽物品</h1><pre class="language-csharp" data-language="csharp"><code class="language-csharp">using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-logger(random) &#x2F;&#x2F;&quot;pipe&quot; the streams.</code></pre>
+public class ItemDrag : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+&#123;
 
-<p>上面两个函数random为source（publisher/observer/producer），logger为sink（subscriber/consumer），实现了logger主动从random中读取一个随机数，并且”是否读取“、”何时终止“都由logger控制，例子中logger的逻辑会一直读取到random最后一个元素。</p>
-<p><strong>翻译成Java</strong></p>
-<pre class="language-java" data-language="java"><code class="language-java">private int n &#x3D; 5;
-...
-&#x2F;&#x2F; 每次读取，提供一个随机数
-public void read(boolean end, BiConsumer&lt;Boolean, Integer&gt; cb)&#123;
-    if(end)&#123;  &#x2F;&#x2F; 结束
-        cb.accept(end, null);
-        return;
+    &#x2F;&#x2F; 鼠标起点
+    private Vector2 originalLocalPointerPosition;
+    &#x2F;&#x2F; 面板起点
+    private Vector3 originalLocalPanelPosition;
+    &#x2F;&#x2F; 当前物体
+    private RectTransform panelRectTransform;
+    &#x2F;&#x2F; 父节点
+    private RectTransform parentRectTransform;
+
+    &#x2F;&#x2F; 格子列表, 在gridList上一层添加一个新的空对象作为父节点
+    private GameObject gridManager;
+    &#x2F;&#x2F; 记录物品拖拽前的位置
+    private GameObject originalGrid;
+
+    private static int siblingIndex &#x3D; 0;
+
+
+    void Awake()
+    &#123;
+        panelRectTransform &#x3D; transform as RectTransform;
+        parentRectTransform &#x3D; GameObject.FindGameObjectWithTag(&quot;ScrollRect&quot;).GetComponent&lt;RectTransform&gt;() as RectTransform;
+        gridManager &#x3D; GameObject.Find(&quot;GridManager&quot;);
+
     &#125;
 
-    if( n-- &lt; 0 )&#123;  &#x2F;&#x2F; 读完所有元素
-        cb.accept(true, null);
-        return;
+    &#x2F;&#x2F; 按下鼠标
+    public void OnPointerDown(PointerEventData eventData)
+    &#123;
+        &#x2F;&#x2F; 记录物品当前所在格子信息
+        originalGrid &#x3D; panelRectTransform.parent.gameObject;
+        &#x2F;&#x2F; 将物品设置在gridManager下，并设置层级，保证物品显示在整个背包之上
+        panelRectTransform.SetParent(parentRectTransform.transform);
+        siblingIndex &#x3D; 10;
+        panelRectTransform.SetSiblingIndex(siblingIndex);
+        &#x2F;&#x2F; 记录当前物品的起点位置
+        originalLocalPanelPosition &#x3D; panelRectTransform.localPosition;
+
+        &#x2F;&#x2F; 通过屏幕中的鼠标点，获取在父节点中的鼠标点
+        &#x2F;&#x2F; parentRectTransform 父节点
+        &#x2F;&#x2F; data.position当前鼠标位置
+        &#x2F;&#x2F; data.pressEventCamera当前事件的摄像机
+        &#x2F;&#x2F; originalLocalPointerPosition获取当前鼠标起点
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRectTransform, eventData.position, eventData.pressEventCamera,
+            out originalLocalPointerPosition);
+
+        Debug.Log(originalLocalPointerPosition.x + &quot; : &quot; + originalLocalPointerPosition.y);
     &#125;
 
-    cb.accept(false, new Random().nextInt());  &#x2F;&#x2F; 回调
-&#125;
+    &#x2F;&#x2F; 拖动
+    public void OnDrag(PointerEventData eventData)
+    &#123;
+        if(panelRectTransform &#x3D;&#x3D; null  parentRectTransform &#x3D;&#x3D; null)
+        &#123;
+            return;
+        &#125;
 
-&#x2F;&#x2F; 从read中读取并打印所有数据
-public void logger(BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; read)&#123;
-
-    Holder&lt;BiConsumer&lt;Boolean, Integer&gt;&gt; holder &#x3D; new Holder&lt;&gt;();
-    holder.value  &#x3D; (end, data) -&gt; &#123;
-        if( end )   return;
-
-        System.out.println(data);
-        read.accept(false, holder.value);  &#x2F;&#x2F; 递归
-    &#125;;
-
-    read.accept(false, holder.value);
-&#125;
-...
-logger(this::read);  &#x2F;&#x2F; pipe</code></pre>
-
-<p>基于pull-stream思想，可以很简洁的写出rxJava和jdk-lambda的核心功能，比如.map</p>
-<pre class="language-java" data-language="java"><code class="language-java">&#x2F;&#x2F; 所有元素\*3
-public BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; triple(
-            BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; readable) &#123;
-
-    return (end, f) -&gt;
-        readable.accept(end, (isEnd, data) -&gt;
-            f.accept(isEnd, isEnd ? null :3 \* data) &#x2F;&#x2F; 所有元素\*3
-        );
-&#125;
-...
-logger( this.triple(this::read) );</code></pre>
-
-<p>上面的调用可读性已经比较差了，优化一下：</p>
-<pre class="language-java" data-language="java"><code class="language-java">public class Pull&#123;
-    &#x2F;&#x2F; 从source读取数据，经through转换后，由sink存储
-    public static void pull(BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; source,
-                     Function&lt;BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt;,
-                             BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt;&gt; through,
-                     Consumer&lt;BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt;&gt; sink
-                     )&#123;
-        sink.accept(through.apply(source));
+        Vector2 localPointerPosition;
+        &#x2F;&#x2F; 获取鼠标本地位置
+        if( RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRectTransform, eventData.position, eventData.pressEventCamera,
+            out localPointerPosition))
+        &#123;
+            &#x2F;&#x2F; 移动位置 &#x3D; 本地鼠标位置 - 鼠标起点位置
+            Vector3 offsetToOriginal &#x3D; localPointerPosition - originalLocalPointerPosition;
+            &#x2F;&#x2F; 当前物品位置 &#x3D; 当前物品起点位置 + 移动位置
+            panelRectTransform.transform.localPosition &#x3D; originalLocalPanelPosition + offsetToOriginal;
+        &#125;
     &#125;
-&#125;
-...
-&#x2F;&#x2F; 随机数 -&gt; \* 3 -&gt; 输出到stdio
-Pull.pull(this::read, this::triple, this::logger);</code></pre>
 
-<p>这样调用起来就便捷多了，在接口设计上一定站在使用方的角度去思考。</p>
-<p>  另外，你很可能遇到reactivex.io，reactivex目标是提供便捷的reactive API。reactive-streams != ReactiveX，rx内的工具主要是2.0规范，比如rxjs没有实现backpressure，而rxjava遵从reactive-streams实现了backpressure。 </p>
-<p><strong>官方</strong><br><a target="_blank" rel="noopener" href="https://pull-stream.github.io/">https://pull-stream.github.io/</a><br><a target="_blank" rel="noopener" href="http://www.reactive-streams.org/">http://www.reactive-streams.org/</a>   </p>
+    
+
+    public void OnPointerUp(PointerEventData eventData)
+    &#123;
+        RaycastHit2D hit &#x3D; Physics2D.Raycast(Input.mousePosition, -Vector2.up);
+        
+        if( hit.collider !&#x3D; null)
+        &#123;
+
+            GameObject g &#x3D; hit.transform.gameObject;
+            Debug.Log(&quot; hit &quot; + g.tag + &quot; &quot;);
+            Debug.Log(g.transform.Find(&quot;Item(Clone)&quot;));
+            if ( hit.collider.gameObject.tag &#x3D;&#x3D; &quot;Grid&quot; &amp;&amp; hit.collider.gameObject.transform.Find(&quot;Item(Clone)&quot;)&#x3D;&#x3D;null)
+            &#123;
+                transform.SetParent(hit.transform);
+            &#125;
+            else
+            &#123;
+                transform.SetParent(originalGrid.transform);
+            &#125;
+        &#125;
+        else
+        &#123;
+            Debug.Log(&quot;not hit&quot;);
+            transform.SetParent(originalGrid.transform);
+        &#125;
+        &#x2F;&#x2F; 重置物品位置
+        transform.localPosition &#x3D; Vector3.zero;
+    &#125;
+
+&#125;</code></pre>
+
+
 
       
     </div>
@@ -388,7 +424,7 @@ Pull.pull(this::read, this::triple, this::logger);</code></pre>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/37/">37</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
