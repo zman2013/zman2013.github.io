@@ -126,7 +126,7 @@
   <ul class="main-menu menu">
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">81</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">82</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">37</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">38</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/04/27/wordpress/multi-modules/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/05/04/wordpress/spring-mybatis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/04/27/wordpress/multi-modules/" class="post-title-link" itemprop="url">系统分层(单系统多模块)</a>
+            <a href="/2016/05/04/wordpress/spring-mybatis/" class="post-title-link" itemprop="url">Spring+Mybatis</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2016-04-28 06:35:07" itemprop="dateCreated datePublished" datetime="2016-04-28T06:35:07+08:00">2016-04-28</time>
+      <time title="Created: 2016-05-04 22:34:05" itemprop="dateCreated datePublished" datetime="2016-05-04T22:34:05+08:00">2016-05-04</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-22 22:51:03" itemprop="dateModified" datetime="2020-11-22T22:51:03+08:00">2020-11-22</time>
+        <time title="Modified: 2020-11-29 22:25:58" itemprop="dateModified" datetime="2020-11-29T22:25:58+08:00">2020-11-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -258,6 +258,10 @@
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a>
         </span>
     </span>
 
@@ -271,87 +275,105 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>介绍一般系统的分层思想和实现</em> <strong>1. 主流分层</strong>   <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2016/04/multiple-models.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2016/04/multiple-models.jpg" alt="multiple-models"></a> (每层对应一个或多个 模块/子系统，根据每层的复杂度进行进一步切分） <strong>2. 举例</strong> 一个结算系统包含业务层、引擎层、基础组件层，化简后，对应模块为业务模块settle-order-service、引擎模块settle-engine、数据模块settle-data。 2.1 创建项目根目录</p>
-<p># 进入workspace目录<br>cd ~/workspace</p>
-<h1 id="创建根目录"><a href="#创建根目录" class="headerlink" title="创建根目录"></a>创建根目录</h1><p>mvn archetype:generate -DarchetypeGroupId=org.codehaus.mojo.archetypes  -DarchetypeArtifactId=pom-root -DgroupId=com.zmannotes.spring -DartifactId=multiple-modules -Dversion=1.0.0-SNAPSHOT</p>
-<p>2.2 创建业务模块 settle-order-service</p>
-<p>cd multiple-modules</p>
-<p>mvn -B archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DgroupId=com.zmannotes.spring -DartifactId=settle-order-service</p>
-<p>2.3 创建引擎模块settle-engine</p>
-<p>mvn -B archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DgroupId=com.zmannotes.spring -DartifactId=settle-engine</p>
-<p>2.4 创建数据模块settle-data</p>
-<p>mvn -B archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DgroupId=com.zmannotes.spring -DartifactId=settle-data</p>
-<p><strong>3. 完整的项目示例</strong> 3.1 所有模块 <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2016/04/whole-project-modules.png"><img src="https://www.zmannotes.com/wp-content/uploads/2016/04/whole-project-modules-300x250.png" alt="whole-project-modules"></a> 3.2 模块内部结构 <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2016/04/module-structure.png"><img src="https://www.zmannotes.com/wp-content/uploads/2016/04/module-structure-300x150.png" alt="module-structure"></a> <strong>4. 设置全局配置</strong> 修改multiple-modules目录下的pom.xml来设定全局配置。 4.1 统一设置所有子模块的默认依赖</p>
-<!-- 添加默认测试依赖 -->
-<dependencies>
-    <!-- test -->
-    <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.12</version>
-        <scope>test</scope>
-    </dependency>                                                                                                                                                    
-    <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-all</artifactId>
-        <version>1.10.19</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>4.1.8.RELEASE</version>
-        <scope>test</scope>
-    </dependency>
-</dependencies>
-
-<p>4.2 统一设置所有子模块依赖的版本号</p>
-<!-- 设置变量 -->
+          <p><em>基于之前的spring项目，引入mybatis作为数据层基本框架</em> <strong>1. 引入mybatis依赖</strong></p>
 <properties>
-    <!--设置编码-->
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!-- 添加spring版本号配置 -->
-    <spring.version>4.1.8.RELEASE</spring.version>
+    <mybatis.version>3.3.0</mybatis.version>
+    <mybatis-spring.version>1.2.3</mybatis-spring.version>
 </properties>
 
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
+<!-- mybatis -->
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis-spring</artifactId>
+    <version>${mybatis-spring.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis</artifactId>
+    <version>${mybatis.version}</version>
+</dependency>
 
-<p>4.3 设置发布仓库地址</p>
-<distributionManagement>
-    <repository>
-        <id>deployRelease</id>
-        <url>http://127.0.0.1:5081/nexus/content/repositories/releases/</url>
-    </repository>
-    <snapshotRepository>
-        <id>deploySnapshot</id>
-        <url>http://127.0.0.1:5081/nexus/content/repositories/snapshots/</url>
-    </snapshotRepository>
-</distributionManagement>
+<p> <strong>2. 创建Domain类</strong> 2.1 表结构</p>
+<p>CREATE TABLE `stock` (<br>  `code` varchar(10) NOT NULL,<br>  `name` varchar(10) NOT NULL,<br>  `count` int(11) DEFAULT NULL,<br>  `main_business` varchar(256) DEFAULT NULL,<br>  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,<br>  `price` decimal(10,2) DEFAULT NULL,<br>  PRIMARY KEY (`code`)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4</p>
+<p>2.2 Stock.java</p>
+<p>package com.zmannotes.spring.mybatis.domain;</p>
+<p>public class Stock {</p>
+<pre><code>private String code;
 
-<p>4.4 设置JDK版本</p>
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>2.1</version>
-            <configuration>
-                <source>1.8</source>
-                <target>1.8</target>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
+private String name;
 
-<p> <em>Good Luck!</em></p>
+private Integer count;
+
+private String mainBusiness;
+
+private Date createTime;
+
+private BigDecimal price;</code></pre>
+<p>//setter and getter<br>//…<br>}</p>
+<p> <strong>3. 创建Dao(Mapper)</strong></p>
+<p>package com.zmannotes.spring.mybatis.dao;</p>
+<p>import com.zmannotes.spring.mybatis.domain.Stock;</p>
+<p>public interface StockMapper {<br>    //根据PK删除<br>    int deleteByPrimaryKey(String code);<br>    //插入新纪录<br>    int insert(Stock record);<br>    //根据PK查询<br>    Stock selectByPrimaryKey(String code);<br>}</p>
+<p> <strong>4. 配置映射文件</strong></p>
+<p>//通过配置文件将 数据库表 与 对象、Dao关联起来<br><?xml version="1.0" encoding="UTF-8" ?><br><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" ><br><mapper namespace="com.zmannotes.spring.mybatis.dao.StockMapper" > <!--指定Dao--><br>  <resultMap id="BaseResultMap" type="com.zmannotes.spring.mybatis.domain.Stock" > <!--指定Domain类--><br>    <id column="code" property="code" jdbcType="VARCHAR" /><br>    <result column="name" property="name" jdbcType="VARCHAR" /><br>    <result column="count" property="count" jdbcType="INTEGER" /><br>    <result column="main\_business" property="mainBusiness" jdbcType="VARCHAR" /><br>    <result column="create\_time" property="createTime" jdbcType="TIMESTAMP" /><br>    <result column="price" property="price" jdbcType="DECIMAL" /><br>  </resultMap><br>  <sql id="Base\_Column\_List" ><br>    code, name, count, main_business, create_time, price<br>  </sql><br>  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" ><br>    select<br>    <include refid="Base\_Column\_List" /><br>    from stock<br>    where code = #{code,jdbcType=VARCHAR}<br>  </select><br>  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" ><br>    delete from stock<br>    where code = #{code,jdbcType=VARCHAR}<br>  </delete><br>  <insert id="insert" parameterType="com.zmannotes.spring.mybatis.domain.Stock" ><br>    insert into stock (code, name, count,<br>      main_business, create_time, price<br>      )<br>    values (#{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{count,jdbcType=INTEGER},<br>      #{mainBusiness,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DECIMAL}<br>      )<br>  </insert><br></xml></p>
+<p><strong>5. 配置数据源及SessionFactory</strong></p>
+<?xml version="1.0" encoding="UTF-8"?>
+<p><beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd"><br>    <!-- dbcp2 数据源 --><br>    <bean id="stock\_dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+          destroy-method="close"><br>        <property name="driverClassName" value="com.mysql.jdbc.Driver" /><br>        <property name="url" value="jdbc:mysql://123.57.144.1:3306/stock" /><br>        <property name="username" value="stock" /><br>        <property name="password" value="stock" /><br>        <property name="connectionInitSqls"><br>            <list><br>                <value>set names utf8mb4;</value><br>            </list><br>        </property><br>    </bean></p>
+<pre><code>&lt;!-- 事务管理器 --&gt;
+&lt;bean id=&quot;stock\_txManager&quot;
+    class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+    &lt;property name=&quot;dataSource&quot; ref=&quot;stock\_dataSource&quot; /&gt;
+&lt;/bean&gt;
+
+&lt;tx:annotation-driven transaction-manager=&quot;stock\_txManager&quot;
+    mode=&quot;proxy&quot; proxy-target-class=&quot;true&quot; /&gt;
+
+&lt;!-- 在使用mybatis时 spring使用sqlsessionFactoryBean 来管理mybatis的sqlsessionFactory --&gt;
+&lt;!-- 创建sqlsessionFactory 并指定数据源 --&gt;
+&lt;bean id=&quot;stock\_sqlSessionFactory&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;
+    &lt;property name=&quot;dataSource&quot; ref=&quot;stock\_dataSource&quot; /&gt;
+    &lt;property name=&quot;typeAliasesPackage&quot;
+        value=&quot;com.zmannotes.spring.mybatis.domain&quot; /&gt;
+    &lt;!-- 配置扫描Mapper XML的位置 --&gt;
+    &lt;property name=&quot;mapperLocations&quot;&gt;
+        &lt;list&gt;
+            &lt;value&gt;classpath:mybatis/stock/\*.xml&lt;/value&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;!-- 使用MapperScannerConfiguer 扫描来实现 --&gt;
+&lt;!-- 这里指定了要扫描的映射接口的路径 --&gt;
+&lt;bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;&gt;
+    &lt;property name=&quot;basePackage&quot;&gt;
+        &lt;value&gt;
+            com.zmannotes.spring.mybatis.dao
+        &lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;sqlSessionFactoryBeanName&quot; value=&quot;stock\_sqlSessionFactory&quot; /&gt;
+&lt;/bean&gt;</code></pre>
+</beans>
+
+<p><strong>6. 完成单测</strong></p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)<br>@ContextConfiguration(locations = “/spring/stock-session-factory.xml”)<br>public class StockTest {<br>    @Autowired<br>    private StockMapper stockMapper;</p>
+<pre><code>/\*\*插入一条数据并自动回滚\*/
+@Transactional
+@Test
+public void test()&#123;
+    Stock stock = new Stock();
+    stock.setCode(&quot;900001&quot;);
+    stock.setName(&quot;tcl&quot;);
+    stockMapper.insert(stock);
+&#125;</code></pre>
+<p>}</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/zman2013/spring-mybatis">源码Github</a> <strong>Q&amp;A</strong> Q：无聊的2<del>4步有没有快捷完成办法？ A：当然有！那就是Mybatis Generator，自动生成2</del>4所有代码。参考 <a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2016/05/05/mybatis-generator/">LINK</a></p>
 
       
     </div>
@@ -373,7 +395,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/23/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/37/">37</a><a class="extend next" rel="next" href="/page/25/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/23/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/25/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

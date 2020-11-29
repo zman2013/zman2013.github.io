@@ -126,7 +126,7 @@
   <ul class="main-menu menu">
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">81</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">82</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">37</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">38</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/05/08/wordpress/resttemplate-detailed-config/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/09/25/wordpress/system-performance-optimize/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/05/08/wordpress/resttemplate-detailed-config/" class="post-title-link" itemprop="url">RestTemplate详细配置</a>
+            <a href="/2016/09/25/wordpress/system-performance-optimize/" class="post-title-link" itemprop="url">系统性能优化</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2016-05-08 21:15:34" itemprop="dateCreated datePublished" datetime="2016-05-08T21:15:34+08:00">2016-05-08</time>
+      <time title="Created: 2016-09-25 11:09:43" itemprop="dateCreated datePublished" datetime="2016-09-25T11:09:43+08:00">2016-09-25</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-22 22:51:03" itemprop="dateModified" datetime="2020-11-22T22:51:03+08:00">2020-11-22</time>
+        <time title="Modified: 2020-11-29 22:25:58" itemprop="dateModified" datetime="2020-11-29T22:25:58+08:00">2020-11-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,11 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/HttpClient/" itemprop="url" rel="index"><span itemprop="name">HttpClient</span></a>
+          <a href="/categories/performance-optimize/" itemprop="url" rel="index"><span itemprop="name">performance_optimize</span></a>
         </span>
     </span>
 
@@ -275,157 +271,60 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><strong>1. 配置文件如下</strong></p>
-<?xml version="1.0" encoding="UTF-8"?>
-<p><beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd"></p>
-<pre><code>&lt;!-- 声明连接池，指定大小 --&gt;
-&lt;bean id=&quot;pollingConnectionManager&quot;
-    class=&quot;org.apache.http.impl.conn.PoolingHttpClientConnectionManager&quot;&gt;
-    &lt;property name=&quot;maxTotal&quot; value=&quot;$&#123;resttemplate.http.connection.max\_total&#125;&quot; /&gt;
-    &lt;property name=&quot;defaultMaxPerRoute&quot; value=&quot;$&#123;resttemplate.http.default\_max\_per\_route&#125;&quot; /&gt;
-&lt;/bean&gt;
-
-&lt;!-- 声明http client工厂 --&gt;
-&lt;bean id=&quot;httpClientBuilder&quot; class=&quot;org.apache.http.impl.client.HttpClientBuilder&quot;
-    factory-method=&quot;create&quot;&gt;
-    &lt;property name=&quot;connectionManager&quot; ref=&quot;pollingConnectionManager&quot; /&gt;
-&lt;/bean&gt;
-
-&lt;!-- 声明http client --&gt;
-&lt;bean id=&quot;httpClient&quot; factory-bean=&quot;httpClientBuilder&quot;
-    factory-method=&quot;build&quot; /&gt;
-
-&lt;!-- 声明http rquest工厂，指定超时时间 --&gt;
-&lt;bean id=&quot;clientHttpRequestFactory&quot;
-    class=&quot;org.springframework.http.client.HttpComponentsClientHttpRequestFactory&quot;&gt;
-    &lt;constructor-arg ref=&quot;httpClient&quot; /&gt;
-    &lt;property name=&quot;connectTimeout&quot; value=&quot;$&#123;resttemplate.http.connect\_timeout&#125;&quot; /&gt;
-    &lt;property name=&quot;readTimeout&quot; value=&quot;$&#123;resttemplate.http.read\_timeout&#125;&quot; /&gt;
-&lt;/bean&gt;
-
-&lt;!-- 声明converter，指定编码 --&gt;
-&lt;bean id=&quot;utf8TextConverter&quot; class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;&gt;
-        &lt;property name=&quot;supportedMediaTypes&quot;&gt;
-            &lt;list&gt;
-                &lt;value&gt;text/html;charset=UTF-8&lt;/value&gt;
-            &lt;/list&gt;
-        &lt;/property&gt;
-    &lt;/bean&gt;
-
-&lt;!-- 最终的RestTemplate --&gt;
-&lt;bean id=&quot;restTemplate&quot; class=&quot;org.springframework.web.client.RestTemplate&quot;&gt;
-    &lt;constructor-arg ref=&quot;clientHttpRequestFactory&quot; /&gt;
-    &lt;property name=&quot;messageConverters&quot;&gt;
-        &lt;list&gt;
-            &lt;ref bean=&quot;utf8TextConverter&quot; /&gt;
-        &lt;/list&gt;
-    &lt;/property&gt;
-&lt;/bean&gt;</code></pre>
-</beans>
-
-<p> <strong>2. 封装RestTemplate</strong></p>
-<p>public class HttpClientWrapper {</p>
-<pre><code>protected Logger logger = LoggerFactory.getLogger(HttpClientWrapper.class);
-
-@Autowired
-protected RestTemplate restTemplate;
-
-protected ObjectMapper mapper = Jackson2ObjectMapperBuilder.json().build();
-
-/\*\*
- \* 请求指定url，并获得返回对象
- \* @param url http://google.com?key1=value1&amp;key2=value2...
- \* @param method GET
- \* @param tClass XXXResponse.class
- \* @return XXXResponse instance
- \*/
-public&lt;T&gt; T request(String url, HttpMethod method, Class&lt;T&gt; tClass) &#123;
-    JavaType returnType = TypeFactory.defaultInstance().constructType(
-            tClass);
-    String content = this.requestForString(url, method, null, null);
-    if (content != null) &#123;
-        try &#123;
-            T object = mapper.readValue(content, returnType);
-            return object;
-        &#125; catch (JsonParseException e) &#123;
-            logger.error(&quot;JSON parse exception: \\n&quot;);
-            logger.error(&quot;Content: &quot; + content);
-            logger.error(e.getMessage(), e);
-        &#125; catch (JsonMappingException e) &#123;
-            logger.error(&quot;JSON mapping exception: \\n&quot;);
-            logger.error(&quot;Content: &quot; + content);
-            logger.error(e.getMessage(), e);
-        &#125; catch (IOException e) &#123;
-            logger.error(e.getMessage(), e);
-        &#125;
-    &#125; else &#123;
-        logger.error(&quot;请求返回空, method:&#123;&#125;, url:&#123;&#125;&quot;, method, url);
-    &#125;
-
-    return null;
-
-&#125;
-
-/\*\*
- \* 记录Request、Response内容和请求耗时
- \*/
-private String requestForString(String url, HttpMethod method,
-        Map&lt;String, Object&gt; pathVariables, HttpEntity&lt;String&gt; httpEntity) &#123;
-    ResponseEntity&lt;String&gt; response = null;
-
-    if (httpEntity == null) &#123;
-        httpEntity = new HttpEntity&lt;String&gt;(&quot;&quot;);
-    &#125;
-
-    this.logRequest(url, method, pathVariables, httpEntity);
-    long start = System.currentTimeMillis();
-    try &#123;
-        if (pathVariables == null) &#123;
-            response = restTemplate.exchange(url, method, httpEntity,
-                    String.class);
-        &#125; else &#123;
-            response = restTemplate.exchange(url, method, httpEntity,
-                    String.class, pathVariables);
-        &#125;
-    &#125; catch (Exception e) &#123;
-        logger.error(e.getMessage(), e);
-        return null;
-    &#125;
-    long end = System.currentTimeMillis();
-    logger.info(&quot;Time: &quot; + (end - start));
-
-    if (response.getStatusCode() != HttpStatus.OK) &#123;
-        logger.error(&quot;Http response is NOT 200, URL: &quot; + method + &quot; &quot; + url
-                + &quot;; HTTP status: &quot; + response.getStatusCode());
-        return null;
-    &#125;
-
-    String content = response.getBody();
-
-    return content;
-&#125;
-
-protected void logRequest(String url, HttpMethod method,
-        Map&lt;String, Object&gt; pathVariables, HttpEntity&lt;String&gt; httpEntity) &#123;
-
-    if (pathVariables != null) &#123;
-        URI expanded = new UriTemplate(url).expand(pathVariables);
-        url = expanded.toString();
-    &#125;
-
-    logger.info(&quot;Http Invoke: &quot; + method + &quot; &quot; + url);
-    if (!StringUtils.isEmpty(httpEntity.getBody())) &#123;
-        logger.info(&quot;Body: &quot; + httpEntity.toString());
-    &#125;
-
-&#125;</code></pre>
+          <p><em>在并发量一定的情况下如何对系统响应时间进行详细分析</em> <strong>1. 分析步骤</strong> 1.1 在关键点位添加日志信息 -&gt; 缩小目标范围</p>
+<p>a) 主要函数耗时</p>
+<p>b) 访问外部系统耗时：DB、MQ、Cache、FileSystem、RPC、HTTP等</p>
+<p>c) 接口内不同逻辑耗时百分比/绝对值</p>
+<p>1.2 详细分析瓶颈出现原因</p>
+<p>a) 技术层面：优先考虑</p>
+<p>b) 业务逻辑：业务逻辑改造一般影响较大、耗时较长，优先级低</p>
+<p>1.3 针对性解决问题</p>
+<p>一旦定位了问题原因，解决问题的方法都相当容易</p>
+<p><strong>2. 技术层面</strong> 2.1 代码实现</p>
+<p>a) 串行逻辑是否可以并行化</p>
+<p>b) 串行请求是否可以批量(batch)请求</p>
+<p>c) SQL是否需要优化</p>
+<p>d) 算法复杂度是否需要优化</p>
+<p>e) 语言核心库是否提供了性能更高的使用方式</p>
+<p>f) 引用的第三方库是否存在性能问题</p>
+<p>g) 每次外部请求是否都重新建立连接</p>
+<p>2.2 内核/硬件层面</p>
+<p>a) CPU使用率</p>
+<p>b) 内存使用率</p>
+<p>c) 磁盘IO状况</p>
+<p>d) 网络状况</p>
+<p>d) 瓶颈是否由调用的内核函数引起？</p>
+<p>该函数是如何工作的；新版本内核是否已经对此优化；如何调整使用方式可以更高效</p>
+<p>2.3 日志</p>
+<p>线程会争夺日志锁，在高并发情况下，同步写日志很影响性能。异步写又可能引起OOM。</p>
+<p>*2.4 垃圾回收</p>
+<p>拥有垃圾回收机制的语言，需要关注垃圾回收的情况如何。例如：jvm的gc状况。</p>
+<p><strong>3. 业务逻辑</strong></p>
+<p>随着业务的增长，接口负担的功能原来越复杂，逻辑链路越来越长，事务越来越大，性能越来越差，越来越没办法维护。（如果有人负责把控、从相对长远些的角度设计系统的迭代，这种情况本是可以避免的）</p>
+<p>优化办法只有一个就是：保留主链路，旁支链路异步化。</p>
+<p><strong>4. 常用工具</strong> 4.1 内核</p>
+<p>a) CPU: top、vmstat</p>
+<p>b) MEM: top、free</p>
+<p>c) disk IO: iostat</p>
+<p>例: iostat -kx 1 //每秒统计一次io</p>
+<p>iotop -o //查看磁盘使用率较高的进程</p>
+<p>d) 网络</p>
+<p>流量：sar -n DEV 1 3 //每秒统计一次所有网卡流量，共3次</p>
+<p>网络抓包: tmpdump，可配合tmptrace、wireshark分析</p>
+<p>TCP连接状况：netstat -an grep TIME_WAIT //client端近期关闭tcp连接数量</p>
+<p>e) 查看/proc/xxx中的系统详细信息</p>
+<p>4.2 java</p>
+<p>a) gc: jstat -gcutil pid 1s</p>
+<p>b) 性能分析工具: jprofiler</p>
+<p><strong>5. 小知识</strong></p>
+<p>a) 网络抖动引起tcp重传，一般内部系统之间的调用，linux设置的重传时间间隔为至少200ms以上。</p>
+<p>b) 服务之间通过网络调用，网络开销在500us ~ 2ms</p>
+<p>c) 机械磁盘寻址: 20ms</p>
+<p>d) 磁盘的某page中如果存在数据，程序写此page时如果不会填充整个page，内核会先载入整个page，再输出整个page，保证磁盘数据不丢。这会导致一次被动读磁盘，性能损耗会很大。否则会直接写入磁盘高速缓存，间隔固定时间刷盘一次(5s)。</p>
+<p>e) java遍历map使用map.entrys</p>
+<p>f) java字符串拼接使用stringbuilder</p>
+<p>g) 日志使用log4j2异步</p>
+<p><strong>*</strong> 随着系统并发量的增加，系统响应时间会逐步下降甚至雪崩，一般是由多线程之间、模块之间、子系统之间争夺资源（锁）引起的。</p>
 
       
     </div>
@@ -447,7 +346,7 @@ protected void logRequest(String url, HttpMethod method,
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/37/">37</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
