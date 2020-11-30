@@ -32,7 +32,7 @@
 <meta property="og:description" content="Android进程间传递文件的FD，进而实现一个App访问另一个App私有目录下的文件，该方式不能跳过SE拦截。访问非本进程的文件，官网推荐的做法是使用Content Uri授权，无论设计还是开发都要比share fd的方式麻烦。 Java-Client + Java-Servicepackage example;  interface IShareFdService &amp;#123;      vo">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-11-29T13:41:24.000Z">
-<meta property="article:modified_time" content="2020-11-29T15:09:23.578Z">
+<meta property="article:modified_time" content="2020-11-30T15:45:12.550Z">
 <meta property="article:author" content="zman">
 <meta property="article:tag" content="share fd">
 <meta name="twitter:card" content="summary">
@@ -174,7 +174,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Client-Java-Service"><span class="nav-number">1.</span> <span class="nav-text">Java-Client + Java-Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Client-C-Service"><span class="nav-number">2.</span> <span class="nav-text">Java-Client + C-Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AEaidl%E7%94%9F%E6%88%90c%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">根据aidl生成c代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Links"><span class="nav-number">4.</span> <span class="nav-text">Links</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Client-Java-Service"><span class="nav-number">1.</span> <span class="nav-text">Java-Client + Java-Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Client-C-Service"><span class="nav-number">2.</span> <span class="nav-text">Java-Client + C-Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AEaidl%E7%94%9F%E6%88%90c%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">根据aidl生成c代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C%E7%AB%AF%E4%BB%A3%E7%A0%81"><span class="nav-number">4.</span> <span class="nav-text">C端代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E7%AB%AF%E4%BB%A3%E7%A0%81"><span class="nav-number">5.</span> <span class="nav-text">Java端代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Links"><span class="nav-number">6.</span> <span class="nav-text">Links</span></a></li></ol></div>
         </section>
         <!--/noindex-->
 
@@ -247,10 +247,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2020-11-29 21:41:24 / Modified: 23:09:23" itemprop="dateCreated datePublished" datetime="2020-11-29T21:41:24+08:00">2020-11-29</time>
+      <time title="Created: 2020-11-29 21:41:24" itemprop="dateCreated datePublished" datetime="2020-11-29T21:41:24+08:00">2020-11-29</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2020-11-30 23:45:12" itemprop="dateModified" datetime="2020-11-30T23:45:12+08:00">2020-11-30</time>
+      </span>
 
   
 </div>
@@ -327,6 +333,45 @@ in_fd &#x3D; _aidl_data.readParcelFileDescriptor();</code></pre>
 
 </li>
 </ol>
+<h2 id="C端代码"><a href="#C端代码" class="headerlink" title="C端代码"></a>C端代码</h2><pre class="language-cpp" data-language="cpp"><code class="language-cpp">ShareFdService service &#x3D; new ShareFdService();
+
+sp&lt;ProcessState&gt; proc(ProcessState::self());
+sp&lt;IServiceManager&gt; sm &#x3D; defaultServiceManager();
+&#x2F;&#x2F; add service
+sm-&gt;addService(String16(&quot;com.example.aidl.IShareFdService&quot;), service);
+
+&#x2F;&#x2F; 查看ServiceManager注册的所有service
+Vector&lt;String16&gt; listServices &#x3D; sm-&gt;listServices();
+Vector&lt;String16&gt;::iterator it &#x3D; listServices.begin();
+for (; it !&#x3D; listServices.end(); ++it)
+&#123;
+  String8 name &#x3D; String8((*it));
+  fprintf(stdout, &quot;StartNodeService1,Name&#x3D;%s\n&quot;, name.string());
+&#125;</code></pre>
+
+<h2 id="Java端代码"><a href="#Java端代码" class="headerlink" title="Java端代码"></a>Java端代码</h2><p>如何绑定c端注册binder service？</p>
+<pre class="language-java" data-language="java"><code class="language-java">try &#123;
+    Class localClass &#x3D; Class.forName(&quot;android.os.ServiceManager&quot;);
+    Method getService &#x3D; localClass.getMethod(&quot;getService&quot;, new Class[] &#123; String.class &#125;);
+    if (getService !&#x3D; null) &#123;
+        Log.i(TAG, &quot;try to bind IShareFdService&quot;);
+        Object result &#x3D; getService.invoke(localClass, new Object[] &#123; &quot;com.example.aidl.IShareFdService&quot; &#125;;
+        
+        if (result !&#x3D; null) &#123;
+            
+            IBinder binder &#x3D; (IBinder) result;
+            Log.i(TAG, &quot;connected, isBinder alive: &quot; + binder.isBinderAlive());
+
+            IShareFdService service &#x3D; IShareFdService.Stub.asInterface(binder);
+
+            ParcelFileDescriptor fd &#x3D; ParcelFileDescriptor.open(file, MODE_WRITE_ONLY);
+            service.shareFd(fd);
+        &#125;
+    &#125;
+&#125; catch (Exception e) &#123;
+    Log.e(TAG, &quot;error&quot;, e);
+&#125;</code></pre>
+
 <h2 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h2><p><a target="_blank" rel="noopener" href="https://android.googlesource.com/platform/system/tools/aidl/+/brillo-m10-dev/docs/aidl-cpp.md">aidl-cpp</a></p>
 
     </div>
