@@ -90,6 +90,51 @@ _aidl_ret_status = _aidl_data.readInt32(&in_fd);
 in_fd = _aidl_data.readParcelFileDescriptor();
 ```
 
+## C端代码
+```cpp
+  ShareFdService service = new ShareFdService();
+
+  sp<ProcessState> proc(ProcessState::self());
+  sp<IServiceManager> sm = defaultServiceManager();
+  // add service
+  sm->addService(String16("com.example.aidl.IShareFdService"), service);
+
+  // 查看ServiceManager注册的所有service
+  Vector<String16> listServices = sm->listServices();
+  Vector<String16>::iterator it = listServices.begin();
+  for (; it != listServices.end(); ++it)
+  {
+    String8 name = String8((*it));
+    fprintf(stdout, "StartNodeService1,Name=%s\n", name.string());
+  }
+```
+
+## Java端代码
+如何绑定c端注册binder service？
+```java
+try {
+    Class localClass = Class.forName("android.os.ServiceManager");
+    Method getService = localClass.getMethod("getService", new Class[] { String.class });
+    if (getService != null) {
+        Log.i(TAG, "try to bind IShareFdService");
+        Object result = getService.invoke(localClass, new Object[] { "com.example.aidl.IShareFdService" };
+        
+        if (result != null) {
+            
+            IBinder binder = (IBinder) result;
+            Log.i(TAG, "connected, isBinder alive: " + binder.isBinderAlive());
+
+            IShareFdService service = IShareFdService.Stub.asInterface(binder);
+
+            ParcelFileDescriptor fd = ParcelFileDescriptor.open(file, MODE_WRITE_ONLY);
+            service.shareFd(fd);
+        }
+    }
+} catch (Exception e) {
+    Log.e(TAG, "error", e);
+}
+```
+
 ## Links
 [aidl-cpp](https://android.googlesource.com/platform/system/tools/aidl/+/brillo-m10-dev/docs/aidl-cpp.md)
 
