@@ -249,7 +249,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-12-01 09:22:09" itemprop="dateModified" datetime="2020-12-01T09:22:09+08:00">2020-12-01</time>
+        <time title="Modified: 2020-12-01 09:36:58" itemprop="dateModified" datetime="2020-12-01T09:36:58+08:00">2020-12-01</time>
       </span>
 
   
@@ -365,6 +365,14 @@ for (; it !&#x3D; listServices.end(); ++it)
 &#125; catch (Exception e) &#123;
     Log.e(TAG, &quot;error&quot;, e);
 &#125;</code></pre>
+
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><h3 id="1-环境配置"><a href="#1-环境配置" class="headerlink" title="1. 环境配置"></a>1. 环境配置</h3><p>Java App访问C Service需要配置SE策略或者直接关闭SE，Java App需要设置为android.uid.system</p>
+<h3 id="2-Android关闭、启用SE"><a href="#2-Android关闭、启用SE" class="headerlink" title="2. Android关闭、启用SE"></a>2. Android关闭、启用SE</h3><pre class="language-shell" data-language="shell"><code class="language-shell">adb shell setenforce 0 # 设置成permissive 模式
+adb shell setenforce 1 # 设置成enforce 模式
+adb shell getenforce   # 查看当前状态</code></pre>
+
+<h3 id="3-Android-App签名"><a href="#3-Android-App签名" class="headerlink" title="3. Android App签名"></a>3. Android App签名</h3><p>platform.x509.pem,platform.pk8存放在: build/target/product/security/<br>signapk.jar存放在: out/host/linux-x86/framework/</p>
+<pre class="language-shell" data-language="shell"><code class="language-shell">java -Djava.library.path&#x3D;&quot;&#x2F;android&#x2F;out&#x2F;host&#x2F;linux-x86&#x2F;lib64&quot; -jar signapk.jar platform.x509.pem platform.pk8 share-fd-unsigned.apk share-fd-signed.apk</code></pre>
 
 <h2 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h2><p><a target="_blank" rel="noopener" href="https://android.googlesource.com/platform/system/tools/aidl/+/brillo-m10-dev/docs/aidl-cpp.md">aidl-cpp</a></p>
 
