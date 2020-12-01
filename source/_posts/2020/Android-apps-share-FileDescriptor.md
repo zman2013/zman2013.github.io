@@ -135,6 +135,24 @@ try {
 }
 ```
 
+## 注意点
+### 1. 环境配置
+Java App访问C Service需要配置SE策略或者直接关闭SE，Java App需要设置为android.uid.system
+
+### 2. Android关闭、启用SE
+```shell
+adb shell setenforce 0 # 设置成permissive 模式
+adb shell setenforce 1 # 设置成enforce 模式
+adb shell getenforce   # 查看当前状态
+```
+
+### 3. Android App签名
+platform.x509.pem,platform.pk8存放在: build/target/product/security/
+signapk.jar存放在: out/host/linux-x86/framework/
+```shell
+java -Djava.library.path="/android/out/host/linux-x86/lib64" -jar signapk.jar platform.x509.pem platform.pk8 share-fd-unsigned.apk share-fd-signed.apk
+```
+
 ## Links
 [aidl-cpp](https://android.googlesource.com/platform/system/tools/aidl/+/brillo-m10-dev/docs/aidl-cpp.md)
 
