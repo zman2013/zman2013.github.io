@@ -87,7 +87,8 @@ lunch 9
 ```cpp
 // 找到函数onTransact，修改其中读取fd的代码如下:
 _aidl_ret_status = _aidl_data.readInt32(&in_fd);
-in_fd = _aidl_data.readParcelFileDescriptor();
++ in_fd = _aidl_data.readParcelFileDescriptor();
++ in_fd = dup(in_fd);
 ```
 
 ## C端代码
@@ -147,10 +148,10 @@ adb shell getenforce   # 查看当前状态
 ```
 
 ### 3. Android App签名
-platform.x509.pem,platform.pk8存放在: build/target/product/security/
-signapk.jar存放在: out/host/linux-x86/framework/
+platform.x509.pem,platform.pk8存放在: android/build/target/product/security/
+signapk.jar存放在: android/out/host/linux-x86/framework/
 ```shell
-java -Djava.library.path="/android/out/host/linux-x86/lib64" -jar signapk.jar platform.x509.pem platform.pk8 share-fd-unsigned.apk share-fd-signed.apk
+java -Djava.library.path="android/out/host/linux-x86/lib64" -jar signapk.jar platform.x509.pem platform.pk8 share-fd-unsigned.apk share-fd-signed.apk
 ```
 
 ## Links
