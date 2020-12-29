@@ -1,5 +1,5 @@
 ---
-title: Spring HTTP Request & Response Log
+title: Spring HTTP Request Log
 tags: []
 id: '324'
 categories:
@@ -49,7 +49,7 @@ public CommonsRequestLoggingFilter logFilter() {
 ```
 ##  1.4 设置logback配置
 ```xml
-<logger name="com.chehejia.iot.batch.advice.ApiAccessFilter" additivity="false">
+<logger name="com.example.spring.log.ApiAccessFilter" additivity="false">
     <level value="DEBUG"/>
 </logger>
 ```
