@@ -26,13 +26,13 @@
 
   <meta name="description" content="1. Controller Log1.1 确认是Spring Boot项目1.2 创建Filterimport org.springframework.web.filter.CommonsRequestLoggingFilter;  import javax.servlet.http.HttpServletRequest;  public class ApiAccessFilter extends">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring HTTP Request &amp; Response Log">
+<meta property="og:title" content="Spring HTTP Request Log">
 <meta property="og:url" content="http://zman2013.github.io/2019/10/28/wordpress/spring-http-request-response-log/index.html">
 <meta property="og:site_name" content="zmannotes">
 <meta property="og:description" content="1. Controller Log1.1 确认是Spring Boot项目1.2 创建Filterimport org.springframework.web.filter.CommonsRequestLoggingFilter;  import javax.servlet.http.HttpServletRequest;  public class ApiAccessFilter extends">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2019-10-28T13:13:55.000Z">
-<meta property="article:modified_time" content="2020-12-21T09:47:06.256Z">
+<meta property="article:modified_time" content="2020-12-29T04:47:56.560Z">
 <meta property="article:author" content="zman">
 <meta name="twitter:card" content="summary">
 
@@ -50,7 +50,7 @@
   };
 </script>
 
-  <title>Spring HTTP Request & Response Log | zmannotes</title>
+  <title>Spring HTTP Request Log | zmannotes</title>
   
 
 
@@ -236,7 +236,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Spring HTTP Request & Response Log
+          Spring HTTP Request Log
         </h1>
 
         <div class="post-meta-container">
@@ -254,7 +254,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-12-21 17:47:06" itemprop="dateModified" datetime="2020-12-21T17:47:06+08:00">2020-12-21</time>
+        <time title="Modified: 2020-12-29 12:47:56" itemprop="dateModified" datetime="2020-12-29T12:47:56+08:00">2020-12-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -309,7 +309,7 @@ public CommonsRequestLoggingFilter logFilter() &#123;
     filter.setAfterMessagePrefix(&quot;&quot;);
     return filter;
 &#125;</code></pre>
-<h2 id="1-4-设置logback配置"><a href="#1-4-设置logback配置" class="headerlink" title=" 1.4 设置logback配置"></a> 1.4 设置logback配置</h2><pre class="language-xml" data-language="xml"><code class="language-xml">&lt;logger name&#x3D;&quot;com.chehejia.iot.batch.advice.ApiAccessFilter&quot; additivity&#x3D;&quot;false&quot;&gt;
+<h2 id="1-4-设置logback配置"><a href="#1-4-设置logback配置" class="headerlink" title=" 1.4 设置logback配置"></a> 1.4 设置logback配置</h2><pre class="language-xml" data-language="xml"><code class="language-xml">&lt;logger name&#x3D;&quot;com.example.spring.log.ApiAccessFilter&quot; additivity&#x3D;&quot;false&quot;&gt;
     &lt;level value&#x3D;&quot;DEBUG&quot;&#x2F;&gt;
 &lt;&#x2F;logger&gt;</code></pre>
 
