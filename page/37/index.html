@@ -126,7 +126,7 @@
   <ul class="main-menu menu">
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">82</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">83</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">37</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">38</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/10/12/wordpress/install-wordpress-2/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/10/18/wordpress/devenv/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/10/12/wordpress/install-wordpress-2/" class="post-title-link" itemprop="url">WordPress安装步骤</a>
+            <a href="/2015/10/18/wordpress/devenv/" class="post-title-link" itemprop="url">开发环境初始化</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2015-10-13 07:29:24" itemprop="dateCreated datePublished" datetime="2015-10-13T07:29:24+08:00">2015-10-13</time>
+      <time title="Created: 2015-10-18 08:51:27" itemprop="dateCreated datePublished" datetime="2015-10-18T08:51:27+08:00">2015-10-18</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-12-29 12:47:56" itemprop="dateModified" datetime="2020-12-29T12:47:56+08:00">2020-12-29</time>
+        <time title="Modified: 2021-02-18 16:08:27" itemprop="dateModified" datetime="2021-02-18T16:08:27+08:00">2021-02-18</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,7 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/WordPress/" itemprop="url" rel="index"><span itemprop="name">WordPress</span></a>
+          <a href="/categories/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" itemprop="url" rel="index"><span itemprop="name">开发环境</span></a>
         </span>
     </span>
 
@@ -271,26 +271,73 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>安装WordPress的详细步骤。</em> 在阿里云租用了一台ECS，用Ubuntu 14.04 64位系统。 WordPress是一个php网站，因此只需搭建一个php+apache+mysql服务器环境，即可正常使用。 <strong>1. 更新ubuntu的源列表</strong></p>
-<p><a target="_blank" rel="noopener" href="http://wiki.ubuntu.org.cn/%E6%BA%90%E5%88%97%E8%A1%A8">http://wiki.ubuntu.org.cn/%E6%BA%90%E5%88%97%E8%A1%A8</a> （我选择了清华服务器）</p>
-<p><strong>2. 安装php</strong></p>
-<p>sudo apt-get install php5-cli</p>
-<p><strong>3. 安装apache及php模块</strong></p>
-<p>sudo apt-get install apache2</p>
-<p>sudo apt-get install libapache2-mod-php5</p>
-<p><strong>4. 安装mysql及php模块</strong></p>
-<p>wget <a target="_blank" rel="noopener" href="http://dev.mysql.com/get/mysql-apt-config/_0.3.7-1ubuntu14.04/_all.deb">http://dev.mysql.com/get/mysql-apt-config\_0.3.7-1ubuntu14.04\_all.deb</a><br>sudo dpkg -i mysql-apt-config_0.3.7-1ubuntu14.04_all.deb<br>sudo apt-get update<br>sudo apt-get install mysql-server</p>
-<p>(mysql官方安装文档: <a target="_blank" rel="noopener" href="http://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/index.html#apt-repo-fresh-install">http://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/index.html#apt-repo-fresh-install</a>)</p>
-<p>#创建wordpress专用数据库<br>mysql -uroot -p<br>#sql: create database wordpress<br>#安装php mysql拓展<br>sudo apt-get install php5-mysql php5-curl php5-gd php5-idn php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl</p>
-<p><strong>5. 下载并安装WordPress</strong> 5.1 下载4.3.1 wget <a target="_blank" rel="noopener" href="https://wordpress.org/wordpress-4.3.1.zip">https://wordpress.org/wordpress-4.3.1.zip</a> 5.2 解压到/var/www目录下 sudo unzip wordpress-4.3.1-zh_CN.zip -d /var/www 5.3 修改apache2的配置，编辑文件/etc/apache2/sites-available/000-default.conf如下：</p>
-<p>#DocumentRoot /var/www/html<br>DocumentRoot /var/www/wordpress</p>
-<p>5.4 重启apache2</p>
-<p>apachectl restart</p>
-<p>5.5 在浏览器输入阿里云ECS的IP即可访问WordPress。 5.6 第一次访问WordPress默认进入数据库配置页面，输入如下信息：</p>
-<p>数据库地址</p>
-<p>用户名/密码</p>
-<p>数据库名称（在步骤4创建的名为wordpress数据库)</p>
-<p>5.7 点击完成 <strong>6. 至此为WordPress的全部安装过程，开始第一篇blog吧。</strong>   Q：安装插件时FTP问题 A：通过web安装插件时，wordpress有可能要求输入ftp凭证。 这是由权限问题引起的：apache的运行用户与wordpress目录的用户不同，将wordpress目录（包含子目录）的拥有者修改apache的运行用户即可。（apache默认用户为www-data） Q：禁止googleapi fonts A：后台搜索‘disable google fonts’，安装、激活。</p>
+          <p><em>从虚拟机安装到基础的开发环境配置完成。</em> <strong>基础开发环境：</strong> VirtualBox+Ubuntu emacs+免密码登录配置 chrome+SwithySharp JDK+STS+Git+Maven+Gradle</p>
+<h3 id="1-VirtualBox"><a href="#1-VirtualBox" class="headerlink" title="1. VirtualBox"></a><strong>1. VirtualBox</strong></h3><p>VirtualBox普通的安装就不介绍了，本段介绍下移动VirtualBox的Virtual Disk Image和手动扩大磁盘大小的方法。 <strong>移动VirtualBox存储位置</strong> 背景：默认的Virtual Disk Image 存放在 <code>C:\Users\&#123;UserName&#125;\VirtualBox VMs</code> ，随着C盘空间越来越小，需要移动Virtual Disk Image的位置。 操作步骤：</p>
+<ol>
+<li> 将原始XXX.vdi文件移动到D盘。</li>
+<li> 删除Virtual Box图形界面程序中删除旧的虚拟电脑。</li>
+<li> 新建虚拟电脑，名称必须与旧的虚拟电脑名称一样，在第3部‘虚拟硬盘’，选择‘使用已有的虚拟硬盘文件’，然后选择在第一部中移动到D盘的XXX.vdi文件即可。</li>
+</ol>
+<p><strong>手动扩大磁盘大小</strong> 背景：随着虚拟机内容的增多，很可能遇到最初配置的硬盘大小不够用，需要扩大硬盘大小。 操作步骤：</p>
+<ol>
+<li><p> 打开cmd</p>
+</li>
+<li><p> 进入VirtualBox安装目录 <code>cd C:\Program Files\Oracle\VirtualBox</code></p>
+</li>
+<li><p> 调整虚拟磁盘大小 <code>VBoxManage modifyhd “D:\virtual-host\dev.vdi” –-resize 10240</code> (单位M)</p>
+</li>
+<li><p>进入虚拟机，打开console，输入lsblk查看设备块信息 ，发现sda盘多了10G空间：</p>
+<p> zman@zman:/data/zman$ lsblk<br> NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT<br> sda      8:0    0  29.3G  0 disk<br> ├─sda1   8:1    0   5.5G  0 part /<br> ├─sda2   8:2    0     1K  0 part<br> └─sda5   8:5    0   2.5G  0 part [SWAP]<br> sr0     11:0    1  1024M  0 rom</p>
+</li>
+<li><p> 使用gparted分配空间，使用方式与windows下一样，安装命令<code>sudo apt-get install gparted</code></p>
+</li>
+<li><p>查看新分区sda3的UUID</p>
+<p> zman@zman:/data/zman$ sudo blkid /dev/sda3<br> /dev/sda3: LABEL=”data” UUID=”4aba2e9c-6347-4386-bdbf-b0362604222a” TYPE=”ext4”</p>
+</li>
+<li><p> 设置sda3分区自动挂载，修改配置文件/etc/fstab添加如下一行：<code>UUID=4aba2e9c-6347-4386-bdbf-b0362604222a /data ext4 defaults 0 0</code> UUID为在第6步获取得。</p>
+</li>
+<li><p> 我习惯将/home目录下的用户空间软链到/data目录下 <code>ln -s /data/zman /home</code>。</p>
+</li>
+</ol>
+<h3 id="2-Ubuntu"><a href="#2-Ubuntu" class="headerlink" title="2. Ubuntu"></a>2. Ubuntu</h3><p><strong>分区配置</strong></p>
+<p>/home/zman/apps            #常用工具安装目录<br>/home/zman/tmp             #临时文件存放目录<br>/home/zman/workspace       #开发工作空间<br>/home/lib/                 #公用库安装目录</p>
+<h3 id="3-Emacs"><a href="#3-Emacs" class="headerlink" title="3. Emacs"></a>3. Emacs</h3><p>sudo apt-get install emacs</p>
+<h3 id="4-免密码登录配置"><a href="#4-免密码登录配置" class="headerlink" title="4. 免密码登录配置"></a>4. 免密码登录配置</h3><p>1. 修改~/.ssh/config，添加目标机器信息：</p>
+<p>Host aliHost<br>  HostName 122.56.112.1<br>  User root</p>
+<p>2. 在本机生成公私钥 <code>ssh-keygen -t rsa -P &#39;&#39;</code> ：id_rsa和id_rsa.pub。 3. 将id_rsa.pub传至目标机器 <code>scp ~/.ssh/id_rsa.pub aliHost:~/tmp</code> 4. 在目标机器上，将id_rsa.pub内容添加到auththorized_keys文件中 <code>cat ~/tmp/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</code> 5. 在本机修改.bashrc，添加alias命令 <code>alias aliHost=&#39;ssh aliHost&#39;</code> 6. 在本机console中输入aliHost即可连接目标机器 <strong>**  工作中经常遇到本地机器不能直连目标机器，需经过跳板机，直连配置步骤与上面相同，但需要修改~/.ssh/config对目标机器开始代理透传</strong></p>
+<p>Host proxyHost<br>  HostName 123.123.155.155<br>  User zman<br>Host targetHost<br>  HostName 134.134.155.155<br>  User zman<br>  ProxyComand ssh proxyHost nc -w 120 %h 22</p>
+<h3 id="5-chrome-SwithySharp"><a href="#5-chrome-SwithySharp" class="headerlink" title="5. chrome+SwithySharp"></a>5. chrome+SwithySharp</h3><p>我习惯使用chrome+SwithySharp搭配，只要墙外有台机器，本地ssh连接时开始socks代理即可。 chrome可以在google.cn下载，SwithSharp可以在<a target="_blank" rel="noopener" href="http://chrome-extension-downloader.com/%E6%90%9C%E7%B4%A2%E2%80%98https://chrome.google.com/webstore/detail/proxy-switchysharp/dpplabbmogkhghncfbfdeeokoefdjegm?utm%5C_source=chrome-ntp-icon%E2%80%99%E4%B8%8B%E8%BD%BD%E3%80%82">http://chrome-extension-downloader.com/搜索‘https://chrome.google.com/webstore/detail/proxy-switchysharp/dpplabbmogkhghncfbfdeeokoefdjegm?utm\_source=chrome-ntp-icon’下载。</a></p>
+<h3 id="6-JDK"><a href="#6-JDK" class="headerlink" title="6. JDK"></a>6. JDK</h3><p>cd ~/downloads  #进入下载目录<br>wget <a target="_blank" rel="noopener" href="http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-linux-x64.tar.gz">http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-linux-x64.tar.gz</a> –no-check-certificate –no-cookies –header “Cookie: oraclelicense=accept-securebackup-cookie” #下载<br>tar zxvf jdk-8u60-linux-x64.tar.gz -C /usr/lib/jvm/ #解压<br>emacs -nw ~/.bashrc #添加如下内容</p>
+<p>#java<br>export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_60<br>export JRE_HOME=${JAVA_HOME}/jre<br>export PATH=${JAVA_HOME}/bin:$PATH</p>
+<p><strong>下载地址：<a target="_blank" rel="noopener" href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</a></strong></p>
+<h3 id="7-STS（已经转战IntelliJ了）"><a href="#7-STS（已经转战IntelliJ了）" class="headerlink" title="7. STS（已经转战IntelliJ了）"></a>7. STS（已经转战IntelliJ了）</h3><p>cd ~/downloads<br>wget <a target="_blank" rel="noopener" href="http://dist.springsource.com/release/STS/3.7.1.RELEASE/dist/e4.5/spring-tool-suite-3.7.1.RELEASE-e4.5.1-linux-gtk-x86/_64.tar.gz">http://dist.springsource.com/release/STS/3.7.1.RELEASE/dist/e4.5/spring-tool-suite-3.7.1.RELEASE-e4.5.1-linux-gtk-x86\_64.tar.gz</a><br>tar zxvf spring-tool-suite-3.7.1.RELEASE-e4.5.1-linux-gtk-x86_64.tar.gz -C ~/apps</p>
+<p>自定义配置：</p>
+<ol>
+<li> 安装主题 <a target="_blank" rel="noopener" href="http://marketplace.eclipse.org/content/eclipse-color-theme%EF%BC%8C">http://marketplace.eclipse.org/content/eclipse-color-theme，</a></li>
+<li> General -&gt; Appearance -&gt; Theme：选择Dark。</li>
+<li> General -&gt; Appearance -&gt; Color Theme：选择Solarized Dark。</li>
+<li> General -&gt; Appearance -&gt; Colors and Fonts -&gt; Text Font: 选择Courier 10。</li>
+<li> General -&gt; Keys -&gt; Scheme: Emacs</li>
+<li> General -&gt; Editors -&gt; Text Editors: 选中’Insert spaces for tabs’。</li>
+<li> General -&gt; Java -&gt; Code Style -&gt; Formatter: 使用Java Conventions，并编辑：Indentation-&gt;Tab: Space Only, Off/On Tags: 选择Enable。</li>
+<li> General -&gt; Network Connections 配置SOCKS到本地开出的SOCKS端口，我的是：Host: 127.0.0.1，Port: 1080。</li>
+</ol>
+<p>或者引入旧配置：</p>
+<p>Import -&gt; Preferences -&gt; All (选择导出的配置文件*.epf)</p>
+<p><strong>下载地址：<a target="_blank" rel="noopener" href="http://spring.io/tools/sts/all">http://spring.io/tools/sts/all</a></strong> <em>国内下载特别慢，可以先在ec2下载好，再scp到本地。</em></p>
+<h3 id="8-Git"><a href="#8-Git" class="headerlink" title="8. Git"></a>8. Git</h3><p>sudo apt-get install git</p>
+<h3 id="9-Maven"><a href="#9-Maven" class="headerlink" title="9. Maven"></a>9. Maven</h3><p>cd ~/downloads<br>wget <a target="_blank" rel="noopener" href="http://mirror.bit.edu.cn/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz">http://mirror.bit.edu.cn/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz</a><br>tar zxvf apache-maven-3.3.3-bin.tar.gz -C ~/apps<br>emacs -nw ~/.bashrc #添加如下内容：</p>
+<p>#maven<br>export PATH=/home/zman/apps/apache-maven-3.3.3/bin:$PATH</p>
+<p>添加oschina镜像：</p>
+<p>mkdir ~/.m2<br>emacs -nw ~/.m2/settings.xml 内容如下：</p>
+<p><settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0                                                                                                                                             
+                          http://maven.apache.org/xsd/settings-1.0.0.xsd"><br>      <localRepository/><br>      <interactiveMode/><br>      <usePluginRegistry/><br>      <offline/><br>      <pluginGroups/><br>      <servers/><br>      <mirrors><br>        <mirror><br>          <id>nexus-osc</id><br>          <mirrorOf>*</mirrorOf><br>          <name>Nexus osc</name><br>          <url><a target="_blank" rel="noopener" href="http://maven.oschina.net/content/groups/public/">http://maven.oschina.net/content/groups/public/</a></url><br>        </mirror><br>      </mirrors><br>      <proxies/><br>      <profiles/><br>      <activeProfiles/><br></settings></p>
+<p>配置STS： Preferences -&gt; Maven -&gt; Installations: Add Maven的安装目录。 <strong>下载地址：<a target="_blank" rel="noopener" href="https://maven.apache.org/download.cgi">https://maven.apache.org/download.cgi</a></strong></p>
+<h3 id="10-Gradle"><a href="#10-Gradle" class="headerlink" title="10. Gradle"></a>10. Gradle</h3><p>cd ~/downloads<br>wget <a target="_blank" rel="noopener" href="https://services.gradle.org/distributions/gradle-2.7-all.zip">https://services.gradle.org/distributions/gradle-2.7-all.zip</a><br>unzip gradle-2.7-all.zip -d ~/apps<br>emacs -nw ~/.bashrc 添加如下内容</p>
+<p>#gradle<br>export PATH=/home/zman/apps/gradle-2.7/bin:$PATH</p>
+<p>配置STS： Preferences -&gt; Gradle -&gt; Gradle Distribution -&gt; Folder: /data/zman/apps/gradle-2.7 Preferences -&gt; Gradle -&gt; Gradle User Home -&gt; Directory: /data/zman <strong>下载地址：<a target="_blank" rel="noopener" href="http://gradle.org/">http://gradle.org/</a></strong></p>
 
       
     </div>
@@ -312,7 +359,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/36/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span>
+    <a class="extend prev" rel="prev" href="/page/36/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/38/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -353,7 +400,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
