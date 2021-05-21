@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">39</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">40</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/10/21/wordpress/rpc/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/10/26/wordpress/popular-rpc-framework/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/10/21/wordpress/rpc/" class="post-title-link" itemprop="url">RPC</a>
+            <a href="/2015/10/26/wordpress/popular-rpc-framework/" class="post-title-link" itemprop="url">主流RPC框架</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2015-10-22 07:22:47" itemprop="dateCreated datePublished" datetime="2015-10-22T07:22:47+08:00">2015-10-22</time>
+      <time title="Created: 2015-10-27 07:00:23" itemprop="dateCreated datePublished" datetime="2015-10-27T07:00:23+08:00">2015-10-27</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-03-19 15:35:50" itemprop="dateModified" datetime="2021-03-19T15:35:50+08:00">2021-03-19</time>
+        <time title="Modified: 2021-05-21 22:36:22" itemprop="dateModified" datetime="2021-05-21T22:36:22+08:00">2021-05-21</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,137 +271,47 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>详细介绍基于RPC的系统与本地调用程序、常用的网络系统的区别，和基本的RPC系统如何实现。</p>
-<h3 id="RPC是什么"><a href="#RPC是什么" class="headerlink" title="RPC是什么"></a>RPC是什么</h3><p>RPC（Remote Procedure Call）从字面理解就是远程过程调用，即像调用本地方法一样调用网络另一端系统中的一段逻辑。我们常说的RPC指的是RPC框架，一个把网络请求、数据编码都封装好的框架或者lib库，内部逻辑对开发人员是透明的，开发人员只关心调用了一个（远程）方法，然后得到了结果。</p>
-<h3 id="RPC的好处"><a href="#RPC的好处" class="headerlink" title="RPC的好处"></a>RPC的好处</h3><p>RPC使得引用方在本地直接调用服务接口就可以完成远端逻辑的执行，省去网络请求、数据编码解码等步骤，无疑可以极大提高开发效率。同时由于所有的请求都交给框架处理，我们又可以进一步扩展框架负责的功能，比如：服务发现、容错、负载均衡、路由等，自然而然服务治理就产生了。</p>
-<h3 id="RPC介绍"><a href="#RPC介绍" class="headerlink" title="RPC介绍"></a>RPC介绍</h3><p>通过介绍简单的本地调用结构、HTTP调用结构、PRC调用结构，可以直观地理解RPC究竟是什么、做了哪些事情。 <strong>本地调用结构</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E6%9C%AC%E5%9C%B0%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%841.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E6%9C%AC%E5%9C%B0%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%841.jpg" alt="本地调用结构"></a> 本地调用结构中所有模块都在一个系统里面，Caller可以直接调用另一段代码逻辑。简单、方便、高效，但耦合度高。 <strong>HTTP API调用结构</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/HTTP-API%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/HTTP-API%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg" alt="HTTP-API调用结构"></a> 目前中小型的互联网公司均使用HTTP API方式实现系统间的调用，此结构相比本地调用，已经实现了解耦，使得开发工作更加灵活，只要保持API不变，不同功能开发互不影响。但增加了调用端和服务器端的工作量，对于每个服务：服务端要进行数据与json的双向转换（或映射）并封装为HTTP接口，调用端同样要进行数据与json的双向转换并实现http请求的调用逻辑。 <strong>RPC调用结构</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg" alt="RPC调用结构"></a> 如上图，调用方调用‘API Proxy’即完成远端服务调用过程，RPC框架隐式地完成网络通信逻辑。服务提供方也只需要实现相应的服务逻辑，使工程师将更多精力集中在业务上。 <em>‘API Proxy’是什么？</em> <em>服务接口的代理，是RPC Framework暴露出的供调用方使用的，输入输出与Implement一样（可参考代理模式）。</em> <strong>完整RPC调用过程</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E8%AF%A6%E7%BB%86RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%842.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E8%AF%A6%E7%BB%86RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%842.jpg" alt="详细RPC调用结构"></a> 上图中所有蓝色块是RPC框架实现的功能模块。 在公司内部，为了实现对系统的监控、增强稳健性、扩展性，经常需要做一些额外的工作。 例如：为了统计接口的调用次数、响应时间，一般是通过日志记录；服务器地址或端口改动时，引起下游消费端进行相应配置改动；负载均衡通过各种第三方工具实现…… 由于所有服务调用均通过RPC框架，因而很容易拓展RPC框架实现服务治理功能，如下图：   <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%861.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%861.jpg" alt="RPC服务治理1"></a></p>
-<h3 id="RPC-Demo"><a href="#RPC-Demo" class="headerlink" title="RPC Demo"></a>RPC Demo</h3><p>先假设RPC框架已经完成，基于RPC框架开发系统需要做那些事情呢？ 以Calculator为例，上游系统调用下游的计算系统获取结果。 <strong>1. 设计接口/契约</strong></p>
-<p>public interface Calculator {</p>
-<pre><code>/\*\*
- \* @return a \* b
- \*/
-int multiply(int a, int b);
-
-/\*\*
- \* @return a / b
- \*/
-int devide(int a, int b);</code></pre>
-<p>}</p>
-<p><strong>2. 上游系统(Caller)实现</strong></p>
-<p>public class CalculatorCaller {</p>
-<pre><code>public static void main(String\[\] args) &#123;
-    SimpleRPCFramework rpc = new SimpleRPCFramework();   //实例化RPC框架
-
-    Calculator calc = rpc.getProxy(Calculator.class);    //获得Calculator代理
-
-    for (int i = 0; i &lt; 10; i++) &#123;                       //把Calculator代理当做Calculator具体实现来调用,
-        int result = calc.multiply(i, (i + 1));          //剩下的事情RPC框架会自行处理
-        System.out.println(result);
-    &#125;
-&#125;</code></pre>
-<p>}</p>
-<p><em>（有木有很简单？就像本地调用一样简单）</em> <strong>3. 下游系统(Server)实现</strong></p>
-<p>public class CalculatorImpl implements Calculator {      //实现Calculator接口</p>
-<pre><code>@Override
-public int multiply(int a, int b) &#123;
-    return a \* b;
-&#125;
-
-@Override
-public int devide(int a, int b) &#123;
-    return a / b;
-&#125;</code></pre>
-<p>}</p>
-<p>public class CalculatorServer {</p>
-<pre><code>public static void main(String\[\] args) throws IOException &#123;
-    //实例化helloWorld
-    CalculatorImpl calculator = new CalculatorImpl();
-    //创建rpc框架实例
-    SimpleRPCFramework rpc = new SimpleRPCFramework();
-    //注册接口和对应实现
-    rpc.registerImplements(Calculator.class, calculator);     //开放更多服务，只需修改此处
-    //暴露服务接口，监听服务
-    rpc.expose();
-&#125;</code></pre>
-<p>}</p>
-<p>至此，接口设计、上下游所有开发工作完成。接下来看下神奇的RPC框架究竟如何实现~ <strong>4. Simple RPC Framework</strong> 根据上面的例子，可以发现该RPC框架有三个接口：</p>
-<p>public interface RPC {</p>
-<pre><code>/\*\*
- \* 服务器端注册接口与相应实现。
- \*
- \* @param inteface
- \* @param instance
- \*/
-void registerImplements(Class&lt;?&gt; inteface, Object instance);
-
-/\*\*
- \* 服务器端暴露端口，并监听调用请求
- \*/
-void expose() throws IOException;
-
-/\*\*
- \* 调用端获取接口的代理
- \*/
-&lt;T&gt; T getProxy(final Class&lt;T&gt; inteface);</code></pre>
-<p>}</p>
-<p>下面看一下具体实现：</p>
-<p>/**<br> * @from zmannotes.com<br> */<br>public class SimpleRPCFramework {</p>
-<pre><code>/\*\* 存储接口与实现的对应关系 \*/
-private final Map&lt;Class&lt;?&gt;, Object&gt; implCache = new ConcurrentHashMap&lt;&gt;();
-
-/\*\* 存储接口与代理的对应关系 \*/
-private final Map&lt;Class&lt;?&gt;, Object&gt; proxyCache = new ConcurrentHashMap&lt;&gt;();
-
-public synchronized void registerImplements(Class&lt;?&gt; inteface, Object instance) &#123;
-    //检测接口是否已经存在
-    if (implCache.containsKey(inteface)) &#123;
-        throw new RuntimeException(&quot;This interface\[&quot; + inteface.getName() + &quot;\] have already been exposed.&quot;);
-    &#125; else &#123;
-        implCache.put(inteface, instance);
-    &#125;
-&#125;
-
-public void expose() throws IOException &#123;
-    //……
-&#125;
-
-public synchronized &lt;T&gt; T getProxy(final Class&lt;T&gt; inteface) &#123;
-   //……
-&#125;</code></pre>
-<p>}</p>
-<p>registerImplements没有复杂逻辑，只是检测缓存中是否已经包含目标接口，完全可以并入expose中，但为使逻辑简单，故为之。 下面是具体的服务暴露逻辑，采用基于Socket的通信方式，编码解码直接使用Java IO自带的序列化流。 原理比较简单，就是上面介绍的三个模块：</p>
-<ol>
-<li> 服务器负责监听端口和接收/发送数据。</li>
-<li> 协议模块负责编码/解码数据。</li>
-<li> Dispatcher负责将请求分发到对应的实现逻辑。</li>
-</ol>
-<p>public void expose() throws IOException {<br>        //暴露服务端口<br>        ServerSocket server = new ServerSocket(2008);<br>        while (true) {<br>            final Socket socket = server.accept();<br>            new Thread(new Runnable() {<br>                public void run() {<br>                    try (<br>                            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());<br>                            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {<br>                        //获取请求数据 - 接收请求,并解码<br>                        Class<?> inter = (Class<?>) in.readObject();<br>                        String methodName = in.readUTF();<br>                        Class<?>\[\] parameterTypes = (Class<?>[]) in.readObject();<br>                        Object[] args = (Object[]) in.readObject();<br>                        //根据接口信息获得对应的接口实现 - Dispatcher<br>                        Object instance = implCache.get(inter);<br>                        //调用接口实现 - invoke<br>                        Method method = instance.getClass().getMethod(methodName, parameterTypes);<br>                        Object result = method.invoke(instance, args);<br>                        //返回结果 - 编码,并返回结果<br>                        out.writeObject(result);<br>                    } catch (Exception e) {<br>                        throw new RuntimeException(e);<br>                    }<br>                }<br>            }).run();<br>        }<br>    }</p>
-<p>下面是接口代理类的生成逻辑，采用JDK自带的Proxy生成机制来实现，具体流程参见‘完整RPC调用过程’。</p>
-<p>public synchronized <T> T getProxy(final Class<T> inteface) {<br>        //检测接口是否已经存在<br>        if (proxyCache.containsKey(inteface)) {<br>            return (T) proxyCache.get(inteface);<br>        }</p>
-<pre><code>    T proxy = (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-            new Class&lt;?&gt;\[\] &#123; inteface &#125;, new InvocationHandler() &#123;
-                public Object invoke(Object proxy, Method method, Object\[\] args) throws Throwable &#123;
-                    Socket socket = new Socket(InetAddress.getLocalHost(), 2008);
-                    try(
-                            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-                            ObjectInputStream input = new ObjectInputStream(socket.getInputStream())
-                            )&#123;
-                        //发送请求数据 - 编码,并发送请求
-                        output.writeObject(inteface);
-                        output.writeUTF(method.getName());
-                        output.writeObject(method.getParameterTypes());
-                        output.writeObject(args);
-                        //接收结果 - 接受数据,并解码
-                        Object result = input.readObject();
-
-                        return result;
-                    &#125;
-                &#125;
-            &#125;);
-    proxyCache.put(inteface, proxy);
-    return proxy;
-&#125;</code></pre>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2015/10/22/rpc/">总结</a></h3><p>本文对RPC的原理和模块进行较详细介绍，并与其它系统间调用方式进行对比，最后给出简单的RPC框架实现。 例子中各模块都可以进一步扩展、优化，以提高框架的运行效率、稳定性、扩展性。完整Demo代码存于Github: <a target="_blank" rel="noopener" href="https://github.com/zman2013/simple-rpc-demo">Go</a>。</p>
+          <p><em>介绍目前在互联网公司比较流行的开源的RPC框架。</em></p>
+<h3 id="RPC框架比较"><a href="#RPC框架比较" class="headerlink" title="RPC框架比较"></a>RPC框架比较</h3><p>语言</p>
+<p>协议</p>
+<p>​服务治理</p>
+<p>​社区</p>
+<p>机构</p>
+<p>Hessian</p>
+<p>多语言</p>
+<p>hessian</p>
+<p>-</p>
+<p>不活跃</p>
+<p>Caucho</p>
+<p>Thrift</p>
+<p>多语言</p>
+<p>thrift</p>
+<p>-</p>
+<p>活跃</p>
+<p>Apache</p>
+<p>Finagle</p>
+<p>Java/Scala</p>
+<p>多协议</p>
+<p>支持</p>
+<p>活跃</p>
+<p>Twitter</p>
+<p>TChannel</p>
+<p>多语言</p>
+<p>thrift</p>
+<p>支持</p>
+<p>活跃</p>
+<p>Uber</p>
+<p>Dubbo</p>
+<p>Java</p>
+<p>支持拓展</p>
+<p>支持</p>
+<p>停滞</p>
+<p>阿里</p>
+<h3 id="详细介绍"><a href="#详细介绍" class="headerlink" title="详细介绍"></a>详细介绍</h3><p><strong><a target="_blank" rel="noopener" href="http://hessian.caucho.com/#IntroductiontoHessian">Hassian</a></strong> Hassian被广泛用做二进制编码协议，但本身也是一个Web Service框架对RPC调用提供支持，功能简单，使用起来也方便。 有些像《<a target="_blank" rel="noopener" href="http://www.evoops.com/index.php/2015/10/22/rpc/">RPC</a>》介绍的SimpleRPCFramework，只是把编码协议从Java Serialization替换为hassian。 <strong><a target="_blank" rel="noopener" href="http://thrift.apache.org/">Thrift</a></strong> Thrift是一个跨语言的RPC框架，自带的代码生成引擎大幅提高了开发效率，从而使它如此流行。 最初由Facebook团队设计开发，现在已贡献给Apache。 Thrift基于接口描述语言定义的Model(契约)，Thrift Compiler进行解析并自动生成目标语言Client和Server端的代码框架，直接基于此框架开发服务或者与现有系统集成都可以较方便实现。 基于Thrift开发远程服务调用，后续Model的改动会导致上下游产生较大升级成本，因此服务双方应先仔细定义Model。 公司内部所有Model应由专门的系统进行统一版本管理、编译、发布。 <strong><a target="_blank" rel="noopener" href="http://twitter.github.io/finagle/">Finagle</a></strong> Finagle是一个专门为Java/Scala设计的、成熟的RPC框架。 简单、高效、支持基本服务治理功能，所有服务治理功能均在Client端集成：服务发现、负载均衡、容错、日志收集等。 使用Scala开发，国内没有听说过有团队使用此框架。 <strong><a target="_blank" rel="noopener" href="https://github.com/uber/tchannel">TChannel</a></strong> TChannel是一个支持多语言的RPC框架，主要编码协议为thrift，同时又参考Finagle基于Dapper设计自己的集群监控实现。 服务治理与Finagle不同，由类似系统总线的独立的路由系统进行服务治理，本身这种系统结构存在单点故障风险，已经被多数公司放弃。但优点显而易见，功能集中在一个系统中，对于系统维护和升级要方便得多，极大降低降低各语言终端的开发成本和框架升级引入的潜在风险。 <strong><a target="_blank" rel="noopener" href="http://dubbo.io/">Dubbo</a></strong> Dubbo是阿里巴巴开源的专门为Java设计的、成熟的RPC框架。 支持基本的服务治理，所有服务治理功能均在Client端集成：服务发现、负载均衡、容错、监控等。 采用微内核+插件体系，所有组件都可以遵循一定的规则进行替换，拥有较强的拓展性。 主流的搭配：</p>
+<p>zookeeper作服务中心</p>
+<p>thrift/dubbo作为编码协议</p>
+<p>netty作为底层通信模块</p>
+<p>Dubbo定义了自己的spring schema，与spring项目进行集成相当方便。 如果是Java系统推荐使用Dubbo，如果是多语言系统可以为Dubbo添加thrift原生协议支持（Dubbo本身不支持原生的thrift协议），通过thrift代码生成引擎支持多语言调用。</p>
 
       
     </div>
@@ -423,7 +333,7 @@ public synchronized &lt;T&gt; T getProxy(final Class&lt;T&gt; inteface) &#123;
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/36/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><a class="page-number" href="/page/39/">39</a><a class="extend next" rel="next" href="/page/38/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/36/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><a class="extend next" rel="next" href="/page/38/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
