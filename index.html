@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">40</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">41</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/05/21/wireshark-display-filters/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/05/22/jest/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/05/21/wireshark-display-filters/" class="post-title-link" itemprop="url">wireshark-display-filters</a>
+            <a href="/2021/05/22/jest/" class="post-title-link" itemprop="url">jest</a>
         </h2>
 
         <div class="post-meta-container">
@@ -243,7 +243,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2021-05-21 22:33:34 / Modified: 22:36:22" itemprop="dateCreated datePublished" datetime="2021-05-21T22:33:34+08:00">2021-05-21</time>
+      <time title="Created: 2021-05-22 09:39:17 / Modified: 10:26:44" itemprop="dateCreated datePublished" datetime="2021-05-22T09:39:17+08:00">2021-05-22</time>
     </span>
 
   
@@ -256,14 +256,50 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="常用-filter"><a href="#常用-filter" class="headerlink" title="常用 filter"></a>常用 filter</h1><ol>
-<li>过滤源<br>ip.src_host == 127.0.0.1</li>
-<li>过滤目标<br>ip.dst_host == 127.0.0.1</li>
-<li>过滤端口<br>tcp.port == 443</li>
-<li>过滤flag<br>tcp.flags.syn==1</li>
-<li>逻辑运算<br>(ip.src_host == 127.0.0.1 || ip.src_host == 127.0.0.2) &amp;&amp; tcp.port == 443  &amp;&amp; tcp.flags.syn==1</li>
-</ol>
+          <h2 id="mock-function，判断被调用次数"><a href="#mock-function，判断被调用次数" class="headerlink" title="mock function，判断被调用次数"></a>mock function，判断被调用次数</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">const abort &#x3D; jest.fn()
+...
+expect((abort as jest.Mock).mock.calls.length).toBe(1)</code></pre>
 
+<h2 id="mock-function-设置返回数据"><a href="#mock-function-设置返回数据" class="headerlink" title="mock function, 设置返回数据"></a>mock function, 设置返回数据</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">const connect &#x3D; jest.fn()
+(connect as jest.Mock).mockReturnValue(&#39;success&#39;)</code></pre>
+
+<h2 id="mock-object"><a href="#mock-object" class="headerlink" title="mock object"></a>mock object</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">const aObject &#x3D; &#123;&#125; as any</code></pre>
+
+<h2 id="mock-3p-module"><a href="#mock-3p-module" class="headerlink" title="mock 3p module"></a>mock 3p module</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">import &#123; getLog &#125; from &#39;nestjs-log&#39;
+jest.mock(&#39;nestjs-log&#39;)
+
+describe(&#39;basic&#39;, ()&#x3D;&gt;&#123;
+  beforeEach(()&#x3D;&gt;&#123;
+    &#x2F;&#x2F; 执行每个单元测试前，清除 getLog 调用信息
+    (getLog as jest.Mock).mockClear()
+  &#125;)
+
+  it(&#39;case1&#39;, ()&#x3D;&gt;&#123;
+    (connect as jest.Mock).mockReturnValue(&#123;...&#125;)
+  &#125;)
+&#125;)</code></pre>
+
+<h2 id="mock-local-class"><a href="#mock-local-class" class="headerlink" title="mock local class"></a>mock local class</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">import &#123; IntClusterRebalancer &#125; from &#39;..&#x2F;src&#x2F;int-cluster-rebalancer&#39;
+jest.mock(&#39;..&#x2F;src&#x2F;int-cluster-rebalancer&#39;, () &#x3D;&gt; &#123;
+  return &#123;
+    IntClusterRebalancer: jest.fn().mockImplementation(() &#x3D;&gt; &#123;
+      return &#123; rebalance: jest.fn() &#125;
+    &#125;),
+  &#125;
+&#125;)
+
+describe(&#39;basic&#39;, () &#x3D;&gt; &#123;
+
+  beforeEach(() &#x3D;&gt; &#123;
+    ;(IntClusterRebalancer as jest.Mock).mockClear()
+  &#125;)
+
+  it(&#39;case1&#39;, ()&#x3D;&gt;&#123;
+    const rebalancer &#x3D; new IntClusterRebalancer()
+    &#x2F;&#x2F; or 任何内部执行 new IntClusterRebalancer() 的方法&#x2F;对象
+    const manager &#x3D; new Manager() &#x2F;&#x2F; Manager 内部会执行 new IntClusterRebalancer()
+  &#125;)
+&#125;)</code></pre>
       
     </div>
 
@@ -284,7 +320,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
