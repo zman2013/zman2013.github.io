@@ -4,11 +4,13 @@ date: 2021-05-22 09:39:17
 tags:
 ---
 
-## mock function，判断被调用次数
+## mock function，判断被调用次数、参数
 ```typescript
   const abort = jest.fn()
   ...
   expect((abort as jest.Mock).mock.calls.length).toBe(1)
+  // 第一次调用的第一个参数
+  expect((abort as jest.Mock).mock.calls[0][0]).toBe(arg1)
 ```
 
 ## mock function, 设置返回数据
@@ -24,26 +26,29 @@ tags:
 
 ## mock 3p module
 ```typescript
-  import { getLog } from 'nestjs-log'
-  jest.mock('nestjs-log')
+  import { axios } from 'axios'
+  jest.mock('axios')
 
   describe('basic', ()=>{
     beforeEach(()=>{
       // 执行每个单元测试前，清除 getLog 调用信息
-      (getLog as jest.Mock).mockClear()
+      (axios.request as jest.Mock).mockClear()
     })
 
     it('case1', ()=>{
-      (connect as jest.Mock).mockReturnValue({...})
+      (axios.request as jest.Mock).mockReturnValue({...})
     })
   })
 ```
 
-## mock local class
+## mock local function & class 
 ```typescript
   import { IntClusterRebalancer } from '../src/int-cluster-rebalancer'
+  let fn1
   jest.mock('../src/int-cluster-rebalancer', () => {
+    fn1 = jest.fn()
     return {
+      functionName: fn1,
       IntClusterRebalancer: jest.fn().mockImplementation(() => {
         return { rebalance: jest.fn() }
       }),
