@@ -241,10 +241,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2021-05-22 09:39:17 / Modified: 10:26:44" itemprop="dateCreated datePublished" datetime="2021-05-22T09:39:17+08:00">2021-05-22</time>
+      <time title="Created: 2021-05-22 09:39:17" itemprop="dateCreated datePublished" datetime="2021-05-22T09:39:17+08:00">2021-05-22</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-08-23 17:24:59" itemprop="dateModified" datetime="2021-08-23T17:24:59+08:00">2021-08-23</time>
+      </span>
 
   
 </div>
@@ -256,32 +262,37 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="mock-function，判断被调用次数"><a href="#mock-function，判断被调用次数" class="headerlink" title="mock function，判断被调用次数"></a>mock function，判断被调用次数</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">const abort &#x3D; jest.fn()
+          <h2 id="mock-function，判断被调用次数、参数"><a href="#mock-function，判断被调用次数、参数" class="headerlink" title="mock function，判断被调用次数、参数"></a>mock function，判断被调用次数、参数</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">const abort &#x3D; jest.fn()
 ...
-expect((abort as jest.Mock).mock.calls.length).toBe(1)</code></pre>
+expect((abort as jest.Mock).mock.calls.length).toBe(1)
+&#x2F;&#x2F; 第一次调用的第一个参数
+expect((abort as jest.Mock).mock.calls[0][0]).toBe(arg1)</code></pre>
 
 <h2 id="mock-function-设置返回数据"><a href="#mock-function-设置返回数据" class="headerlink" title="mock function, 设置返回数据"></a>mock function, 设置返回数据</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">const connect &#x3D; jest.fn()
 (connect as jest.Mock).mockReturnValue(&#39;success&#39;)</code></pre>
 
 <h2 id="mock-object"><a href="#mock-object" class="headerlink" title="mock object"></a>mock object</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">const aObject &#x3D; &#123;&#125; as any</code></pre>
 
-<h2 id="mock-3p-module"><a href="#mock-3p-module" class="headerlink" title="mock 3p module"></a>mock 3p module</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">import &#123; getLog &#125; from &#39;nestjs-log&#39;
-jest.mock(&#39;nestjs-log&#39;)
+<h2 id="mock-3p-module"><a href="#mock-3p-module" class="headerlink" title="mock 3p module"></a>mock 3p module</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">import &#123; axios &#125; from &#39;axios&#39;
+jest.mock(&#39;axios&#39;)
 
 describe(&#39;basic&#39;, ()&#x3D;&gt;&#123;
   beforeEach(()&#x3D;&gt;&#123;
     &#x2F;&#x2F; 执行每个单元测试前，清除 getLog 调用信息
-    (getLog as jest.Mock).mockClear()
+    (axios.request as jest.Mock).mockClear()
   &#125;)
 
   it(&#39;case1&#39;, ()&#x3D;&gt;&#123;
-    (connect as jest.Mock).mockReturnValue(&#123;...&#125;)
+    (axios.request as jest.Mock).mockReturnValue(&#123;...&#125;)
   &#125;)
 &#125;)</code></pre>
 
-<h2 id="mock-local-class"><a href="#mock-local-class" class="headerlink" title="mock local class"></a>mock local class</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">import &#123; IntClusterRebalancer &#125; from &#39;..&#x2F;src&#x2F;int-cluster-rebalancer&#39;
+<h2 id="mock-local-function-amp-class"><a href="#mock-local-function-amp-class" class="headerlink" title="mock local function &amp; class"></a>mock local function &amp; class</h2><pre class="language-typescript" data-language="typescript"><code class="language-typescript">import &#123; IntClusterRebalancer &#125; from &#39;..&#x2F;src&#x2F;int-cluster-rebalancer&#39;
+let fn1
 jest.mock(&#39;..&#x2F;src&#x2F;int-cluster-rebalancer&#39;, () &#x3D;&gt; &#123;
+  fn1 &#x3D; jest.fn()
   return &#123;
+    functionName: fn1,
     IntClusterRebalancer: jest.fn().mockImplementation(() &#x3D;&gt; &#123;
       return &#123; rebalance: jest.fn() &#125;
     &#125;),
