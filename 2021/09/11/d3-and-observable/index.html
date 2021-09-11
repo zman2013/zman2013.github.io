@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zman2013.github.io","root":"/","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":true,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+
+  <meta name="description" content="Embedding a cell on a web page有几种嵌入方式，本文只关注通过 JavaScript 方式嵌入 cell. 方式一：嵌入 Cell 在 cell 左侧，点击更多按钮（纵向的三个点） 在弹出菜单中，点击 Emebed 在弹出窗口中选择 cell 名称 在弹出窗口中选择 Runtime with JavaScript 复制显示的 JavaScript 到项目中   源码在远">
+<meta property="og:type" content="article">
+<meta property="og:title" content="d3 and observable">
+<meta property="og:url" content="http://zman2013.github.io/2021/09/11/d3-and-observable/index.html">
+<meta property="og:site_name" content="zmannotes">
+<meta property="og:description" content="Embedding a cell on a web page有几种嵌入方式，本文只关注通过 JavaScript 方式嵌入 cell. 方式一：嵌入 Cell 在 cell 左侧，点击更多按钮（纵向的三个点） 在弹出菜单中，点击 Emebed 在弹出窗口中选择 cell 名称 在弹出窗口中选择 Runtime with JavaScript 复制显示的 JavaScript 到项目中   源码在远">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-09-11T04:44:09.000Z">
+<meta property="article:modified_time" content="2021-09-11T05:18:44.113Z">
+<meta property="article:author" content="zman">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://zman2013.github.io/2021/09/11/d3-and-observable/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>d3 and observable | zmannotes</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">zmannotes</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">83</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">23</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">42</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Embedding-a-cell-on-a-web-page"><span class="nav-number">1.</span> <span class="nav-text">Embedding a cell on a web page</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E5%B5%8C%E5%85%A5-Cell"><span class="nav-number">1.1.</span> <span class="nav-text">方式一：嵌入 Cell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E4%B8%8B%E8%BD%BD%E6%8F%92%E4%BB%B6%E6%BA%90%E7%A0%81"><span class="nav-number">1.2.</span> <span class="nav-text">方式二：下载插件源码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B8%B2%E6%9F%93-Cell"><span class="nav-number">2.</span> <span class="nav-text">渲染 Cell</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96-cell-%E5%86%85%E5%AE%B9"><span class="nav-number">3.</span> <span class="nav-text">获取 cell 内容</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0-cell-%E7%9A%84%E5%86%85%E5%AE%B9"><span class="nav-number">4.</span> <span class="nav-text">更新 cell 的内容</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Links"><span class="nav-number">5.</span> <span class="nav-text">Links</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
+
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zman</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zman2013" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zman2013" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </section>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/09/11/d3-and-observable/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zman">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zmannotes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          d3 and observable
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2021-09-11 12:44:09 / Modified: 13:18:44" itemprop="dateCreated datePublished" datetime="2021-09-11T12:44:09+08:00">2021-09-11</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="Embedding-a-cell-on-a-web-page"><a href="#Embedding-a-cell-on-a-web-page" class="headerlink" title="Embedding a cell on a web page"></a>Embedding a cell on a web page</h1><p>有几种嵌入方式，本文只关注通过 JavaScript 方式嵌入 cell.</p>
+<h2 id="方式一：嵌入-Cell"><a href="#方式一：嵌入-Cell" class="headerlink" title="方式一：嵌入 Cell"></a>方式一：嵌入 Cell</h2><ol>
+<li>在 cell 左侧，点击更多按钮（纵向的三个点）</li>
+<li>在弹出菜单中，点击 Emebed</li>
+<li>在弹出窗口中选择 cell 名称</li>
+<li>在弹出窗口中选择 Runtime with JavaScript</li>
+<li>复制显示的 JavaScript 到项目中</li>
+</ol>
+<ul>
+<li>源码在远端，无法修改</li>
+</ul>
+<h2 id="方式二：下载插件源码"><a href="#方式二：下载插件源码" class="headerlink" title="方式二：下载插件源码"></a>方式二：下载插件源码</h2><ol>
+<li>在页面右上方，点击更多按钮（横向的三个点）</li>
+<li>在弹出菜单中，点击 Export</li>
+<li>Download Code</li>
+</ol>
+<ul>
+<li>插件源码在本地，可以修改</li>
+</ul>
+<h1 id="渲染-Cell"><a href="#渲染-Cell" class="headerlink" title="渲染 Cell"></a>渲染 Cell</h1><p>最显而易见的方式是直接在页面中显示嵌入的 notebook 的内容。Observable runtime 包含一个标准的 inspector，它从 notebook 获取内容并显示在 HTML 中。</p>
+<pre class="language-js" data-language="js"><code class="language-js">&#x2F;&#x2F; Load the Observable runtime and inspector.
+import &#123;Runtime, Inspector&#125; from &quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;@observablehq&#x2F;runtime@4&#x2F;dist&#x2F;runtime.js&quot;;
+
+&#x2F;&#x2F; Your notebook, compiled as an ES module.
+import notebook from &quot;https:&#x2F;&#x2F;api.observablehq.com&#x2F;@jashkenas&#x2F;my-neat-notebook.js?v&#x3D;3&quot;;
+
+&#x2F;&#x2F; Load the notebook, observing its cells with a default Inspector
+&#x2F;&#x2F; that simply renders the value of each cell into the provided DOM node.
+new Runtime().module(notebook, Inspector.into(document.body));</code></pre>
+
+<p>如果不想渲染整个 notebook，可以自定义一个方法选择只渲染哪些 cell，使用 name 来匹配的，如下：</p>
+<pre class="language-js" data-language="js"><code class="language-js">new Runtime().module(notebook, name &#x3D;&gt; &#123;
+  if (name &#x3D;&#x3D;&#x3D; &quot;chart&quot;) &#123;
+    return new Inspector(document.querySelector(&quot;#chart&quot;));
+  &#125;
+&#125;);</code></pre>
+
+<p>如果想只加载提供能力，不渲染，当匹配对应的 cell name 时返回 true，如下：</p>
+<pre class="language-js" data-language="js"><code class="language-js">(new Runtime).module(define, name &#x3D;&gt; &#123;
+  if (name &#x3D;&#x3D;&#x3D; &quot;chart&quot;) return Inspector.into(&quot;.chart&quot;)();
+  &#x2F;&#x2F; update 会被 chart 调用
+  if (name &#x3D;&#x3D;&#x3D; &quot;update&quot;) return true;
+&#125;);</code></pre>
+
+<h1 id="获取-cell-内容"><a href="#获取-cell-内容" class="headerlink" title="获取 cell 内容"></a>获取 cell 内容</h1><pre class="language-js" data-language="js"><code class="language-js">const module &#x3D; new Runtime().module(notebook);
+const value &#x3D; await module.value(&quot;chart&quot;);</code></pre>
+
+<p>还有一种方式，通过 observer 来获取，例如：</p>
+<pre class="language-js" data-language="js"><code class="language-js">new Runtime().module(notebook, name &#x3D;&gt; &#123;
+  return &#123;
+    pending() &#123; console.log(&#96;$&#123;name&#125; is running…&#96;); &#125;,
+    fulfilled(value) &#123; console.log(name, value); &#125;,
+    rejected(error) &#123; console.error(error); &#125;
+  &#125;;
+&#125;);</code></pre>
+
+<h1 id="更新-cell-的内容"><a href="#更新-cell-的内容" class="headerlink" title="更新 cell 的内容"></a>更新 cell 的内容</h1><p>通过 <a target="_blank" rel="noopener" href="https://github.com/observablehq/runtime/blob/main/README.md#module_redefine">module.redefine</a> 可以修改 cell 中定义的变量，比如图标的 data/width/height/x/y/margin。</p>
+<pre class="language-js" data-language="js"><code class="language-js">const main &#x3D; new Runtime().module(define, name &#x3D;&gt; &#123;
+  if (name &#x3D;&#x3D;&#x3D; &quot;chart&quot;) return new Inspector(document.querySelector(&quot;#observablehq-chart-3ff9aa20&quot;));
+&#125;);
+main.redefine(&quot;data&quot;, [
+	&#123;&#39;name&#39;:&#39;apple&#39;, value:100&#125;,
+	&#123;&#39;name&#39;:&#39;orange&#39;, value:100&#125;,	
+	]);
+main.redefine(&#39;height&#39;, 100)</code></pre>
+
+<h1 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://observablehq.com/@observablehq/downloading-and-embedding-notebooks">Downloading and Embedding</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/observablehq/examples">Observable Examples</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/05/22/jest/" rel="prev" title="jest">
+                  <i class="fa fa-chevron-left"></i> jest
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zman</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/components/prism-core.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1257185695&web_id=1257185695"></script>
+  </div>
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

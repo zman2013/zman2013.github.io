@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">41</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">42</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/05/08/wordpress/web-log/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/05/08/wordpress/spring-unit-test/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/05/08/wordpress/web-log/" class="post-title-link" itemprop="url">Java Web项目添加log模块</a>
+            <a href="/2016/05/08/wordpress/spring-unit-test/" class="post-title-link" itemprop="url">Spring项目单元测试</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2016-05-08 16:54:53" itemprop="dateCreated datePublished" datetime="2016-05-08T16:54:53+08:00">2016-05-08</time>
+      <time title="Created: 2016-05-08 20:12:38" itemprop="dateCreated datePublished" datetime="2016-05-08T20:12:38+08:00">2016-05-08</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-08-23 17:24:59" itemprop="dateModified" datetime="2021-08-23T17:24:59+08:00">2021-08-23</time>
+        <time title="Modified: 2021-09-11 13:18:44" itemprop="dateModified" datetime="2021-09-11T13:18:44+08:00">2021-09-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -261,7 +261,11 @@
         </span>
           , 
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/log/" itemprop="url" rel="index"><span itemprop="name">log</span></a>
+          <a href="/categories/Unit-Test/" itemprop="url" rel="index"><span itemprop="name">Unit Test</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Mock/" itemprop="url" rel="index"><span itemprop="name">Mock</span></a>
         </span>
     </span>
 
@@ -275,49 +279,68 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>Java EE Web项目添加log模块</em> 目前最好的Java日志组件是**<a target="_blank" rel="noopener" href="http://logging.apache.org/log4j/2.x/manual/webapp.html">Log4j 2</a><strong>，就以Log4j 2为例，且Tomcat版本&gt;=7.0.43。 **1. 项目依赖</strong></p>
-<dependencies>
-  <dependency>
-    <groupId>org.apache.logging.log4j</groupId>
-    <artifactId>log4j-api</artifactId>
-    <version>2.5</version>
-  </dependency>
-  <dependency>
-    <groupId>org.apache.logging.log4j</groupId>
-    <artifactId>log4j-core</artifactId>
-    <version>2.5</version>
-  </dependency>
-  <dependency>
-    <groupId>org.apache.logging.log4j</groupId>
-    <artifactId>log4j-web</artifactId>
-    <version>2.5</version>
-    <scope>runtime</scope>
-  </dependency>
-</dependencies>
+          <p><em>JUnit与Spring Test、Mockito配合使用</em> <strong>1. 项目依赖</strong></p>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-test</artifactId>
+    <scope>test</scope>
+    <version>4.2.5.RELEASE</version>
+</dependency>
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.12</version>
+    <scope>test</scope>
+</dependency>
 
-<p> <strong>2. 创建log配置文件log4j2.xml</strong></p>
-<p>在目录WEB-INF中创建配置文件log4j2.xml。<br>内容如下：<br><?xml version="1.0" encoding="UTF-8"?><br><Configuration monitorInterval="30"><br>    <Appenders><br>        <Console name="STDOUT" target="SYSTEM\_OUT"><br>            <PatternLayout pattern="%d{ISO8601} %-5p \[%t\] %-40.40c (%F:%L) - %m%n"/><br>        </Console><br>    </Appenders><br>    <Loggers><br>        <Root level="info"><br>            <AppenderRef ref="STDOUT"/><br>        </Root><br>    </Loggers><br></Configuration></p>
-<p><strong>3. 修改web.xml</strong> 3.1 Servlet 3.0 及以上 对于Servlet 3.0及以上的Web项目，不需要修改web.xml，LogContext会自动绑定生效。 （如果在web.xml手动配置了isLog4jAutoInitializationDisabled为true，即时是Servlet3.0，也要按Servlet2.5进行配置。原因是：这个参数导致ServletContainerInitializer没生效） 3.2 Servlet 2.5及以下</p>
-<!-- 此listener必须放在web.xml中其他listener和filter之前，保证在web初始化之前生效 -->
-<listener>
-    <listener-class>org.apache.logging.log4j.web.Log4jServletContextListener</listener-class>
-</listener>
-<!-- 此filter绑定LogContext到所有类型请求 -->
-<filter>
-    <filter-name>log4jServletFilter</filter-name>
-    <filter-class>org.apache.logging.log4j.web.Log4jServletFilter</filter-class>
-</filter>
-<filter-mapping>
-    <filter-name>log4jServletFilter</filter-name>
-    <url-pattern>/\*</url-pattern>
-    <dispatcher>REQUEST</dispatcher>
-    <dispatcher>FORWARD</dispatcher>
-    <dispatcher>INCLUDE</dispatcher>
-    <dispatcher>ERROR</dispatcher>
-    <dispatcher>ASYNC</dispatcher><!-- Servlet 3.0 w/ disabled auto-initialization only; not supported in 2.5 -->
-</filter-mapping>
+<p><strong>2. 创建测试类</strong></p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)<br>//指定配置文件<br>@ContextConfiguration(locations = {“/spring/stock-session-factory.xml”})<br>//指定资源文件<br>@TestPropertySource(locations = {“/application.properties”})<br>public class StockTest {</p>
+<pre><code>@Autowired
+private StockMapper stockMapper;
 
-<p><strong>4. 高级应用</strong> 4.1 log4j2与slf4j配合使用 <a target="_blank" rel="noopener" href="https://github.com/zman2013/Spring-web-log/blob/master/pom.xml">LINK</a> 4.2 使用Spring MVC拦截器配置全局traceId，方便快速定位  <a target="_blank" rel="noopener" href="https://github.com/zman2013/Spring-web-log/blob/master/src/main/webapp/WEB-INF/dispatcher-servlet.xml">LINK</a> 项目源码 <a target="_blank" rel="noopener" href="https://github.com/zman2013/Spring-web-log">Github</a> <strong>Q&amp;A</strong> Q：如何判断Servlet版本？ A：web.xml中web-app标签的version属性表示Servlet版本。 Q：接口ServletContainerInitializer是做什么的？ A：ServletContainerInitializer初始化Log4jServletContextListener和Log4jServletFilter。 Q：为什么tomcat版本&gt;=7.0.43？ A：Tomcat7.0.43(包含7.0.43)以上版本会自动加载Log4jServletContainerInitializer(实现ServletContainerInitializer接口)，以下版本会过滤 log4j*.jar，需要手动修改catalina.properties，在属性jarsToSkip中删除log4j*.jar。</p>
+@Transactional
+@Test
+public void test()&#123;
+    Stock stock = new Stock();
+    stock.setCode(&quot;900001&quot;);
+    stock.setName(&quot;tcl&quot;);
+    stockMapper.insert(stock);
+&#125;</code></pre>
+<p>}</p>
+<p><strong>3. Mock</strong> 3.1 加入依赖<a target="_blank" rel="noopener" href="http://mockito.org/">Mockito</a></p>
+<!-- mock -->
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-all</artifactId>
+    <version>1.10.19</version>
+    <scope>test</scope>
+</dependency>
+
+<p>3.2 Mock数据库访问操作</p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)<br>//指定配置文件<br>@ContextConfiguration(locations = {“/spring/stock-session-factory.xml”})<br>//指定资源文件<br>@TestPropertySource(locations = {“/application.properties”})<br>public class StockTest {</p>
+<pre><code>@InjectMocks
+@Autowired
+private StockService stockService;
+@Mock
+private StockMapper stockMapperMocker;
+
+@Before
+public void setup()&#123;
+    MockitoAnnotations.initMocks(this);
+&#125;
+
+@Transactional
+@Test
+public void test()&#123;
+    Stock stock = new Stock();
+    stock.setName(&quot;露露&quot;);</code></pre>
+<p>        //如果是数据库插入操作，则直接跳过，返回1<br>        when(stockMapperMocker.insert(any(Stock.class))).thenReturn(1);<br>        //如果是数据库查询操作，则直接返回stock对象<br>    when(stockMapperMocker.selectByPrimaryKey(anyString())).thenReturn(stock);</p>
+<pre><code>    stockService.insert(null);
+    String name = stockService.selectByCode(&quot;000848&quot;);
+    System.out.println( name );
+&#125;</code></pre>
+<p>}</p>
+<p>项目源码 <a target="_blank" rel="noopener" href="https://github.com/zman2013/spring-unit-test">Github</a></p>
 
       
     </div>
@@ -339,7 +362,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/23/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><a class="extend next" rel="next" href="/page/25/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/23/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><a class="extend next" rel="next" href="/page/25/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
