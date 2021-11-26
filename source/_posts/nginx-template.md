@@ -33,9 +33,9 @@ server {
     index index.html;
   }
 }
-```
-# URL 匹配规则
+## 参考信息
 1. [https://www.jianshu.com/p/38810b49bc29](https://www.jianshu.com/p/38810b49bc29)
 2. [http://nginx.org/en/docs/http/ngx_http_core_module.html](http://nginx.org/en/docs/http/ngx_http_core_module.html)
+```
 # 配置 https
 参考 [https://coolshell.cn/articles/18094.html](https://coolshell.cn/articles/18094.html)
