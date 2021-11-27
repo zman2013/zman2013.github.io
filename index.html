@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">42</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">43</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/09/11/d3-and-observable/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/11/26/nginx-template/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/09/11/d3-and-observable/" class="post-title-link" itemprop="url">d3 and observable</a>
+            <a href="/2021/11/26/nginx-template/" class="post-title-link" itemprop="url">nginx-template</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2021-09-11 12:44:09" itemprop="dateCreated datePublished" datetime="2021-09-11T12:44:09+08:00">2021-09-11</time>
+      <time title="Created: 2021-11-26 13:16:22" itemprop="dateCreated datePublished" datetime="2021-11-26T13:16:22+08:00">2021-11-26</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-11-26 13:46:54" itemprop="dateModified" datetime="2021-11-26T13:46:54+08:00">2021-11-26</time>
+        <time title="Modified: 2021-11-27 17:15:40" itemprop="dateModified" datetime="2021-11-27T17:15:40+08:00">2021-11-27</time>
       </span>
 
   
@@ -262,75 +262,33 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="Embedding-a-cell-on-a-web-page"><a href="#Embedding-a-cell-on-a-web-page" class="headerlink" title="Embedding a cell on a web page"></a>Embedding a cell on a web page</h1><p>有几种嵌入方式，本文只关注通过 JavaScript 方式嵌入 cell.</p>
-<h2 id="方式一：嵌入-Cell"><a href="#方式一：嵌入-Cell" class="headerlink" title="方式一：嵌入 Cell"></a>方式一：嵌入 Cell</h2><ol>
-<li>在 cell 左侧，点击更多按钮（纵向的三个点）</li>
-<li>在弹出菜单中，点击 Emebed</li>
-<li>在弹出窗口中选择 cell 名称</li>
-<li>在弹出窗口中选择 Runtime with JavaScript</li>
-<li>复制显示的 JavaScript 到项目中</li>
-</ol>
-<ul>
-<li>源码在远端，无法修改</li>
-</ul>
-<h2 id="方式二：下载插件源码"><a href="#方式二：下载插件源码" class="headerlink" title="方式二：下载插件源码"></a>方式二：下载插件源码</h2><ol>
-<li>在页面右上方，点击更多按钮（横向的三个点）</li>
-<li>在弹出菜单中，点击 Export</li>
-<li>Download Code</li>
-</ol>
-<ul>
-<li>插件源码在本地，可以修改</li>
-</ul>
-<h1 id="渲染-Cell"><a href="#渲染-Cell" class="headerlink" title="渲染 Cell"></a>渲染 Cell</h1><p>最显而易见的方式是直接在页面中显示嵌入的 notebook 的内容。Observable runtime 包含一个标准的 inspector，它从 notebook 获取内容并显示在 HTML 中。</p>
-<pre class="language-js" data-language="js"><code class="language-js">&#x2F;&#x2F; Load the Observable runtime and inspector.
-import &#123;Runtime, Inspector&#125; from &quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;@observablehq&#x2F;runtime@4&#x2F;dist&#x2F;runtime.js&quot;;
-
-&#x2F;&#x2F; Your notebook, compiled as an ES module.
-import notebook from &quot;https:&#x2F;&#x2F;api.observablehq.com&#x2F;@jashkenas&#x2F;my-neat-notebook.js?v&#x3D;3&quot;;
-
-&#x2F;&#x2F; Load the notebook, observing its cells with a default Inspector
-&#x2F;&#x2F; that simply renders the value of each cell into the provided DOM node.
-new Runtime().module(notebook, Inspector.into(document.body));</code></pre>
-
-<p>如果不想渲染整个 notebook，可以自定义一个方法选择只渲染哪些 cell，使用 name 来匹配的，如下：</p>
-<pre class="language-js" data-language="js"><code class="language-js">new Runtime().module(notebook, name &#x3D;&gt; &#123;
-  if (name &#x3D;&#x3D;&#x3D; &quot;chart&quot;) &#123;
-    return new Inspector(document.querySelector(&quot;#chart&quot;));
+          <h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><ol>
+<li>进入配置目录<pre class="language-none"><code class="language-none">cd &#x2F;etc&#x2F;nginx&#x2F;sites-enabled</code></pre></li>
+<li>新建文件 xiu66.site，内容如下:<pre class="language-shell" data-language="shell"><code class="language-shell">server &#123;
+  listen 80;
+  server_name xiu66.site;
+  # client 可以携带的最大 body 为 20m
+  client_max_body_size 20m;
+  # 将请求都转发到 127.0.0.1:3000
+  # 因为所有的地址都以 &#x2F; 开头，所以这条规则将匹配到所有请求
+  # 但是正则和最长字符串会优先匹配
+  location &#x2F; &#123;
+      proxy_pass_header Server;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Scheme $scheme;
+      proxy_pass http:&#x2F;&#x2F;127.0.0.1:3000;
   &#125;
-&#125;);</code></pre>
-
-<p>如果想只加载提供能力，不渲染，当匹配对应的 cell name 时返回 true，如下：</p>
-<pre class="language-js" data-language="js"><code class="language-js">(new Runtime).module(define, name &#x3D;&gt; &#123;
-  if (name &#x3D;&#x3D;&#x3D; &quot;chart&quot;) return Inspector.into(&quot;.chart&quot;)();
-  &#x2F;&#x2F; update 会被 chart 调用
-  if (name &#x3D;&#x3D;&#x3D; &quot;update&quot;) return true;
-&#125;);</code></pre>
-
-<h1 id="获取-cell-内容"><a href="#获取-cell-内容" class="headerlink" title="获取 cell 内容"></a>获取 cell 内容</h1><pre class="language-js" data-language="js"><code class="language-js">const module &#x3D; new Runtime().module(notebook);
-const value &#x3D; await module.value(&quot;chart&quot;);</code></pre>
-
-<p>还有一种方式，通过 observer 来获取，例如：</p>
-<pre class="language-js" data-language="js"><code class="language-js">new Runtime().module(notebook, name &#x3D;&gt; &#123;
-  return &#123;
-    pending() &#123; console.log(&#96;$&#123;name&#125; is running…&#96;); &#125;,
-    fulfilled(value) &#123; console.log(name, value); &#125;,
-    rejected(error) &#123; console.error(error); &#125;
-  &#125;;
-&#125;);</code></pre>
-
-<h1 id="更新-cell-的内容"><a href="#更新-cell-的内容" class="headerlink" title="更新 cell 的内容"></a>更新 cell 的内容</h1><p>通过 <a target="_blank" rel="noopener" href="https://github.com/observablehq/runtime/blob/main/README.md#module_redefine">module.redefine</a> 可以修改 cell 中定义的变量，比如图标的 data/width/height/x/y/margin。</p>
-<pre class="language-js" data-language="js"><code class="language-js">const main &#x3D; new Runtime().module(define, name &#x3D;&gt; &#123;
-  if (name &#x3D;&#x3D;&#x3D; &quot;chart&quot;) return new Inspector(document.querySelector(&quot;#observablehq-chart-3ff9aa20&quot;));
-&#125;);
-main.redefine(&quot;data&quot;, [
-	&#123;&#39;name&#39;:&#39;apple&#39;, value:100&#125;,
-	&#123;&#39;name&#39;:&#39;orange&#39;, value:100&#125;,	
-	]);
-main.redefine(&#39;height&#39;, 100)</code></pre>
-
-<h1 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h1><ol>
-<li><a target="_blank" rel="noopener" href="https://observablehq.com/@observablehq/downloading-and-embedding-notebooks">Downloading and Embedding</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/observablehq/examples">Observable Examples</a></li>
+  # static 开头的请求会到 root 目录下寻找
+  location &#x2F;static&#x2F; &#123;
+    # 绝对路径，最终文件路径&#x3D;root+$&#123;location&#125;
+    root &#x2F;web&#x2F;xiu66&#x2F;dist&#x2F;;
+    index index.html;
+  &#125;
+&#125;</code></pre>
+<h1 id="URL-匹配规则"><a href="#URL-匹配规则" class="headerlink" title="URL 匹配规则"></a>URL 匹配规则</h1></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/38810b49bc29">https://www.jianshu.com/p/38810b49bc29</a></li>
+<li><a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_core_module.html">http://nginx.org/en/docs/http/ngx_http_core_module.html</a><h1 id="配置-https"><a href="#配置-https" class="headerlink" title="配置 https"></a>配置 https</h1>参考 <a target="_blank" rel="noopener" href="https://coolshell.cn/articles/18094.html">https://coolshell.cn/articles/18094.html</a></li>
 </ol>
 
       
@@ -353,7 +311,7 @@ main.redefine(&#39;height&#39;, 100)</code></pre>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
