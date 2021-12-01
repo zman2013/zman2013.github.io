@@ -24,10 +24,9 @@ jobs:
       - name: Install Dependencies
         run: npm install
       - name: Build
-        run: npm run build
-      - name: create cname file
         run: |
-          echo 'zman.fun' > ./build/CNAME
+        npm run build
+        echo 'zman.fun' > ./build/CNAME
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
