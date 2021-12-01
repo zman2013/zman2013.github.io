@@ -27,7 +27,7 @@ jobs:
         run: npm run build
       - name: create cname file
         run: |
-          echo zman.fun' > ./build/CNAME && gh-pages -d build"
+          echo 'zman.fun' > ./build/CNAME
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
