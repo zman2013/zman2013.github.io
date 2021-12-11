@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">43</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/02/28/wordpress/code-version-management/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/04/16/wordpress/spring-basic-web/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/02/28/wordpress/code-version-management/" class="post-title-link" itemprop="url">代码版本管理 SVN Git</a>
+            <a href="/2016/04/16/wordpress/spring-basic-web/" class="post-title-link" itemprop="url">快速开发Spring Web应用</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2016-02-28 16:57:52" itemprop="dateCreated datePublished" datetime="2016-02-28T16:57:52+08:00">2016-02-28</time>
+      <time title="Created: 2016-04-16 17:28:03" itemprop="dateCreated datePublished" datetime="2016-04-16T17:28:03+08:00">2016-04-16</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-12-01 12:42:01" itemprop="dateModified" datetime="2021-12-01T12:42:01+08:00">2021-12-01</time>
+        <time title="Modified: 2021-12-11 15:03:32" itemprop="dateModified" datetime="2021-12-11T15:03:32+08:00">2021-12-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,7 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/SVN-Git/" itemprop="url" rel="index"><span itemprop="name">SVN Git</span></a>
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
         </span>
     </span>
 
@@ -271,29 +271,83 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>介绍团队协作中代码管理的基本规则及命令</em> 系统开发中不可避免几个人对同一个包进行修改。 背景：代码主干(trunk/master)已经稳定，团队协作进行一般的功能迭代开发。 流程：</p>
-<ol>
-<li> 团队每个成员基于主干最新版本建立分支。</li>
-<li> 每个成员基于各自分支进行功能开发，并确保每天将主干最新代码合并到自己的分支。</li>
-<li> 每个成员每完成一个功能，确保不影响正常业务的前提下，将改动的代码合并到主干。</li>
-</ol>
-<p><strong>SVN相关命令</strong> 1.  建立分支</p>
-<p>//基于主干创建分支<br>//svn cp -m ‘create branch’ trunk-url new-branch-url<br>svn cp -m ‘create branch …’ <a target="_blank" rel="noopener" href="http://svn.com/svn/pay/trunk">http://svn.com/svn/pay/trunk</a> <a target="_blank" rel="noopener" href="http://svn.com/svn/pay/branches/branch-01">http://svn.com/svn/pay/branches/branch-01</a></p>
-<p>2. 主干 -&gt; 分支</p>
-<p>//切换到branch-01目录下<br>cd ~/workspace/pay/branch-01<br>//把trunk上的改动合并到branch-01<br>//svn merge trunk-url<br>svn merge <a target="_blank" rel="noopener" href="http://svn.com/svn/pay/trunk">http://svn.com/svn/pay/trunk</a><br>//突处理冲突，提交</p>
-<p>3. 分支 -&gt; 主干</p>
-<p>//切换到主干目录下<br>cd ~/workspace/pay/trunk<br>//把branche-01上的改动merge到trunk<br>//svn merge –reintegrate branch-url<br>svn merge –reintegrate <a target="_blank" rel="noopener" href="http://svn.com/svn/pay/branches/branch-01">http://svn.com/svn/pay/branches/branch-01</a><br>//处理冲突，提交</p>
-<p><strong>*</strong> 不要用 svn merge -r XX:HEAD branch-url 其他常用命令</p>
-<p>1. 查看修改状态<br>   svn status<br>2. 删除分支<br>   svn rm -m “del branch-01” <a target="_blank" rel="noopener" href="http://svn.com/svn/pay/branches/branch-01">http://svn.com/svn/pay/branches/branch-01</a><br>3. 查看指定branch的不同version之间的diff（默认为本地代码对应分支）<br>   svn diff -r999:111 <a target="_blank" rel="noopener" href="http://svn.com/svn/pay/branches/branch-01">http://svn.com/svn/pay/branches/branch-01</a><br>4. 查看版本修改信息<br>   svn log –verbose –stop-on-copy <a target="_blank" rel="noopener" href="http://svn.com/svn/pay/branches/branch-01">http://svn.com/svn/pay/branches/branch-01</a></p>
-<p><strong>Git 相关命令</strong> 1. 建立远程分支</p>
-<p>//建议直接通过网页UI建立分支，或者通过以下命令建立分支<br>//clone主干到本地<br>git clone <a target="_blank" rel="noopener" href="https://git.com/zmannotes/pay.git">https://git.com/zmannotes/pay.git</a><br>cd pay<br>//push到本地分支masetr到远程分支branch-01，此时如果git服务器没有远程分支，会自动创建远程分支branch-01<br>//git push origin &lt;local_branch_name&gt;:&lt;remote_branch_name&gt;<br>git push origin master:branch-01<br>//基于远程分支branch-01建立本地分支branch-01<br>git checkout -b branch-01 origin/branch-01</p>
-<p>2. 主干 -&gt; 分支</p>
-<p>//切换到分支branch-01<br>git checkout branch-01<br>//合并主干到分支branch-01<br>git merge master<br>//处理冲突,提交,发布</p>
-<p>3. 分支 -&gt; 主干</p>
-<p>//切换到主干<br>git checkout master<br>//合并分支branch-01改动到主干<br>git merge branch-01<br>//处理冲突,提交,发布</p>
-<p>其他常用命令</p>
-<p>1. 当前修改状态<br>   git status<br>2. 删除分支<br> git branch -d branch-name<br>3. 获取远程分支信息<br>   git fetch<br>4. 获取所有(本地和远程)分支信息 (*表示当前正在使用的分支）<br>   git branch -a<br>5. 显示远程库映射<br>   git remote -v</p>
-<p><strong>Git vs SVN</strong> Q：哪个更好？ A：这个问题比较可怕，两个阵营的人吵成一锅粥，你觉得哪个好就哪个好！反正我用Git更顺手，不多说了…</p>
+          <p><em>基于spring boot可以秒建一个基本__web应用</em> <strong>1. 创建maven项目</strong></p>
+<p>//创建名为spring-basic-web的maven项目<br>$ mvn -B archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DgroupId=com.zmannotes.spring -DartifactId=spring-basic-web</p>
+<p><em>（详细说明请参考: <a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2016/04/16/spring-basic-application/">快速开发Spring Application</a>)</em> <strong>2. 导入STS/Eclipse/IntelliJ</strong> <strong>3. 修改pom.xml内容如下</strong></p>
+<p><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4\_0\_0.xsd"><br>    <modelVersion>4.0.0</modelVersion><br>    <groupId>com.zmannotes.spring</groupId><br>    <artifactId>spring-basic-web</artifactId><br>    <packaging>jar</packaging><br>    <version>1.0-SNAPSHOT</version><br>    <name>spring-basic-web</name></p>
+<pre><code>&lt;!-- 父配置文件，继承通用的配置 --&gt;
+&lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;1.3.3.RELEASE&lt;/version&gt;
+&lt;/parent&gt;
+
+&lt;dependencies&gt;
+    &lt;!-- spring web 依赖 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;junit&lt;/groupId&gt;
+        &lt;artifactId&gt;junit&lt;/artifactId&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+
+&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;!-- 打包用插件 --&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;</code></pre>
+</project>
+
+<p><strong>4. 例子</strong> 建立一个web服务，访问Url，返回json串。 4.1 创建json串对应的Java对象</p>
+<p>package com.zmannotes.spring.domain;</p>
+<p>public class HomeResponse {<br>    /** 响应码 */<br>    private int code;<br>    /** 响应信息 */<br>    private String message;</p>
+<pre><code>public HomeResponse(int code, String msg) &#123;
+    this.code = code;
+    this.message = msg;
+&#125;
+
+public int getCode() &#123;
+    return code;
+&#125;
+
+public String getMessage() &#123;
+    return message;
+&#125;</code></pre>
+<p>}</p>
+<p>4.2 创建Controller对象</p>
+<p>package com.zmannotes.spring.controller;</p>
+<p>import org.springframework.web.bind.annotation.RequestMapping;<br>import org.springframework.web.bind.annotation.RequestParam;<br>import org.springframework.web.bind.annotation.RestController;</p>
+<p>import com.zmannotes.spring.domain.HomeResponse;</p>
+<p>@RestController                 //标明此类是一个Controller<br>@RequestMapping(“/home”)        //标明Url根路径为/home<br>public class HomeController {</p>
+<pre><code>@RequestMapping(&quot;hi&quot;)       //标明Url子路径为hi
+public HomeResponse hi(
+        @RequestParam(name = &quot;name&quot;, defaultValue = &quot;hacker&quot;) String name) &#123;
+
+    String msg = String.format(&quot;Welcome %s&quot;, name);
+
+    HomeResponse response = new HomeResponse(0, msg);
+
+    return response;
+&#125;</code></pre>
+<p>}</p>
+<p>4.3 修改App.java</p>
+<p>package com.zmannotes.spring;</p>
+<p>import org.springframework.boot.SpringApplication;<br>import org.springframework.boot.autoconfigure.SpringBootApplication;</p>
+<p>@SpringBootApplication<br>public class App {<br>    public static void main(String[] args) {<br>        SpringApplication.run(App.class, args);<br>    }<br>}</p>
+<p>至此开发阶段完成！ <strong>5. 打包、运行</strong> 5.1 打包 <code>$ mvn clean package</code> 5.2 运行</p>
+<p>$ java -jar target/spring-basic-web-1.0-SNAPSHOT.jar</p>
+<p><strong>6. 测试</strong> 6.1 访问Url：<a target="_blank" rel="noopener" href="http://localhost:8080/home/hi?name=zman">http://localhost:8080/home/hi?name=zman</a> 6.2 返回信息如下：</p>
+<p>{<br>    code: 0,<br>    message: “Welcome zman”<br>}</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/zman2013/spring-basic-web">源码 GitHub</a> <strong>Q&amp;A</strong> Q：为什么没有用到tomcat这类的容器？ A：Spring boot已经在项目依赖中自动内嵌了tomcat，因此不需要外置的tomcat容器了。</p>
 
       
     </div>
@@ -315,7 +369,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/33/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><span class="page-number current">34</span><a class="page-number" href="/page/35/">35</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/35/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/33/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><span class="page-number current">34</span><a class="page-number" href="/page/35/">35</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/35/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

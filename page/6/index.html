@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">43</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/02/18/nodejs-crash-diagnose-root-cause/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/05/21/wireshark-display-filters/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/18/nodejs-crash-diagnose-root-cause/" class="post-title-link" itemprop="url">Nodejs Crash Diagnose Root Cause</a>
+            <a href="/2021/05/21/wireshark-display-filters/" class="post-title-link" itemprop="url">wireshark-display-filters</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2021-02-18 15:46:45" itemprop="dateCreated datePublished" datetime="2021-02-18T15:46:45+08:00">2021-02-18</time>
+      <time title="Created: 2021-05-21 22:33:34" itemprop="dateCreated datePublished" datetime="2021-05-21T22:33:34+08:00">2021-05-21</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-12-01 12:42:01" itemprop="dateModified" datetime="2021-12-01T12:42:01+08:00">2021-12-01</time>
+        <time title="Modified: 2021-12-11 15:03:32" itemprop="dateModified" datetime="2021-12-11T15:03:32+08:00">2021-12-11</time>
       </span>
 
   
@@ -262,26 +262,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Nodejs 运行期间遇到未捕获的异常会导致进程 crash，此时可以使用 <code>process.on(&#39;uncaughtException&#39;)</code> 捕获异常，但会丢失错误上下文，导致无法定位根本原因。</p>
-<p>通过 Nodejs 提供的 <code>domain</code> 模块，可以捕获异常同时保留错误上下文。</p>
-<p>示例如下:</p>
-<pre class="language-typescript" data-language="typescript"><code class="language-typescript">import domain from &#39;domain&#39;
-
-function main()&#123;
-  &#x2F;&#x2F; biz code
-&#125;
-
-domain.create()
-  .on(&#39;error&#39;, console.error)
-  .run(main)</code></pre>
-
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ol>
-<li>If any of the event emitters or callbacks registered to a domain emit an ‘error’ event, or throw an error, then the domain object will be notified, rather than losing the context of the error in the <code>process.on(&#39;uncaughtException&#39;)</code> handler, or causing the program to exit immediately with an error code.</li>
-<li>Domain error handlers are not a substitute for closing down a process when an error occurs.</li>
-<li>By the very nature of how throw works in JavaScript, there is almost never any way to safely “pick up where it left off”, without leaking references, or creating some other sort of undefined brittle state.The safest way to respond to a thrown error is to shut down the process. </li>
-</ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a target="_blank" rel="noopener" href="https://nodejs.org/dist/latest-v15.x/docs/api/domain.html">https://nodejs.org/dist/latest-v15.x/docs/api/domain.html</a></li>
+          <h1 id="常用-filter"><a href="#常用-filter" class="headerlink" title="常用 filter"></a>常用 filter</h1><ol>
+<li>过滤源<br><code>ip.src_host == 127.0.0.1</code></li>
+<li>过滤目标<br><code>ip.dst_host == 127.0.0.1</code></li>
+<li>过滤端口<br><code>tcp.port == 443</code></li>
+<li>过滤flag<br><code>tcp.flags.syn==1</code></li>
+<li>逻辑运算<br><code>(ip.src_host == 127.0.0.1 || ip.src_host == 127.0.0.2) &amp;&amp; tcp.port == 443  &amp;&amp; tcp.flags.syn==1</code></li>
 </ol>
 
       
@@ -304,7 +290,7 @@ domain.create()
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

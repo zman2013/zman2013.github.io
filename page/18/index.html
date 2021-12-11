@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">43</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2017/09/24/wordpress/kubernetes-basic-command/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2019/03/10/wordpress/python-data-operations/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2017/09/24/wordpress/kubernetes-basic-command/" class="post-title-link" itemprop="url">Kubernetes常用命令</a>
+            <a href="/2019/03/10/wordpress/python-data-operations/" class="post-title-link" itemprop="url">Python数据操作</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2017-09-24 22:30:39" itemprop="dateCreated datePublished" datetime="2017-09-24T22:30:39+08:00">2017-09-24</time>
+      <time title="Created: 2019-03-10 21:04:00" itemprop="dateCreated datePublished" datetime="2019-03-10T21:04:00+08:00">2019-03-10</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-12-01 12:42:01" itemprop="dateModified" datetime="2021-12-01T12:42:01+08:00">2021-12-01</time>
+        <time title="Modified: 2021-12-11 15:03:32" itemprop="dateModified" datetime="2021-12-11T15:03:32+08:00">2021-12-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,7 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/container/" itemprop="url" rel="index"><span itemprop="name">container</span></a>
+          <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
         </span>
     </span>
 
@@ -271,49 +271,164 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="核心命令"><a href="#核心命令" class="headerlink" title="核心命令"></a>核心命令</h3><pre class="language-shell" data-language="shell"><code class="language-shell">kubectl get - list resources
+          <h1 id="1-时间"><a href="#1-时间" class="headerlink" title="1. 时间"></a>1. 时间</h1><h2 id="1-1-日期转化"><a href="#1-1-日期转化" class="headerlink" title="1.1 日期转化"></a>1.1 日期转化</h2><pre class="language-python" data-language="python"><code class="language-python">import time, datetime
+import pandas as pd
 
-kubectl describe - show detailed information about a resource
+# 今天
+today &#x3D; datetime.datetime.today().date()
 
-kubectl logs - print the logs from a container in a pod
+# 时间格式化
+date_point_formatted &#x3D; date_point.strftime(&#39;%Y%m%d&#39;)
 
-kubectl exec - execute a command on a contain in a pod</code></pre>
-<h3 id="1-get"><a href="#1-get" class="headerlink" title="1. get"></a>1. get</h3><p>1.1 查看nodes<br><code>kubectl get nodes</code></p>
-<p>1.2 查看pod</p>
-<p><code>kubectl get pod</code></p>
-<p>1.3 查看deployment</p>
-<p><code>kubectl get deployments</code></p>
-<h3 id="2-describe"><a href="#2-describe" class="headerlink" title="2. describe"></a>2. describe</h3><p>2.1 查看详情</p>
-<pre class="language-shell" data-language="shell"><code class="language-shell">kubectl describe pods
+# 字符串转化日期
+date &#x3D; &#39;20190101&#39;
+date &#x3D; datetime.datetime.strptime(str(date), &#39;%Y%m%d&#39;).date()
 
-kubectl describe pods $POD_NAME
+# 各种结构转化为日期：integer, float, string, datetime, list, tuple, 1-d array, Series
+date &#x3D; pd.to_datetime(str(date), format&#x3D;&#39;%Y%m%d&#39;)</code></pre>
 
-kubectl describe nodes</code></pre>
-<h3 id="3-exec"><a href="#3-exec" class="headerlink" title="3. exec"></a>3. exec</h3><p>3.1 调用pod内部命令</p>
-<p><code>kubectl exec -ti $POD_NAME curl localhost:8080</code></p>
-<p>3.2 启动容器bash</p>
-<p><code>kubectl exec -ti $POD_NAME bash    （退出：exit）</code></p>
-<h3 id="4-删除service"><a href="#4-删除service" class="headerlink" title="4. 删除service"></a>4. 删除service</h3><p><code>kubectl delete service -l run=kubernetes-bootcamp</code></p>
-<h3 id="5-查看版本"><a href="#5-查看版本" class="headerlink" title="5. 查看版本"></a>5. 查看版本</h3><p><code>kubectl version</code></p>
-<h3 id="6-查看集群信息"><a href="#6-查看集群信息" class="headerlink" title="6. 查看集群信息"></a>6. 查看集群信息</h3><p><code>kubectl cluster-info</code></p>
-<h3 id="7-创建一个deployment"><a href="#7-创建一个deployment" class="headerlink" title="7. 创建一个deployment"></a>7. 创建一个deployment</h3><p><code>kubectl run kubernetes-bootcamp --image=docker.io/jocatalin/kubernetes-bootcamp:v1 --port=8080</code></p>
-<h3 id="8-暴露服务到外网（即：创建一个service）"><a href="#8-暴露服务到外网（即：创建一个service）" class="headerlink" title="8. 暴露服务到外网（即：创建一个service）"></a>8. 暴露服务到外网（即：创建一个service）</h3><p>8.1 创建service<br><code>kubectl expose deployment/kubernetes-bootcamp --type=&quot;NodePort&quot; --port 8080    (port: 为pod监听的端口）</code><br>8.2 查看service</p>
-<pre class="language-shell" data-language="shell"><code class="language-shell">kubectl describe service
-kubectl describe services&#x2F;kubernetes-bootcamp</code></pre>
+<h2 id="1-2-日期加减、比较"><a href="#1-2-日期加减、比较" class="headerlink" title="1.2 日期加减、比较"></a>1.2 日期加减、比较</h2><pre class="language-python" data-language="python"><code class="language-python">import datetime
 
-<p>8.3 删除service</p>
-<pre class="language-shell" data-language="shell"><code class="language-shell">kubectl delete service $SERVICE_NAME
+today &#x3D; datetime.datetime.today().date()
 
-kubectl delete service -l run&#x3D;kubernetes-bootcamp</code></pre>
+# 五年前
+delta_year &#x3D; 5
+start_date &#x3D; datetime.date(today.year - delta_year, today.month, today.day)
 
-<h3 id="9-标签的使用（label）"><a href="#9-标签的使用（label）" class="headerlink" title="9. 标签的使用（label）"></a>9. 标签的使用（label）</h3><p>9.1 打标签<br><code>kubectl label pod $POD_NAME app=v1</code></p>
-<p>9.2 使用标签过滤<br><code>kubectl get pods -l app=v1</code></p>
-<h3 id="10-scale"><a href="#10-scale" class="headerlink" title="10. scale"></a>10. scale</h3><p><code>kubectl scale deployments/kubernetes-bootcamp --replicas=2</code></p>
-<h3 id="11-平滑升级、回滚"><a href="#11-平滑升级、回滚" class="headerlink" title="11. 平滑升级、回滚"></a>11. 平滑升级、回滚</h3><p>11.1 <strong>升级</strong><br><code>kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2</code></p>
-<p>11.2 <strong>检查状态</strong><br>11.2.1 通过service访问服务接口<br>11.2.2 kubectl rollout status deployments/kubernetes-bootcamp<br>11.3 <strong>回滚</strong><br><code>kubectl rollout undo deployments/kubernetes-bootcamp</code></p>
-<h3 id="12-namespace"><a href="#12-namespace" class="headerlink" title="12. namespace"></a>12. namespace</h3><p>kubectl create namespace mem-example</p>
-<p>kubectl create -f <a target="_blank" rel="noopener" href="https://k8s.io/docs/tasks/configure-pod-container/memory-request-limit.yaml">https://k8s.io/docs/tasks/configure-pod-container/memory-request-limit.yaml</a> –namespace=mem-example</p>
-<p><code>kubectl get pod memory-demo --namespace=mem-example</code><br> LINK <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/user-guide/kubectl/v1.7/">Kubectl API</a></p>
+# 七天前
+day_delta &#x3D; datetime.timedelta(days&#x3D;-7)
+
+# 大小比较
+today &gt; start_date</code></pre>
+
+<h1 id="2-基本操作"><a href="#2-基本操作" class="headerlink" title="2. 基本操作"></a>2. 基本操作</h1><h2 id="2-1字符串"><a href="#2-1字符串" class="headerlink" title="2.1字符串"></a>2.1字符串</h2><pre class="language-python" data-language="python"><code class="language-python"># 转为字符串
+price &#x3D; 12
+price &#x3D; str(12)
+
+# 转为int
+price &#x3D; int(price)
+
+# 分割
+text &#x3D; &quot;600690.SH&quot;
+tmp &#x3D; text.split(&quot;.&quot;)
+print(tmp[1]+tmp[0])
+
+# 大小写
+text &#x3D; text.lower()
+text &#x3D; text.upper()</code></pre>
+
+<h2 id="2-2-列表"><a href="#2-2-列表" class="headerlink" title=" 2.2 列表"></a> 2.2 列表</h2><pre class="language-python" data-language="python"><code class="language-python"> 1. 遍历 元素
+for item in list:
+ 
+2. 遍历 索引, 元素
+for index, item in enumerate(list):</code></pre>
+
+<h2 id="2-3-HTTP请求设置代理"><a href="#2-3-HTTP请求设置代理" class="headerlink" title="2.3 HTTP请求设置代理"></a>2.3 HTTP请求设置代理</h2><pre class="language-python" data-language="python"><code class="language-python">r &#x3D; requests.post(url, params&#x3D;para, headers&#x3D;header, proxies&#x3D;&#123;
+    &#39;http&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:1086&#39;,
+    &#39;https&#39;: &#39;https:&#x2F;&#x2F;127.0.0.1:1086&#39;
+&#125;)</code></pre>
+<h1 id="3-DataFrame"><a href="#3-DataFrame" class="headerlink" title="3. DataFrame"></a>3. DataFrame</h1><h2 id="3-1-设置index"><a href="#3-1-设置index" class="headerlink" title="3.1 设置index"></a>3.1 设置index</h2><pre class="language-python" data-language="python"><code class="language-python">date_index &#x3D; pd.to_datetime(df[&#39;trade_date&#39;], format&#x3D;&#39;%Y%m%d&#39;)
+df.set_index(date_index, inplace&#x3D;True)
+df &#x3D; df.sort_index(ascending&#x3D;True)</code></pre>
+
+<h2 id="3-2-去重"><a href="#3-2-去重" class="headerlink" title=" 3.2 去重"></a> 3.2 去重</h2><pre class="language-python" data-language="python"><code class="language-python"># 去重
+df &#x3D; df.drop_duplicates(subset&#x3D;&#39;trade_date&#39;, keep&#x3D;&#39;first&#39;)</code></pre>
+
+<h2 id="3-3-拼接"><a href="#3-3-拼接" class="headerlink" title=" 3.3 拼接"></a> 3.3 拼接</h2><pre class="language-python" data-language="python"><code class="language-python"># 拼接
+df &#x3D; df.append(old_df, ignore_index&#x3D;True)
+
+# merge on
+df &#x3D; pd.merge(income_df, balancesheet_df, on&#x3D;&#39;end_date&#39;)
+
+# merge
+merged_df &#x3D; pd.merge(stock_price_df, finance_df, left_index&#x3D;True, right_index&#x3D;True, how&#x3D;&#39;left&#39;)</code></pre>
+
+<h2 id="3-4-遍历、删除"><a href="#3-4-遍历、删除" class="headerlink" title=" 3.4 遍历、删除"></a> 3.4 遍历、删除</h2><pre class="language-python" data-language="python"><code class="language-python"># 按index值进行遍历，并删除大于起始时间的
+for index in df.index:
+  print(index)
+  if index.date() &gt; start_date:
+    df.drop(index&#x3D;index)
+
+# 按下标进行遍历
+for index in range(0, len(pe_df), 1):
+  line &#x3D; pe_df.iloc[index]
+
+# 直接遍历line
+for index, line in df.iterrows():</code></pre>
+
+<h2 id="3-5-获取column中最大、最小值"><a href="#3-5-获取column中最大、最小值" class="headerlink" title=" 3.5 获取column中最大、最小值"></a> 3.5 获取column中最大、最小值</h2><pre class="language-python" data-language="python"><code class="language-python">max_line &#x3D; data.loc[data[&#39;profitRate&#39;].idxmax()]
+min_line &#x3D; data.loc[data[&#39;profitRate&#39;].idxmin()]</code></pre>
+
+<h2 id="3-6-cell操作"><a href="#3-6-cell操作" class="headerlink" title=" 3.6 cell操作"></a> 3.6 cell操作</h2><pre class="language-python" data-language="python"><code class="language-python"># 字符串化
+df[&#39;trade_date&#39;] &#x3D; df[&#39;trade_date&#39;].apply(str)
+
+# 日志操作
+df[&#39;end_date&#39;] &#x3D; df[&#39;end_date&#39;].apply(lambda x: x[2:6])
+
+# 单元格操作
+df[&#39;trade_date&#39;] &#x3D; df[&#39;trade_date&#39;].apply(lambda x: ajust_date_to_quarter(x))
+
+# 读取[row, column]的内容
+df.at[row, column]</code></pre>
+
+<h2 id="3-7-loc-iloc区别"><a href="#3-7-loc-iloc区别" class="headerlink" title=" 3.7 loc/iloc区别"></a> 3.7 loc/iloc区别</h2><pre class="language-python" data-language="python"><code class="language-python"># 下标方式获取df段
+data &#x3D; pe_df[index: index + 480]
+
+# loc根据index获取，index_value: 真实值，比如20190101、20190102
+line &#x3D; pe_df.loc[index_value]
+
+# iloc根据下标获取，index: 0、1、2、3
+line &#x3D; pe_df.iloc[index]</code></pre>
+
+<p><a href="./Screen-Shot-2019-10-06-at-8.54.08-PM.png"><img src="./Screen-Shot-2019-10-06-at-8.54.08-PM-1024x337.png" alt="DataFrame Selection"></a><br><a target="_blank" rel="noopener" href="https://pandas.pydata.org/pandas-docs/stable/getting_started/dsintro.html#indexing-selection">https://pandas.pydata.org/pandas-docs/stable/getting_started/dsintro.html#indexing-selection</a></p>
+<h2 id="3-8-保存、加载"><a href="#3-8-保存、加载" class="headerlink" title=" 3.8 保存、加载"></a> 3.8 保存、加载</h2><pre class="language-python" data-language="python"><code class="language-python"># 写文件
+df.to_csv(file_path, index&#x3D;False)
+
+# 读文件
+df &#x3D; pd.read_csv(dir_path+index_code)
+
+# 第一列作为index
+df &#x3D; pd.read_csv(file_path, index_col&#x3D;0)</code></pre>
+
+<h2 id="3-9-日期操作"><a href="#3-9-日期操作" class="headerlink" title="3.9 日期操作"></a>3.9 日期操作</h2><pre class="language-python" data-language="python"><code class="language-python">from pandas.tseries.offsets import *
+today &#x3D; &#39;20190101&#39;
+today &#x3D; pd.Timestamp(today)
+# 本季度末
+this_quarter &#x3D; (today - QuarterEnd(n&#x3D;0))
+print(this_quarter.strftime(&quot;%Y%m%d&quot;))
+# 上一个季度末
+last_quarter &#x3D; (today - QuarterEnd(n&#x3D;1))
+print(last_quarter.strftime(&quot;%Y%m%d&quot;))</code></pre>
+
+<h2 id="3-9-其它"><a href="#3-9-其它" class="headerlink" title="3.9 其它"></a>3.9 其它</h2><pre class="language-python" data-language="python"><code class="language-python">df &#x3D; df[[&#39;total_revenue&#39;, &#39;total_profit&#39;, &#39;n_income&#39;]]
+df &#x3D; df.fillna(value&#x3D;0)
+df &#x3D; df.round(2)
+# 重命名
+df &#x3D; df.rename(columns&#x3D;&#123;&#39;n_income&#39;: &#39;净利润&#39;, &#39;total_profit&#39;: &#39;总利润&#39;&#125;)
+
+# 插入
+finance_df.insert(0, &#39;类目&#39;, finance_df.index)
+
+# 所有column名称
+finance_df.columns.values.tolist()
+
+# group
+df_max &#x3D; df.groupby(&#39;trade_date&#39;).max().rename(columns&#x3D;&#123;&#39;close&#39;: &#39;max&#39;&#125;)
+
+# 转置
+finance_df &#x3D; finance_df.transpose()
+
+# 是否存在某个row
+result &#x3D; row_name in analysed_stocks.index</code></pre>
+
+<h1 id="4-异常"><a href="#4-异常" class="headerlink" title="4. 异常"></a>4. 异常</h1><h2 id="4-1-异常栈"><a href="#4-1-异常栈" class="headerlink" title="4.1 异常栈"></a>4.1 异常栈</h2><pre class="language-python" data-language="python"><code class="language-python">import traceback
+
+try:
+  
+except Exception as e:
+  traceback.print_exc()</code></pre>
+
+
 
       
     </div>
@@ -335,7 +450,7 @@ kubectl delete service -l run&#x3D;kubernetes-bootcamp</code></pre>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/17/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><span class="page-number current">18</span><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/19/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/17/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><span class="page-number current">18</span><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/19/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">43</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/11/26/nginx-template/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/12/11/elasticsearch-command/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/26/nginx-template/" class="post-title-link" itemprop="url">nginx-template</a>
+            <a href="/2021/12/11/elasticsearch-command/" class="post-title-link" itemprop="url">elasticsearch command</a>
         </h2>
 
         <div class="post-meta-container">
@@ -241,16 +241,10 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
+      
 
-      <time title="Created: 2021-11-26 13:16:22" itemprop="dateCreated datePublished" datetime="2021-11-26T13:16:22+08:00">2021-11-26</time>
+      <time title="Created: 2021-12-11 14:54:06 / Modified: 15:03:32" itemprop="dateCreated datePublished" datetime="2021-12-11T14:54:06+08:00">2021-12-11</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-12-01 12:42:01" itemprop="dateModified" datetime="2021-12-01T12:42:01+08:00">2021-12-01</time>
-      </span>
 
   
 </div>
@@ -262,38 +256,46 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><ol>
-<li>进入配置目录<pre class="language-none"><code class="language-none">cd &#x2F;etc&#x2F;nginx&#x2F;sites-enabled</code></pre></li>
-<li>新建文件 xiu66.site，内容如下:<pre class="language-shell" data-language="shell"><code class="language-shell">server &#123;
-  listen 80;
-  server_name xiu66.site;
-  # client 可以携带的最大 body 为 20m
-  client_max_body_size 20m;
-  # 将请求都转发到 127.0.0.1:3000
-  # 因为所有的地址都以 &#x2F; 开头，所以这条规则将匹配到所有请求
-  # 但是正则和最长字符串会优先匹配
-  location &#x2F; &#123;
-      proxy_pass_header Server;
-      proxy_set_header Host $http_host;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Scheme $scheme;
-      proxy_pass http:&#x2F;&#x2F;127.0.0.1:3000;
+          <h1 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h1><ol>
+<li><p>创建索引<br>创建名为<code>xxx-span-2021-12-11</code>的索引</p>
+<pre class="language-none"><code class="language-none">PUT &#x2F;xxx-span-2021-12-11
+&#123;
+  &quot;mappings&quot;: &#123;
+      &quot;properties&quot;: &#123;
+        &quot;tags.source.uri&quot;: &#123;
+          &quot;type&quot;:       &quot;keyword&quot;
+        &#125;
+      &#125;
   &#125;
-  # static 开头的请求会到 root 目录下寻找
-  location &#x2F;static&#x2F; &#123;
-    # 绝对路径，最终文件路径&#x3D;root+$&#123;location&#125;
-    root &#x2F;web&#x2F;xiu66&#x2F;dist&#x2F;;
-    index index.html;
+&#125;</code></pre>
+</li>
+<li><p>查看索引和映射<br>有了映射才能在 Kibana 中做查询和图标</p>
+<pre class="language-none"><code class="language-none">GET &#x2F;xxx-span-2021-12-11
+GET &#x2F;xxx-span-2021-12-11&#x2F;_mapping</code></pre>
+</li>
+<li><p>删除索引</p>
+<pre class="language-none"><code class="language-none">DELETE &#x2F;index_*</code></pre>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/_deleting_an_index.html">LINK</a></p>
+</li>
+<li><p>模板操作</p>
+<pre class="language-none"><code class="language-none">GET _template&#x2F;xxx-span_template
+DELETE _template&#x2F;xxx-span_template</code></pre>
+</li>
+<li><p>查询</p>
+<pre class="language-none"><code class="language-none">GET &#x2F;xxx-span-2021-12-11&#x2F;_search
+&#123;
+  &quot;query&quot;: &#123;
+    &quot;match&quot;: &#123;
+      &quot;traceId&quot;: &#123;
+        &quot;query&quot;: &quot;bf2a201e835028ecae23c324e85b9855&quot;
+      &#125;
+    &#125;
   &#125;
 &#125;</code></pre>
 
 </li>
 </ol>
-<h1 id="URL-匹配规则"><a href="#URL-匹配规则" class="headerlink" title="URL 匹配规则"></a>URL 匹配规则</h1><ol>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/38810b49bc29">https://www.jianshu.com/p/38810b49bc29</a></li>
-<li><a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_core_module.html">http://nginx.org/en/docs/http/ngx_http_core_module.html</a></li>
-</ol>
-<h1 id="配置-https"><a href="#配置-https" class="headerlink" title="配置 https"></a>配置 https</h1><p>参考 <a target="_blank" rel="noopener" href="https://coolshell.cn/articles/18094.html">https://coolshell.cn/articles/18094.html</a></p>
+<h1 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h1><p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/cn/kibana/current/tutorial-visualizing.html">Kibana 可视化</a></p>
 
       
     </div>
@@ -315,7 +317,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

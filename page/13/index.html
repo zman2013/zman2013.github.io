@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">43</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2019/11/01/wordpress/unity-2d-core-knowledge/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2019/11/11/wordpress/a-stream-is-just-an-array-in-time/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2019/11/01/wordpress/unity-2d-core-knowledge/" class="post-title-link" itemprop="url">Unity 2D 基础知识</a>
+            <a href="/2019/11/11/wordpress/a-stream-is-just-an-array-in-time/" class="post-title-link" itemprop="url">A stream is just an array in time</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2019-11-01 21:39:02" itemprop="dateCreated datePublished" datetime="2019-11-01T21:39:02+08:00">2019-11-01</time>
+      <time title="Created: 2019-11-11 23:27:36" itemprop="dateCreated datePublished" datetime="2019-11-11T23:27:36+08:00">2019-11-11</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-12-01 12:42:01" itemprop="dateModified" datetime="2021-12-01T12:42:01+08:00">2021-12-01</time>
+        <time title="Modified: 2021-12-11 15:03:32" itemprop="dateModified" datetime="2021-12-11T15:03:32+08:00">2021-12-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,7 +257,11 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/unity/" itemprop="url" rel="index"><span itemprop="name">unity</span></a>
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/pull-stream/" itemprop="url" rel="index"><span itemprop="name">pull-stream</span></a>
         </span>
     </span>
 
@@ -271,21 +275,98 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="1-层级关系"><a href="#1-层级关系" class="headerlink" title="1. 层级关系"></a>1. 层级关系</h1><p>2D世界的物体都在Z轴同一位面（z=0），摄像机在z=-10进行拍摄。物体之间的层级关系通过Y轴的高地来进行计算遮挡关系，从而产生立体感。 设置步骤： </p>
-<ol>
-<li>设置根据Y轴进行排序<br>Edit -&gt; Project Setting -&gt; Graphics -&gt; Camera Settings -&gt; Transparent Sort Mode =&gt; (x=0,y=1,z=0) </li>
-<li>设置排序为Sprite中心点<br>Inspector -&gt; Sprite Render -&gt; Sprite Sort Point -&gt; Pivot 3. 调整Sprite的中心点 Assets -&gt; 选中目标Sprite -&gt; Edit Sprite -&gt; 调整Pivot</li>
-</ol>
-<h1 id="2-刚体、碰撞"><a href="#2-刚体、碰撞" class="headerlink" title="2. 刚体、碰撞"></a>2. 刚体、碰撞</h1><p>UnityEngine模拟了物理世界基本定律：可以通过给GameObject添加刚体（Rigidbody 2D）组件，GameObject便开始收到物理定律的影响（记得把Gravity置为0）。通过添加Collider2D实现碰撞效果。 </p>
-<ol>
-<li>防止GameObject沿Z轴旋转<br>Inspector -&gt; Rigidbody 2D -&gt; Constraints -&gt; Freeze Rotation -&gt; 勾选z </li>
-<li>Collider调整到物体下半部分效果比较真实，即正好是物体的占地面积。 </li>
-<li>OnTriggerEnter2D 任意一方勾选了Collider的trigger属性，使用此方法。物体之间可以发生碰撞，同时可以互相进入对方空间内部。 OnCollisionEnter2D不勾选trigger时使用，物体之间发生碰撞，无法进入对方空间。</li>
-</ol>
-<h1 id="3-动画"><a href="#3-动画" class="headerlink" title="3. 动画"></a>3. 动画</h1><p>Animation -&gt; 动画（内容） Animator -&gt; GameObject的Component Animation Controller -&gt; 动画状态控制器，可以从一个状态转变为另一个状态 Blend State 挺有趣的（组合多个状态进行叠加）</p>
-<h1 id="4-声音"><a href="#4-声音" class="headerlink" title="4. 声音"></a>4. 声音</h1><p>Audio Source -&gt; 声源 Audio Listener -&gt; 喇叭 Audio Clip -&gt; 声音内容 Clip 放到 Source 中进行播放，Listener负责接收</p>
-<h1 id="5-RectTransform"><a href="#5-RectTransform" class="headerlink" title="5. RectTransform"></a>5. RectTransform</h1><p>UI对象的中心点(Pivot) -&gt; Unity开始渲染图像时从中心点开始渲染 UI对象的锚点(Anchor) -&gt; 与父对象的相对位置是通过计算与Anchor的相对位置计算的 UI的对象在Screen坐标中，不在World坐标，需要进行转换。</p>
-<h1 id="6-Tile"><a href="#6-Tile" class="headerlink" title="6. Tile"></a>6. Tile</h1><p>Tile的依存关系： Grid - TileMap1 - Tile1 - Tile2 - TileMap2 - Tile3 这样组织场景会比较方便管理。 Pallete挺好用的，尤其RulePallete、RandomPallete、LinePallete。</p>
+          <p><code>There is a deeper, platonic abstraction, where a streams is just an array in time, instead of in space. And all the various streaming &quot;abstractions&quot; are just crude implementations of this abstract idea.</code> <em>-- pull-stream</em>   </p>
+<p>如果Stream可以分版本，我理解目前是2.1。<br>Stream 1.0 是一个有限集合，消费者通过foreach遍历集合内部元素。<br>Stream 2.0 是一个无限集合，集合内部的元素随着时间不断产生，由生产者不断推向消费者，消费者被动接收。<br>Stream 2.1 解决了2.0实际使用中出现的backpressure和error propagation问题，元素传递的决策权交由消费者进行控制。 Stream 2.1有两个组织分别提出了不同的解决思路：reactive-streams、pull-stream。RxJava采用的是reactive-streams，JDK9的Flow基于reactive-streams。IPFS采用了pull-stream。 reactive-streams提出了一套规范，并且声明主要目标就是解决backpressure问题，核心思路是Subscriber声明自己能承受的请求数量n，Publisher根据n决定推送元素的个数。 </p>
+<p><strong>pull-stream实在是只有天才的大脑才能想出来，两个函数搞定~</strong> 主要想介绍这两个函数，因为实在憋不住不分享出来。</p>
+<pre class="language-js" data-language="js"><code class="language-js">var n &#x3D; 5;
+
+&#x2F;&#x2F; random is a source 5 of random numbers.
+function random (end, cb) &#123;
+  if(end) return cb(end)
+  &#x2F;&#x2F; only read n times, then stop.
+  if(0 &gt; --n) return cb(true)
+  cb(null, Math.random())
+&#125;
+
+&#x2F;&#x2F; logger reads a source and logs it.
+function logger (read) &#123;
+  read(null, function next(end, data) &#123;
+    if(end &#x3D;&#x3D;&#x3D; true) return
+    if(end) throw end
+
+    console.log(data)
+    read(null, next)
+  &#125;)
+&#125;
+
+logger(random) &#x2F;&#x2F;&quot;pipe&quot; the streams.</code></pre>
+
+<p>上面两个函数random为source（publisher/observer/producer），logger为sink（subscriber/consumer），实现了logger主动从random中读取一个随机数，并且”是否读取“、”何时终止“都由logger控制，例子中logger的逻辑会一直读取到random最后一个元素。</p>
+<p><strong>翻译成Java</strong></p>
+<pre class="language-java" data-language="java"><code class="language-java">private int n &#x3D; 5;
+...
+&#x2F;&#x2F; 每次读取，提供一个随机数
+public void read(boolean end, BiConsumer&lt;Boolean, Integer&gt; cb)&#123;
+    if(end)&#123;  &#x2F;&#x2F; 结束
+        cb.accept(end, null);
+        return;
+    &#125;
+
+    if( n-- &lt; 0 )&#123;  &#x2F;&#x2F; 读完所有元素
+        cb.accept(true, null);
+        return;
+    &#125;
+
+    cb.accept(false, new Random().nextInt());  &#x2F;&#x2F; 回调
+&#125;
+
+&#x2F;&#x2F; 从read中读取并打印所有数据
+public void logger(BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; read)&#123;
+
+    Holder&lt;BiConsumer&lt;Boolean, Integer&gt;&gt; holder &#x3D; new Holder&lt;&gt;();
+    holder.value  &#x3D; (end, data) -&gt; &#123;
+        if( end )   return;
+
+        System.out.println(data);
+        read.accept(false, holder.value);  &#x2F;&#x2F; 递归
+    &#125;;
+
+    read.accept(false, holder.value);
+&#125;
+...
+logger(this::read);  &#x2F;&#x2F; pipe</code></pre>
+
+<p>基于pull-stream思想，可以很简洁的写出rxJava和jdk-lambda的核心功能，比如.map</p>
+<pre class="language-java" data-language="java"><code class="language-java">&#x2F;&#x2F; 所有元素\*3
+public BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; triple(
+            BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; readable) &#123;
+
+    return (end, f) -&gt;
+        readable.accept(end, (isEnd, data) -&gt;
+            f.accept(isEnd, isEnd ? null :3 \* data) &#x2F;&#x2F; 所有元素\*3
+        );
+&#125;
+...
+logger( this.triple(this::read) );</code></pre>
+
+<p>上面的调用可读性已经比较差了，优化一下：</p>
+<pre class="language-java" data-language="java"><code class="language-java">public class Pull&#123;
+    &#x2F;&#x2F; 从source读取数据，经through转换后，由sink存储
+    public static void pull(BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt; source,
+                     Function&lt;BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt;,
+                             BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt;&gt; through,
+                     Consumer&lt;BiConsumer&lt;Boolean, BiConsumer&lt;Boolean, Integer&gt;&gt;&gt; sink
+                     )&#123;
+        sink.accept(through.apply(source));
+    &#125;
+&#125;
+...
+&#x2F;&#x2F; 随机数 -&gt; \* 3 -&gt; 输出到stdio
+Pull.pull(this::read, this::triple, this::logger);</code></pre>
+
+<p>这样调用起来就便捷多了，在接口设计上一定站在使用方的角度去思考。</p>
+<p>  另外，你很可能遇到reactivex.io，reactivex目标是提供便捷的reactive API。reactive-streams != ReactiveX，rx内的工具主要是2.0规范，比如rxjs没有实现backpressure，而rxjava遵从reactive-streams实现了backpressure。 </p>
+<p><strong>官方</strong><br><a target="_blank" rel="noopener" href="https://pull-stream.github.io/">https://pull-stream.github.io/</a><br><a target="_blank" rel="noopener" href="http://www.reactive-streams.org/">http://www.reactive-streams.org/</a>   </p>
 
       
     </div>
@@ -307,7 +388,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">43</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/01/24/wordpress/cap/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/04/16/wordpress/spring-basic-application/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/01/24/wordpress/cap/" class="post-title-link" itemprop="url">CAP理论的应用分析</a>
+            <a href="/2016/04/16/wordpress/spring-basic-application/" class="post-title-link" itemprop="url">快速开发Spring Application</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2016-01-24 11:21:29" itemprop="dateCreated datePublished" datetime="2016-01-24T11:21:29+08:00">2016-01-24</time>
+      <time title="Created: 2016-04-16 12:06:03" itemprop="dateCreated datePublished" datetime="2016-04-16T12:06:03+08:00">2016-04-16</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-12-01 12:42:01" itemprop="dateModified" datetime="2021-12-01T12:42:01+08:00">2021-12-01</time>
+        <time title="Modified: 2021-12-11 15:03:32" itemprop="dateModified" datetime="2021-12-11T15:03:32+08:00">2021-12-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,11 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">分布式系统</span></a>
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
         </span>
     </span>
 
@@ -275,12 +271,86 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>分析CAP的缺陷及实际应用</em> <strong>CAP理论的应用缺陷</strong> 互联网公司中分布式系统设计一般都会考虑三个问题，高可用性、网络抖动、数据一致性问题。这三个问题全部是针对系统的后台集群来讨论，不包括系统的终端。<em>如果你的系统不需要考虑数据一致性问题，那真是太幸运了！</em> CAP理论证明在分布式系统中不能同时满足这三个特征，只能满足其中两点。就是后半句话引起了人们在实际应用中的困惑和对理论的质疑。 来看CAP的定义： Consistency：集群中所有节点的数据始终保持一致性。 Availability：集群中即使有部分节点挂了，集群依然可以对外提供服务。 Partition Tolerance：集群中即使节点之间不能互相通信，集群依然对外提供服务。（节点没挂，只是节点之间不能通信，比如网络抖动） <strong>“满足其中两点”引发的困惑</strong> <strong>困惑一</strong> CP：为了实现一致性和分区容忍性必须放弃可用性。 实际应用中，比如系统存在A、B两个节点(或网络分区)，数据写入A后，网络发生抖动导致A、B通信中断，数据无法写入B，为了保证数据一致性，系统将无法继续提供服务直到B完成写入，AB达到数据一致的状态。如果A、B通信永远不恢复，系统将永远不可用，这在实际应用中不可接受。 <strong>困惑二</strong> CA：为了实现一致性和可用性放弃分区容忍性。 实际应用中，比如系统存在A、B两个节点(或网络分区)，数据写入A后，网络发生抖动导致A、B通信中断，数据无法写入B，为了保证数据一致性，系统将无法继续提供服务直到B完成写入，AB达到数据一致的状态。如果A、B通信永远不恢复，系统将永远不可用，这在实际应用中不可接受。 是的，实际应用中CP、CA本质上没有区别，同样是面对网络抖动问题，为了满足一致性，都会导致系统无法使用。这是因为实际应用中，节点A没有办法判断节点B是挂掉了、还是无法与其正常通信。于是CA和CP在不引入第三方组件的情况下都是无法达到的。而这完全是由C（一致性）导致，所以如果可以在业务上避免对分布式系统的一致性要求那是极好的！ <strong>实际应用分析</strong> <strong>只求AP</strong> 放弃一致性，保证系统高可用、高扩展性、分区容忍性。系统设计将极大简化，同时保证高可用、高扩展，系统的运维也很方便，最终的结果是从设计、开发、测试、上线、运维都极大的降低了成本。就如Amazon SQS，的确是不错。 <strong>寻求A、C折中</strong> 网络抖动时，保留一致性，放弃可用性。在一定时间窗口内(比如5s)，如果服务依然没有恢复，就放弃一致性，恢复对外提供服务。这种策略在实际应用比较普遍，根据具体的业务场景，设定一个时间窗口，保证系统在可容忍的时间内尽可能保持一致性，如果实在保证不了，那就放弃一致性，继续提供服务。毕竟更多时候，不能提供服务造成的损失要比部分数据不一致造成的损失大很多。更多的时候，我们自然而然的把failover逻辑放在系统的终端实现，就如ActiveMQ的failover、<a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2016/01/17/rocketmq/">RocketMQ</a>的rebalance。 耶鲁Daniel教授将此方法上升到理论层面提出PACELC，还发表了论文。 总而言之，在分布式系统中，能在业务层面回避一致性就回避。实在做不到，就进行可用性与一致性的折中<em>。对于CAP是什么，可以完全抛到脑后，它只能带来困惑。</em> <strong><a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2016/01/24/cap/">LINK</a></strong></p>
-<ol>
-<li> <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/CAP/_theorem#cite\_note-Burgess-7">https://en.wikipedia.org/wiki/CAP\_theorem#cite\_note-Burgess-7</a></li>
-<li> <a target="_blank" rel="noopener" href="https://www.quora.com/What-is-the-difference-between-availability-and-partition-tolerance-in-CAP">https://www.quora.com/What-is-the-difference-between-availability-and-partition-tolerance-in-CAP</a></li>
-<li> <a target="_blank" rel="noopener" href="http://dbmsmusings.blogspot.com/2012/10/ieee-computer-issue-on-cap-theorem.html">http://dbmsmusings.blogspot.com/2012/10/ieee-computer-issue-on-cap-theorem.html</a></li>
-</ol>
+          <p><em>最近为公司其他语言的同事介绍Spring框架的入门知识，在此整理为Spring系列</em> <strong>开发环境</strong> JDK</p>
+<p>1.8_xx</p>
+<p>IDE</p>
+<p>Eclipse/STS (推荐使用STS，Spring团队基于Eclipse开发的IDE，很适合做Spring项目开发）</p>
+<p>IntelliJ</p>
+<p>项目管理工具</p>
+<p>Maven3.xx</p>
+<p><strong>Spring Basic Application</strong> <strong>1. 使用maven创建新项目</strong></p>
+<p>命令格式如下：<br>mvn -B archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DgroupId=xxx -DartifactId=xxx<br>需要指定：<br>    groupId 一般格式为 com.公司名.系统名<br>    artifactId 项目名称，单词之间用 - 分割</p>
+<p>例子：<br>$: mvn -B archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DgroupId=com.zmannotes.spring -DartifactId=spring-basic-application</p>
+<p>在当前目录得到一个名为spring-basic-application的项目</p>
+<p><strong>2. 将新创建的项目导入STS/Eclipse</strong> 2.1 打开STS，选择菜单 File -&gt; Import 2.2 选择Maven -&gt; Existing Maven Projects，点击Next <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2016/04/1.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2016/04/1.jpg" alt="import maven project"></a> 2.3 在新的窗口中选择第1步创建的spring-basic-application目录，点击Finish即可。 2.4 最终导入项目如下 <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2016/04/2-1.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2016/04/2-1.jpg"></a> <strong>3. 配置项目依赖，引入Spring框架，编辑pom.xml文件，内容如下</strong></p>
+<p><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4\_0\_0.xsd"><br>    <modelVersion>4.0.0</modelVersion><br>    <groupId>com.zmannotes.spring</groupId><br>    <artifactId>spring-basic-application</artifactId><br>    <packaging>jar</packaging><br>    <version>1.0-SNAPSHOT</version><br>    <name>spring-basic-application</name></p>
+<pre><code>&lt;!-- 父配置文件，继承通用的配置 --&gt;
+&lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;1.3.3.RELEASE&lt;/version&gt;
+&lt;/parent&gt;
+
+&lt;dependencies&gt;
+    &lt;!-- spring 依赖 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;junit&lt;/groupId&gt;
+        &lt;artifactId&gt;junit&lt;/artifactId&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+
+&lt;build&gt;
+    &lt;!-- 打包用插件 --&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;</code></pre>
+</project>
+
+<p><strong>4. 实现一个例子</strong> 一个工人每间隔1s工作一段时间 4.1 创建Worker.java</p>
+<p>package com.zmannotes.spring.worker;</p>
+<p>import org.springframework.stereotype.Component;</p>
+<p>@Component    //Component注解 标明该类可以被自动发现<br>public class Worker {</p>
+<pre><code>public void start() throws InterruptedException &#123;
+    while (true) &#123;
+        System.out.println(&quot;I&#39;m working...&quot;);
+        // 暂时1s
+        Thread.sleep(1000);
+    &#125;
+&#125;</code></pre>
+<p>}</p>
+<p>4.2 修改App.java，使其调用Worker</p>
+<p>package com.zmannotes.spring;</p>
+<p>import org.springframework.beans.factory.annotation.Autowired;<br>import org.springframework.boot.CommandLineRunner;<br>import org.springframework.boot.SpringApplication;<br>import org.springframework.boot.autoconfigure.SpringBootApplication;</p>
+<p>import com.zmannotes.spring.worker.Worker;</p>
+<p>/**<br> * Hello world!<br> *<br> */<br>@SpringBootApplication  //激活Spring注解：@Component @Autowired等<br>public class App implements CommandLineRunner {</p>
+<pre><code>@Autowired  //自动注入Worker对象
+private Worker worker;
+
+/\*\* main函数 \*/
+public static void main( String\[\] args )
+&#123;
+    SpringApplication.run(App.class);
+&#125;
+
+/\*\* 程序入口 \*/
+public void run(String... args) throws Exception &#123;
+    worker.start();
+&#125;</code></pre>
+<p>}</p>
+<p>4.3 最终目录结构 <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2016/04/4.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2016/04/4.jpg" alt="spring-basic-application-structure-final"></a> <strong>5 运行程序</strong> 5.1 右击App.java，选择Run As -&gt; Java Application <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2016/04/3.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2016/04/3.jpg" alt="sts-run-java-application"></a> 5.2 输出结果如下</p>
+<p>  .   ____          _            __ _ _<br> /\\ / ___‘_ __ _ _(_)_ __  __ _ \ \ \ \<br>( ( )\___  ‘_  ‘_  ‘_ \/ _`  \ \ \ \<br> \\/  ___) _)      (_   ) ) ) )<br>  ‘  ____ .___ __ _\__,  / / / /<br> =========_==============___/=/_/_/_/<br> :: Spring Boot ::        (v1.3.3.RELEASE)</p>
+<p>2016-04-16 10:54:08.843  INFO 6072 — [           main] com.zmannotes.spring.App                 : Starting App on evo with PID 6072 (\workspace\spring-tutorial\spring-basic-application\spring-basic-application\target\classes started by zman in \workspace\spring-tutorial\spring-basic-application\spring-basic-application)<br>2016-04-16 10:54:08.843  INFO 6072 — [           main] com.zmannotes.spring.App                 : No active profile set, falling back to default profiles: default<br>2016-04-16 10:54:08.937  INFO 6072 — [           main] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@3891771e: startup date [Sat Apr 16 10:54:08 CST 2016]; root of context hierarchy<br>2016-04-16 10:54:10.614  INFO 6072 — [           main] o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup<br>I’m working…<br>I’m working…<br>I’m working…<br>I’m working…<br>I’m working…</p>
+<p><strong>6 打包、运行</strong> 6.1 回到console中spring-basic-application目录下，运行<code>mvn clean package</code>，会在target目录下生成spring-basic-application.jar 6.2 运行jar包   <code>java -jar target/spring-basic-application-1.0-SNAPSHOT.jar</code> 6.3 输出与5.2相同 :) <a target="_blank" rel="noopener" href="https://github.com/zman2013/spring-basic-application">源码 GitHub</a> <strong>Q&amp;A</strong> Q：pom.xml是什么东西？ A：pom.xml文件时maven项目的标志性文件，在此文件中配置项目的依赖、打包方式等各种配置信息，maven通过解析、执行pom.xml中的配置进行项目的管理、打包、发布。 Q：没感觉到Spring框架的强大 A：的确。这个基础应用只使用了Spring最核心最基本的注入功能，简单来说就是把一个对象注入到另一个对象供其使用。注入关系是通过注解@Autowired的方式声明，由spring统一管理的。（当然还有另一种方式通过配置xml的方式进行声明）可以尝试一下不是Spring，如果完成上面的例子。</p>
 
       
     </div>
@@ -302,7 +372,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/34/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><span class="page-number current">35</span><a class="page-number" href="/page/36/">36</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/36/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/34/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><span class="page-number current">35</span><a class="page-number" href="/page/36/">36</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/36/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

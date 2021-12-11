@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">43</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/10/21/wordpress/rpc/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/10/31/wordpress/dubbo/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/10/21/wordpress/rpc/" class="post-title-link" itemprop="url">RPC</a>
+            <a href="/2015/10/31/wordpress/dubbo/" class="post-title-link" itemprop="url">Dubbo</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2015-10-22 07:22:47" itemprop="dateCreated datePublished" datetime="2015-10-22T07:22:47+08:00">2015-10-22</time>
+      <time title="Created: 2015-10-31 09:04:44" itemprop="dateCreated datePublished" datetime="2015-10-31T09:04:44+08:00">2015-10-31</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-12-01 12:42:01" itemprop="dateModified" datetime="2021-12-01T12:42:01+08:00">2021-12-01</time>
+        <time title="Modified: 2021-12-11 15:03:32" itemprop="dateModified" datetime="2021-12-11T15:03:32+08:00">2021-12-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,137 +271,123 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>详细介绍基于RPC的系统与本地调用程序、常用的网络系统的区别，和基本的RPC系统如何实现。</p>
-<h3 id="RPC是什么"><a href="#RPC是什么" class="headerlink" title="RPC是什么"></a>RPC是什么</h3><p>RPC（Remote Procedure Call）从字面理解就是远程过程调用，即像调用本地方法一样调用网络另一端系统中的一段逻辑。我们常说的RPC指的是RPC框架，一个把网络请求、数据编码都封装好的框架或者lib库，内部逻辑对开发人员是透明的，开发人员只关心调用了一个（远程）方法，然后得到了结果。</p>
-<h3 id="RPC的好处"><a href="#RPC的好处" class="headerlink" title="RPC的好处"></a>RPC的好处</h3><p>RPC使得引用方在本地直接调用服务接口就可以完成远端逻辑的执行，省去网络请求、数据编码解码等步骤，无疑可以极大提高开发效率。同时由于所有的请求都交给框架处理，我们又可以进一步扩展框架负责的功能，比如：服务发现、容错、负载均衡、路由等，自然而然服务治理就产生了。</p>
-<h3 id="RPC介绍"><a href="#RPC介绍" class="headerlink" title="RPC介绍"></a>RPC介绍</h3><p>通过介绍简单的本地调用结构、HTTP调用结构、PRC调用结构，可以直观地理解RPC究竟是什么、做了哪些事情。 <strong>本地调用结构</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E6%9C%AC%E5%9C%B0%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%841.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E6%9C%AC%E5%9C%B0%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%841.jpg" alt="本地调用结构"></a> 本地调用结构中所有模块都在一个系统里面，Caller可以直接调用另一段代码逻辑。简单、方便、高效，但耦合度高。 <strong>HTTP API调用结构</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/HTTP-API%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/HTTP-API%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg" alt="HTTP-API调用结构"></a> 目前中小型的互联网公司均使用HTTP API方式实现系统间的调用，此结构相比本地调用，已经实现了解耦，使得开发工作更加灵活，只要保持API不变，不同功能开发互不影响。但增加了调用端和服务器端的工作量，对于每个服务：服务端要进行数据与json的双向转换（或映射）并封装为HTTP接口，调用端同样要进行数据与json的双向转换并实现http请求的调用逻辑。 <strong>RPC调用结构</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg" alt="RPC调用结构"></a> 如上图，调用方调用‘API Proxy’即完成远端服务调用过程，RPC框架隐式地完成网络通信逻辑。服务提供方也只需要实现相应的服务逻辑，使工程师将更多精力集中在业务上。 <em>‘API Proxy’是什么？</em> <em>服务接口的代理，是RPC Framework暴露出的供调用方使用的，输入输出与Implement一样（可参考代理模式）。</em> <strong>完整RPC调用过程</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E8%AF%A6%E7%BB%86RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%842.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E8%AF%A6%E7%BB%86RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%842.jpg" alt="详细RPC调用结构"></a> 上图中所有蓝色块是RPC框架实现的功能模块。 在公司内部，为了实现对系统的监控、增强稳健性、扩展性，经常需要做一些额外的工作。 例如：为了统计接口的调用次数、响应时间，一般是通过日志记录；服务器地址或端口改动时，引起下游消费端进行相应配置改动；负载均衡通过各种第三方工具实现…… 由于所有服务调用均通过RPC框架，因而很容易拓展RPC框架实现服务治理功能，如下图：   <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%861.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%861.jpg" alt="RPC服务治理1"></a></p>
-<h3 id="RPC-Demo"><a href="#RPC-Demo" class="headerlink" title="RPC Demo"></a>RPC Demo</h3><p>先假设RPC框架已经完成，基于RPC框架开发系统需要做那些事情呢？ 以Calculator为例，上游系统调用下游的计算系统获取结果。 <strong>1. 设计接口/契约</strong></p>
-<p>public interface Calculator {</p>
+          <p><em>详解Dubbo设计结构和实现原理。</em></p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前已经有许多介绍Dubbo的文章，但大部分内容比较粗糙或者内容是直接从Dubbo官网复制的，也有少部分内容详实的专题系列，却有不免于流水账式分析Dubbo的源代码。于是计划写一篇关于Dubbo设计结构和实现原理的总结，寄希望帮助读者阅读Dubbo源码时可以清晰明白各个模块如此设计的原理，进而可以轻松阅读Dubbo源码。</p>
+<h3 id="设计结构"><a href="#设计结构" class="headerlink" title="设计结构"></a>设计结构</h3><p>Dubbo是一个分布式的支持服务治理功能的RPC框架，整个系统必然无法逃脱标准的<a target="_blank" rel="noopener" href="http://www.evoops.com/index.php/2015/10/22/rpc/">RPC设计结构</a>，如下图。 <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/dubbo_rpc_invoke.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/dubbo_rpc_invoke.jpg"></a> 上图即是Dubbo的基础结构，所有模块都是以此为核心扩展出来，完整的Dubbo结构如下图： <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E7%B3%BB%E7%BB%9F%E7%BB%93%E6%9E%84.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E7%B3%BB%E7%BB%9F%E7%BB%93%E6%9E%84.jpg" alt="系统结构"></a> 上图左侧为Dubbo的组成模块，右侧淡蓝色部分是使用的技术(思想)。 <strong>组成模块</strong> Remote Communication(通信层)：负责数据传输，Client发送Request，Server返回Response。 Protocol(编解码协议)：负责数据编码、解码，协议层接收到数据后，将数据编码后交给通信层，解码后交给Invoker层。 Invoker(逻辑层)：RPC的主要逻辑都在此实现，所有服务治理的接口都抽象为Invoker，组成一个Invoker链，每个完整的请求都会层层经过此链，链中每个invoker完成各自的责任。 Proxy(代理层 )：负责将Client的调用转为Invoker链的调用。 Interface Implement(实现层)：即接口的实现，也叫做业务逻辑层，是Client最终期望引用的远程逻辑。 Spring Config(配置层)：负责将Spring配置实例化为对象，使开发人员只需进行简单的spring配置就完成服务暴露、引用代理实例化，具体实现逻辑透明化。 <strong>底层技术</strong> SPI(Service Provider Interface)：字面意思是服务提供方接口，核心系统规定服务接口，所有实现遵循服务接口规定，当系统需要升级时不需要改动核心代码而是切换服务接口的实现。Dubbo就是基于此思想实现微内核+插件的设计结构，所有模块均可以自行实现和替换。 Proxy：我认为代理模式是RPC的核心模式，通过Client端的代理来调用Server端的实现。 Class Loader：类加载器。Dubbo重新实现SPI，不同模块在程序运行时按需加载到容器中，为了支持此行为，Class Loader自然而然被引入。 NIO：Dubbo数据传输层默认使用NIO框架Netty，NIO降低了服务端的线程数量，进而提高资源利用率。 Spring Schema Ext：Spring Schema扩展实现比较简单，按特定规则完成配置项的定义和解析即可，却实现了通过简单配置替代编码的目的。 <strong>SPI</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2015-10-31-%E4%B8%8A%E5%8D%887.41.58.png"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2015-10-31-%E4%B8%8A%E5%8D%887.41.58.png"></a> 如上图，基于SPI设计结构的系统一般有两部分：核心程序（主程序）与接口实现程序（插件）。 主程序负责定义SPI(即Interface)和按特定规则加载插件；插件负责实现主程序定义的SPI并按特定规则定义配置文件。 我们几乎每天都在使用标准Java SPI是JDBC定义的java.sql.Driver，用的时候只需要把目标数据库依赖的jar放入Classpath，JDBC主程序会自动找到各DB Driver，准备后续使用。 <strong><a target="_blank" rel="noopener" href="https://github.com/zman2013/java-spi-demo">SPI例子</a></strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2015-10-31-%E4%B8%8A%E5%8D%888.01.58.png"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2015-10-31-%E4%B8%8A%E5%8D%888.01.58-300x213.png"></a> 主程序</p>
+<p>　定义SPI</p>
+<p>　在主程序内部加载并调用SPI</p>
+<p>插件</p>
+<p>　为SPI提供实现逻辑</p>
+<p>　在固定位置声明自身为SPI的提供者</p>
+<p>  下面介绍一个加密程序的例子：为了达到信息安全防止被破解的目的，设计的一套加密程序并计划不定时更换加密算法，为了在不改动主程序的情况下灵活切换、新增加密算法，于是使用SPI设计结构，具体实现如下。 主程序</p>
+<p>/**<br> * 此接口为标准Java SPI，<br>   所有加密算法实现实现应当遵循此SPI。<br> */<br>public interface Encryption {</p>
 <pre><code>/\*\*
- \* @return a \* b
+ \* 对data进行加密，然后返回加密数据。
+ \* 
+ \* @param data
+ \*            字节数组
+ \* @return 加密后的数据
  \*/
-int multiply(int a, int b);
-
-/\*\*
- \* @return a / b
- \*/
-int devide(int a, int b);</code></pre>
+byte\[\] encrypt(byte\[\] data);</code></pre>
 <p>}</p>
-<p><strong>2. 上游系统(Caller)实现</strong></p>
-<p>public class CalculatorCaller {</p>
+<p>/**<br> * 加密器主程序<br> * 负责加载、调用加密算法的Provider。<br> */<br>public class EncryptorApplication {</p>
 <pre><code>public static void main(String\[\] args) &#123;
-    SimpleRPCFramework rpc = new SimpleRPCFramework();   //实例化RPC框架
 
-    Calculator calc = rpc.getProxy(Calculator.class);    //获得Calculator代理
+    //准备加密数组
+    byte\[\] data = new byte\[\] &#123; 1, 2, 3, 4, 5, 6, 7, 8, 9 &#125;;
 
-    for (int i = 0; i &lt; 10; i++) &#123;                       //把Calculator代理当做Calculator具体实现来调用,
-        int result = calc.multiply(i, (i + 1));          //剩下的事情RPC框架会自行处理
-        System.out.println(result);
+    //加载所有加密算法
+    ServiceLoader&lt;Encryption&gt; encryptions = ServiceLoader.load(Encryption.class);
+    Iterator&lt;Encryption&gt; encryptionIter = encryptions.iterator();
+
+    if (!encryptionIter.hasNext()) &#123;
+        System.out.println(&quot;there is no provider for encryption algorithm.&quot;);
+    &#125;
+    //进行组合加密
+    while (encryptionIter.hasNext()) &#123;
+        Encryption encryption = encryptionIter.next();
+        data = encryption.encrypt(data);
+    &#125;
+    //输出加密后数据
+    for (int i = 0; i &lt; data.length; i++) &#123;
+        System.out.print(data\[i\] + &quot;,&quot;);
     &#125;
 &#125;</code></pre>
 <p>}</p>
-<p><em>（有木有很简单？就像本地调用一样简单）</em> <strong>3. 下游系统(Server)实现</strong></p>
-<p>public class CalculatorImpl implements Calculator {      //实现Calculator接口</p>
-<pre><code>@Override
-public int multiply(int a, int b) &#123;
-    return a \* b;
+<p>插件（加密算法）</p>
+<p>/**<br> * 遍历所有字节，对所有字节+1。<br> */<br>public class IncrementAlgorithm implements Encryption {</p>
+<pre><code>/\*\*
+ \* 对数组中所有字节+1，返回修改后的字节数组。
+ \*/
+@Override
+public byte\[\] encrypt(byte\[\] data) &#123;
+    if (null == data  data.length == 0) &#123;
+        return data;
+    &#125;
+    for (int i = 0; i &lt; data.length; i++) &#123;
+        data\[i\] = (byte) (data\[i\] + 1);
+    &#125;
+
+    return data;
+&#125;</code></pre>
+<p>}</p>
+<p>配置文件META-INF/services/tutorial.jdk.spi.Encryption<br>    tutorial.jdk.spi.ReverseAlgorithm<br>    tutorial.jdk.spi.IncrementAlgorithm</p>
+<p>为了介绍方便，这个例子将主程序与插件放在同一个project里，线上产品是将各加密算法拆分为单独的project，主程序希望调用哪个算法或者进行组合调用，就将对应的.jar放入Classpath，部署起来要方便的多。 <strong>Proxy</strong> 代理模式是每一个RPC框架的核心设计模式。 Dubbo消费者的配置如下：</p>
+<p>&lt;dubbo:reference id=”demoService” interface=”com.alibaba.dubbo.demo.DemoService” /&gt;</p>
+<p>此配置信息在消费者端生成接口DemoService的代理DemoServiceProxy，DemoServiceProxy完成了网络数据通信的具体过程，且Proxy的内部逻辑对开发人员完全透明，使用起来就像调用本地的接口一样方便。 代理模式也是每天都会用到，最多的应该是Spring的事务。Proxy的实现技术有多个：最强大的是Aspectj，还有Cglib和基于接口的JDK Proxy。 <strong><a target="_blank" rel="noopener" href="https://github.com/zman2013/java-proxy-demo">Proxy例子</a></strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/proxy%E4%BE%8B%E5%AD%90.png"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/proxy%E4%BE%8B%E5%AD%90.png"></a> 调用方</p>
+<p>public class Client {</p>
+<pre><code>public static void main(String\[\] args) &#123;
+    //通过代理工厂获取proxy
+    HelloWorld proxy = HelloWorldProxyFactory.getProxy();
+    //调用proxy代理的方法
+    proxy.sayHelloWorld();
+&#125;</code></pre>
+<p>}</p>
+<p>Proxy的回调方法</p>
+<p>/**<br> * 该类对应HelloWorld Proxy的具体调用逻辑。<br> */<br>public class HelloWorldHandler implements InvocationHandler {</p>
+<pre><code>//被代理的原始对象
+private Object obj;
+
+public HelloWorldHandler(Object obj) &#123;
+    super();
+    this.obj = obj;
 &#125;
 
 @Override
-public int devide(int a, int b) &#123;
-    return a / b;
+public Object invoke(Object proxy, Method method, Object\[\] args) throws Throwable &#123;
+    Object result = null;
+    //调用sayHelloWorld方法前的动作
+    System.out.println(&quot;Firstly, open mouth!&quot;);
+    //调用sayHelloWorld方法
+    result = method.invoke(obj, args);
+    //调用sayHelloWorld方法后续动作
+    System.out.println(&quot;At last, close mouth!&quot;);
+
+    return result;
 &#125;</code></pre>
 <p>}</p>
-<p>public class CalculatorServer {</p>
-<pre><code>public static void main(String\[\] args) throws IOException &#123;
-    //实例化helloWorld
-    CalculatorImpl calculator = new CalculatorImpl();
-    //创建rpc框架实例
-    SimpleRPCFramework rpc = new SimpleRPCFramework();
-    //注册接口和对应实现
-    rpc.registerImplements(Calculator.class, calculator);     //开放更多服务，只需修改此处
-    //暴露服务接口，监听服务
-    rpc.expose();
-&#125;</code></pre>
-<p>}</p>
-<p>至此，接口设计、上下游所有开发工作完成。接下来看下神奇的RPC框架究竟如何实现~ <strong>4. Simple RPC Framework</strong> 根据上面的例子，可以发现该RPC框架有三个接口：</p>
-<p>public interface RPC {</p>
+<p>代理工厂</p>
+<p>/**<br> * 代理工厂类<br> * 代理工厂可参考:org.springframework.aop.framework.ProxyFactory<br> */<br>public class HelloWorldProxyFactory {</p>
 <pre><code>/\*\*
- \* 服务器端注册接口与相应实现。
- \*
- \* @param inteface
- \* @param instance
+ \* 获得HelloWorld的代理对象。
  \*/
-void registerImplements(Class&lt;?&gt; inteface, Object instance);
+public static HelloWorld getProxy() &#123;
+    //接口的实现类
+    HelloWorld helloWorld = new HelloWorldImpl();
 
-/\*\*
- \* 服务器端暴露端口，并监听调用请求
- \*/
-void expose() throws IOException;
+    //proxy的调用类
+    InvocationHandler handler = new HelloWorldHandler(helloWorld);
 
-/\*\*
- \* 调用端获取接口的代理
- \*/
-&lt;T&gt; T getProxy(final Class&lt;T&gt; inteface);</code></pre>
-<p>}</p>
-<p>下面看一下具体实现：</p>
-<p>/**<br> * @from zmannotes.com<br> */<br>public class SimpleRPCFramework {</p>
-<pre><code>/\*\* 存储接口与实现的对应关系 \*/
-private final Map&lt;Class&lt;?&gt;, Object&gt; implCache = new ConcurrentHashMap&lt;&gt;();
+    //生成proxy
+    HelloWorld proxy = (HelloWorld) Proxy.newProxyInstance(
+            helloWorld.getClass().getClassLoader(),
+            helloWorld.getClass().getInterfaces(),
+            handler);
 
-/\*\* 存储接口与代理的对应关系 \*/
-private final Map&lt;Class&lt;?&gt;, Object&gt; proxyCache = new ConcurrentHashMap&lt;&gt;();
-
-public synchronized void registerImplements(Class&lt;?&gt; inteface, Object instance) &#123;
-    //检测接口是否已经存在
-    if (implCache.containsKey(inteface)) &#123;
-        throw new RuntimeException(&quot;This interface\[&quot; + inteface.getName() + &quot;\] have already been exposed.&quot;);
-    &#125; else &#123;
-        implCache.put(inteface, instance);
-    &#125;
-&#125;
-
-public void expose() throws IOException &#123;
-    //……
-&#125;
-
-public synchronized &lt;T&gt; T getProxy(final Class&lt;T&gt; inteface) &#123;
-   //……
-&#125;</code></pre>
-<p>}</p>
-<p>registerImplements没有复杂逻辑，只是检测缓存中是否已经包含目标接口，完全可以并入expose中，但为使逻辑简单，故为之。 下面是具体的服务暴露逻辑，采用基于Socket的通信方式，编码解码直接使用Java IO自带的序列化流。 原理比较简单，就是上面介绍的三个模块：</p>
-<ol>
-<li> 服务器负责监听端口和接收/发送数据。</li>
-<li> 协议模块负责编码/解码数据。</li>
-<li> Dispatcher负责将请求分发到对应的实现逻辑。</li>
-</ol>
-<p>public void expose() throws IOException {<br>        //暴露服务端口<br>        ServerSocket server = new ServerSocket(2008);<br>        while (true) {<br>            final Socket socket = server.accept();<br>            new Thread(new Runnable() {<br>                public void run() {<br>                    try (<br>                            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());<br>                            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {<br>                        //获取请求数据 - 接收请求,并解码<br>                        Class<?> inter = (Class<?>) in.readObject();<br>                        String methodName = in.readUTF();<br>                        Class<?>\[\] parameterTypes = (Class<?>[]) in.readObject();<br>                        Object[] args = (Object[]) in.readObject();<br>                        //根据接口信息获得对应的接口实现 - Dispatcher<br>                        Object instance = implCache.get(inter);<br>                        //调用接口实现 - invoke<br>                        Method method = instance.getClass().getMethod(methodName, parameterTypes);<br>                        Object result = method.invoke(instance, args);<br>                        //返回结果 - 编码,并返回结果<br>                        out.writeObject(result);<br>                    } catch (Exception e) {<br>                        throw new RuntimeException(e);<br>                    }<br>                }<br>            }).run();<br>        }<br>    }</p>
-<p>下面是接口代理类的生成逻辑，采用JDK自带的Proxy生成机制来实现，具体流程参见‘完整RPC调用过程’。</p>
-<p>public synchronized <T> T getProxy(final Class<T> inteface) {<br>        //检测接口是否已经存在<br>        if (proxyCache.containsKey(inteface)) {<br>            return (T) proxyCache.get(inteface);<br>        }</p>
-<pre><code>    T proxy = (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-            new Class&lt;?&gt;\[\] &#123; inteface &#125;, new InvocationHandler() &#123;
-                public Object invoke(Object proxy, Method method, Object\[\] args) throws Throwable &#123;
-                    Socket socket = new Socket(InetAddress.getLocalHost(), 2008);
-                    try(
-                            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-                            ObjectInputStream input = new ObjectInputStream(socket.getInputStream())
-                            )&#123;
-                        //发送请求数据 - 编码,并发送请求
-                        output.writeObject(inteface);
-                        output.writeUTF(method.getName());
-                        output.writeObject(method.getParameterTypes());
-                        output.writeObject(args);
-                        //接收结果 - 接受数据,并解码
-                        Object result = input.readObject();
-
-                        return result;
-                    &#125;
-                &#125;
-            &#125;);
-    proxyCache.put(inteface, proxy);
     return proxy;
 &#125;</code></pre>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2015/10/22/rpc/">总结</a></h3><p>本文对RPC的原理和模块进行较详细介绍，并与其它系统间调用方式进行对比，最后给出简单的RPC框架实现。 例子中各模块都可以进一步扩展、优化，以提高框架的运行效率、稳定性、扩展性。完整Demo代码存于Github: <a target="_blank" rel="noopener" href="https://github.com/zman2013/simple-rpc-demo">Go</a>。</p>
+<p>}</p>
+<p>基于Proxy如何实现RPC框架？请参考<a target="_blank" rel="noopener" href="http://www.evoops.com/index.php/2015/10/22/rpc/">《RPC》</a>。 <em>顺便说一句，Dubbo的设计思想的确很优秀，只是代码质量不堪入目，实在太差了。</em></p>
 
       
     </div>
@@ -423,7 +409,7 @@ public synchronized &lt;T&gt; T getProxy(final Class&lt;T&gt; inteface) &#123;
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/40/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><span class="page-number current">41</span><a class="page-number" href="/page/42/">42</a><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/42/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/40/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><span class="page-number current">41</span><a class="page-number" href="/page/42/">42</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/42/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

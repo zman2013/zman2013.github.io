@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">43</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/09/25/wordpress/system-performance-optimize/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2017/09/24/wordpress/kubernetes-cluster-setup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/09/25/wordpress/system-performance-optimize/" class="post-title-link" itemprop="url">系统性能优化</a>
+            <a href="/2017/09/24/wordpress/kubernetes-cluster-setup/" class="post-title-link" itemprop="url">Kubernetes集群搭建</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2016-09-25 11:09:43" itemprop="dateCreated datePublished" datetime="2016-09-25T11:09:43+08:00">2016-09-25</time>
+      <time title="Created: 2017-09-24 22:16:47" itemprop="dateCreated datePublished" datetime="2017-09-24T22:16:47+08:00">2017-09-24</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-12-01 12:42:01" itemprop="dateModified" datetime="2021-12-01T12:42:01+08:00">2021-12-01</time>
+        <time title="Modified: 2021-12-11 15:03:32" itemprop="dateModified" datetime="2021-12-11T15:03:32+08:00">2021-12-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,7 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/performance-optimize/" itemprop="url" rel="index"><span itemprop="name">performance_optimize</span></a>
+          <a href="/categories/container/" itemprop="url" rel="index"><span itemprop="name">container</span></a>
         </span>
     </span>
 
@@ -271,60 +271,127 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>在并发量一定的情况下如何对系统响应时间进行详细分析</em> <strong>1. 分析步骤</strong> 1.1 在关键点位添加日志信息 -&gt; 缩小目标范围</p>
-<p>a) 主要函数耗时</p>
-<p>b) 访问外部系统耗时：DB、MQ、Cache、FileSystem、RPC、HTTP等</p>
-<p>c) 接口内不同逻辑耗时百分比/绝对值</p>
-<p>1.2 详细分析瓶颈出现原因</p>
-<p>a) 技术层面：优先考虑</p>
-<p>b) 业务逻辑：业务逻辑改造一般影响较大、耗时较长，优先级低</p>
-<p>1.3 针对性解决问题</p>
-<p>一旦定位了问题原因，解决问题的方法都相当容易</p>
-<p><strong>2. 技术层面</strong> 2.1 代码实现</p>
-<p>a) 串行逻辑是否可以并行化</p>
-<p>b) 串行请求是否可以批量(batch)请求</p>
-<p>c) SQL是否需要优化</p>
-<p>d) 算法复杂度是否需要优化</p>
-<p>e) 语言核心库是否提供了性能更高的使用方式</p>
-<p>f) 引用的第三方库是否存在性能问题</p>
-<p>g) 每次外部请求是否都重新建立连接</p>
-<p>2.2 内核/硬件层面</p>
-<p>a) CPU使用率</p>
-<p>b) 内存使用率</p>
-<p>c) 磁盘IO状况</p>
-<p>d) 网络状况</p>
-<p>d) 瓶颈是否由调用的内核函数引起？</p>
-<p>该函数是如何工作的；新版本内核是否已经对此优化；如何调整使用方式可以更高效</p>
-<p>2.3 日志</p>
-<p>线程会争夺日志锁，在高并发情况下，同步写日志很影响性能。异步写又可能引起OOM。</p>
-<p>*2.4 垃圾回收</p>
-<p>拥有垃圾回收机制的语言，需要关注垃圾回收的情况如何。例如：jvm的gc状况。</p>
-<p><strong>3. 业务逻辑</strong></p>
-<p>随着业务的增长，接口负担的功能原来越复杂，逻辑链路越来越长，事务越来越大，性能越来越差，越来越没办法维护。（如果有人负责把控、从相对长远些的角度设计系统的迭代，这种情况本是可以避免的）</p>
-<p>优化办法只有一个就是：保留主链路，旁支链路异步化。</p>
-<p><strong>4. 常用工具</strong> 4.1 内核</p>
-<p>a) CPU: top、vmstat</p>
-<p>b) MEM: top、free</p>
-<p>c) disk IO: iostat</p>
-<p>例: iostat -kx 1 //每秒统计一次io</p>
-<p>iotop -o //查看磁盘使用率较高的进程</p>
-<p>d) 网络</p>
-<p>流量：sar -n DEV 1 3 //每秒统计一次所有网卡流量，共3次</p>
-<p>网络抓包: tmpdump，可配合tmptrace、wireshark分析</p>
-<p>TCP连接状况：netstat -an grep TIME_WAIT //client端近期关闭tcp连接数量</p>
-<p>e) 查看/proc/xxx中的系统详细信息</p>
-<p>4.2 java</p>
-<p>a) gc: jstat -gcutil pid 1s</p>
-<p>b) 性能分析工具: jprofiler</p>
-<p><strong>5. 小知识</strong></p>
-<p>a) 网络抖动引起tcp重传，一般内部系统之间的调用，linux设置的重传时间间隔为至少200ms以上。</p>
-<p>b) 服务之间通过网络调用，网络开销在500us ~ 2ms</p>
-<p>c) 机械磁盘寻址: 20ms</p>
-<p>d) 磁盘的某page中如果存在数据，程序写此page时如果不会填充整个page，内核会先载入整个page，再输出整个page，保证磁盘数据不丢。这会导致一次被动读磁盘，性能损耗会很大。否则会直接写入磁盘高速缓存，间隔固定时间刷盘一次(5s)。</p>
-<p>e) java遍历map使用map.entrys</p>
-<p>f) java字符串拼接使用stringbuilder</p>
-<p>g) 日志使用log4j2异步</p>
-<p><strong>*</strong> 随着系统并发量的增加，系统响应时间会逐步下降甚至雪崩，一般是由多线程之间、模块之间、子系统之间争夺资源（锁）引起的。</p>
+          <p><em>献给在墙内尝试搭建最新版kubernetes集群的家伙</em></p>
+<h2 id="1-Overview"><a href="#1-Overview" class="headerlink" title="1. Overview"></a>1. Overview</h2><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/cluster_topology.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/cluster_topology-300x248.png" alt="cluster_topology"></a></p>
+<h2 id="2-组件"><a href="#2-组件" class="headerlink" title="2. 组件"></a>2. 组件</h2><p>OS：CentOS7</p>
+<h3 id="2-1-Master"><a href="#2-1-Master" class="headerlink" title="2.1 Master"></a>2.1 Master</h3><p>Apiproxy (必要)</p>
+<p>Scheduler (必要)</p>
+<p>Controller Manager (必要)</p>
+<p>Kubectl (非必要)</p>
+<h3 id="2-2-Node"><a href="#2-2-Node" class="headerlink" title="2.2 Node"></a>2.2 Node</h3><p>Docker（必要）</p>
+<p>Kubelet (必要)</p>
+<p>Flannel（非必要）</p>
+<p>Kube-Proxy (非必要)</p>
+<p>Etcd (非必要)</p>
+<h2 id="3-Start-Trip"><a href="#3-Start-Trip" class="headerlink" title="3. Start Trip"></a>3. Start Trip</h2><h3 id="3-1-下载Kubernetes（所有节点）"><a href="#3-1-下载Kubernetes（所有节点）" class="headerlink" title="3.1 下载Kubernetes（所有节点）"></a>3.1 下载Kubernetes（所有节点）</h3><ol>
+<li><p>创建并进入目录</p>
+<p> mkdir ~/kubernetes &amp;&amp; cd ~/kubernetes</p>
+</li>
+<li><p>下载Kubernetes.tar.gz (<a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/releases/tag/v1.7.6">LINK</a>)</p>
+<p> wget <a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/releases/download/v1.7.6/kubernetes.tar.gz">https://github.com/kubernetes/kubernetes/releases/download/v1.7.6/kubernetes.tar.gz</a></p>
+</li>
+<li><p>解压</p>
+<p> tar zxvf kubernetes.tar.gz</p>
+</li>
+<li><p>下载二进制包</p>
+<p> ./kubernetes/cluster/get-kube-binaries.sh</p>
+</li>
+<li><p>解压</p>
+<p> tar zxvf ./kubernetes/server/kubernetes-server-linux-amd64.tar.gz</p>
+</li>
+<li><p>添加环境变量</p>
+<p> cd ./kubernetes/server/bin<br> export PATH=`pwd`:$PATH</p>
+</li>
+<li><p>检查兼容的etcd版本</p>
+<p> [root@localhost ~]# grep TAGS kubernetes/cluster/images/etcd/Makefile</p>
+<h1 id="TAGS-2-2-1-2-3-7-3-0-17-REGISTRY-gcr-io-google-containers-ARCH-amd64-BASEIMAGE-busybox-make-buildpush"><a href="#TAGS-2-2-1-2-3-7-3-0-17-REGISTRY-gcr-io-google-containers-ARCH-amd64-BASEIMAGE-busybox-make-buildpush" class="headerlink" title="[TAGS=2.2.1 2.3.7 3.0.17] [REGISTRY=gcr.io/google_containers] [ARCH=amd64] [BASEIMAGE=busybox] make (buildpush)"></a>[TAGS=2.2.1 2.3.7 3.0.17] [REGISTRY=gcr.io/google_containers] [ARCH=amd64] [BASEIMAGE=busybox] make (buildpush)</h1><p> TAGS的值为兼容的版本，kubernetes1.7.6兼容etcd2.2.1，于是选择etcd2.2.1</p>
+</li>
+</ol>
+<h3 id="3-2-搭建etcd集群"><a href="#3-2-搭建etcd集群" class="headerlink" title="3.2 搭建etcd集群"></a>3.2 搭建etcd集群</h3><ol>
+<li><p>下载etcd2.2.1 （<a target="_blank" rel="noopener" href="https://github.com/coreos/etcd/releases/tag/v2.2.1">LINK</a>)</p>
+<p> curl -L  <a target="_blank" rel="noopener" href="https://github.com/coreos/etcd/releases/download/v2.2.1/etcd-v2.2.1-darwin-amd64.zip">https://github.com/coreos/etcd/releases/download/v2.2.1/etcd-v2.2.1-darwin-amd64.zip</a> -o etcd-v2.2.1-darwin-amd64.zip<br> unzip etcd-v2.2.1-darwin-amd64.zip<br> cd etcd-v2.2.1-darwin-amd64</p>
+</li>
+<li><p>搭建集群</p>
+<p> ###将export中的ip改为对应机器的ip###<br> #host1 ip 为192.168.46.31，执行以下命令<br> export HostIP=”192.168.46.31”<br> nohup \<br> ./etcd \</p>
+<pre><code> -name=etcd0 \\
+ -listen-client-urls=http://0.0.0.0:2379 \\
+ -advertise-client-urls=http://$&#123;HostIP&#125;:2379 \\
+ -listen-peer-urls=http://0.0.0.0:2380 \\
+ -initial-advertise-peer-urls=http://$&#123;HostIP&#125;:2380 \\
+ -initial-cluster-token etcd-cluster-1 \\
+  -initial-cluster etcd0=http://192.168.46.31:2380,etcd1=http://192.168.46.32:2380,etcd2=http://192.168.46.33:2380 \\
+  -initial-cluster-state new \\</code></pre>
+<p> &amp;</p>
+<p> #host2 ip为192.168.46.32，执行以下命令<br> export HostIP=”192.168.46.32”<br> nohup \<br> ./etcd \</p>
+<pre><code> -name=etcd1 \\
+ -listen-client-urls=http://0.0.0.0:2379 \\
+ -advertise-client-urls=http://$&#123;HostIP&#125;:2379 \\
+ -listen-peer-urls=http://0.0.0.0:2380 \\
+ -initial-advertise-peer-urls=http://$&#123;HostIP&#125;:2380 \\
+ -initial-cluster-token etcd-cluster-1 \\
+  -initial-cluster etcd0=http://192.168.46.31:2380,etcd1=http://192.168.46.32:2380,etcd2=http://192.168.46.33:2380 \\
+  -initial-cluster-state new \\</code></pre>
+<p> &amp;</p>
+<p> #host3 ip为192.168.46.33，执行以下命令<br> export HostIP=”192.168.46.33”<br> nohup \<br> ./etcd \</p>
+<pre><code> -name=etcd2 \\
+ -listen-client-urls=http://0.0.0.0:2379 \\
+ -advertise-client-urls=http://$&#123;HostIP&#125;:2379 \\
+ -listen-peer-urls=http://0.0.0.0:2380 \\
+ -initial-advertise-peer-urls=http://$&#123;HostIP&#125;:2380 \\
+ -initial-cluster-token etcd-cluster-1 \\
+  -initial-cluster etcd0=http://192.168.46.31:2380,etcd1=http://192.168.46.32:2380,etcd2=http://192.168.46.33:2380 \\
+  -initial-cluster-state new \\</code></pre>
+<p> &amp;</p>
+</li>
+<li><p>检查集群状态</p>
+<p> etcdctl member list<br> etcdctl cluster-health</p>
+</li>
+<li><p>设置flannel配置</p>
+<p> etcdctl set /coreos.com/network/config ‘{“Network”: “10.1.0.0/16”,”SubnetLen”: 24,”SubnetMin”: “10.1.0.0”,”SubnetMax”: “10.1.9.255”,”Backend”: {“Type”:”vxlan”}}’</p>
+</li>
+</ol>
+<h3 id="3-3-安装Flannel（每个node）"><a href="#3-3-安装Flannel（每个node）" class="headerlink" title="3.3 安装Flannel（每个node）"></a>3.3 安装Flannel（每个node）</h3><ol>
+<li><p>安装flannel</p>
+<p> wget <a target="_blank" rel="noopener" href="https://github.com/coreos/flannel/releases/download/v0.8.0/flanneld-amd64">https://github.com/coreos/flannel/releases/download/v0.8.0/flanneld-amd64</a> &amp;&amp; chmod +x flanneld-amd64</p>
+</li>
+<li><p>启动flannel</p>
+<p> ./flanneld-amd64 –etcd-endpoints=<a target="_blank" rel="noopener" href="http://192.168.46.31:2379/">http://192.168.46.31:2379</a></p>
+</li>
+<li><p>检查flannel运行状态</p>
+<p> [root@localhost ~]# cat /var/run/flannel/subnet.env<br> FLANNEL_NETWORK=10.1.0.0/16<br> FLANNEL_SUBNET=10.1.5.1/24<br> FLANNEL_MTU=1450<br> FLANNEL_IPMASQ=false</p>
+</li>
+</ol>
+<h3 id="3-4-安装Docker（每个node）"><a href="#3-4-安装Docker（每个node）" class="headerlink" title="3.4 安装Docker（每个node）"></a>3.4 安装Docker（每个node）</h3><ol>
+<li><p>安装Docker</p>
+<p> yum install docker -y</p>
+</li>
+<li><p>配置docker网络</p>
+<p> #修改/etc/systemd/system/docker.service文件信息如下<br> #其实就是在docker的启动命令中添加–bip和–mtu两个参数，参数信息来自flannel获取的配置<br> …<br> [Service]<br> …<br> EnvironmentFile=-/run/flannel/subnet.env (新增此行)<br> …<br> ExecStart=/usr/bin/dockerd … \</p>
+<pre><code> ... \\
+ --bip=$&#123;FLANNEL\_SUBNET&#125; --mtu=$&#123;FLANNEL\_MTU&#125; \\ (新增此行)
+ ...</code></pre>
+</li>
+<li><p>重启docker并确认网段</p>
+<p> systemctl restart docker<br> ip a<br> #输出信息docker0的网段应当落入flannel归属的网段，即配置文件中/var/run/flannel/subnet.env的FLANNEL_SUBNET</p>
+</li>
+<li><p>加载gcr必要镜像</p>
+<p> wget <a target="_blank" rel="noopener" href="https://github.com/zman2013/kubernetes-install/raw/master/docker-images/pause-amd64.tar">https://github.com/zman2013/kubernetes-install/raw/master/docker-images/pause-amd64.tar</a><br> docker load -i pause-amd64.tar<br> #Loaded image: gcr.io/google_containers/pause-amd64:3.0</p>
+</li>
+</ol>
+<h3 id="3-5-启动Apiserver（master节点）"><a href="#3-5-启动Apiserver（master节点）" class="headerlink" title="3.5 启动Apiserver（master节点）"></a>3.5 启动Apiserver（master节点）</h3><p>nohup hyperkube apiserver \<br>    –etcd-servers=<a target="_blank" rel="noopener" href="http://192.168.46.31:2379/">http://192.168.46.31:2379</a> \  #etcd集群地址<br>    –service-cluster-ip-range=10.1.0.0/16 \<br>    –storage-backend=etcd2 \<br>    –insecure-bind-address=0.0.0.0 \<br>    –admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,ResourceQuota \<br>    –v=4 &gt; apiserver.log &amp;</p>
+<h3 id="3-6-启动Scheduler（master节点）"><a href="#3-6-启动Scheduler（master节点）" class="headerlink" title="3.6 启动Scheduler（master节点）"></a>3.6 启动Scheduler（master节点）</h3><p>nohup hyperkube scheduler –master=127.0.0.1:8080 &gt; scheduler.log &amp;  #apiserver的地址</p>
+<h3 id="3-7-启动Controller-Manager（master节点）"><a href="#3-7-启动Controller-Manager（master节点）" class="headerlink" title="3.7 启动Controller Manager（master节点）"></a>3.7 启动Controller Manager（master节点）</h3><p>nohup hyperkube controller-manager –master=127.0.0.1:8080 &gt; controller-manager.log &amp; #apiserver的地址</p>
+<h3 id="3-8-启动Kubelet（每个Node）"><a href="#3-8-启动Kubelet（每个Node）" class="headerlink" title=" 3.8 启动Kubelet（每个Node）"></a> 3.8 启动Kubelet（每个Node）</h3><p>nohup hyperkube kubelet \<br>    –api-servers=<a target="_blank" rel="noopener" href="http://192.168.46.31:8080/">http://192.168.46.31:8080</a> \<br>    –hostname-override=192.168.46.32 \       #本机ip<br>    –cgroup-driver=systemd \<br>    –v=4  &gt; kubelet.log &amp;</p>
+<h3 id="3-9-启动Kube-Proxy（每个Node）"><a href="#3-9-启动Kube-Proxy（每个Node）" class="headerlink" title=" 3.9 启动Kube-Proxy（每个Node）"></a> 3.9 启动Kube-Proxy（每个Node）</h3><p>nohup hyperkube kube-proxy –master=<a target="_blank" rel="noopener" href="http://192.168.46.31:8080/">http://192.168.46.31:8080</a> &gt; kube-proxy.log &amp;</p>
+<p> </p>
+<h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><p><strong>1.</strong> Q: Error syncing pod 39d2bd89-a174-11e7-b855-0050568723c9, skipping: failed to “StartContainer” for “POD” with ErrImagePull: “image pull failed for gcr.io/google_containers/pause-amd64:3.0, this may be because there are no credentials on this request A: 获取pause-amd64镜像失败。参考步骤：3.4中4加载gcr必要镜像。  </p>
+<h3 id="LINKS"><a href="#LINKS" class="headerlink" title="LINKS"></a>LINKS</h3><ol>
+<li> <a target="_blank" rel="noopener" href="https://github.com/coreos/flannel">Flannel</a></li>
+<li> <a target="_blank" rel="noopener" href="https://github.com/coreos/flannel/blob/master/Documentation/configuration.md">Flanneld配置</a></li>
+<li> <a target="_blank" rel="noopener" href="https://github.com/coreos/etcd">Etcd</a></li>
+<li> <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/getting-started-guides/scratch/">Kubernetes从零创建</a></li>
+<li> <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/admin/kube-apiserver/">Kubernetes启动参数</a></li>
+</ol>
 
       
     </div>
@@ -346,7 +413,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/21/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/23/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/21/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/23/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

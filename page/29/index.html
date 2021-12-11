@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">43</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/05/04/wordpress/spring-mybatis/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/05/05/wordpress/spring-package-for-different-stage/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/05/04/wordpress/spring-mybatis/" class="post-title-link" itemprop="url">Spring+Mybatis</a>
+            <a href="/2016/05/05/wordpress/spring-package-for-different-stage/" class="post-title-link" itemprop="url">Maven项目不同环境打包不同配置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2016-05-04 22:34:05" itemprop="dateCreated datePublished" datetime="2016-05-04T22:34:05+08:00">2016-05-04</time>
+      <time title="Created: 2016-05-05 22:01:08" itemprop="dateCreated datePublished" datetime="2016-05-05T22:01:08+08:00">2016-05-05</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-12-01 12:42:01" itemprop="dateModified" datetime="2021-12-01T12:42:01+08:00">2021-12-01</time>
+        <time title="Modified: 2021-12-11 15:03:32" itemprop="dateModified" datetime="2021-12-11T15:03:32+08:00">2021-12-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -258,10 +258,6 @@
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a>
         </span>
     </span>
 
@@ -275,105 +271,71 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>基于之前的spring项目，引入mybatis作为数据层基本框架</em> <strong>1. 引入mybatis依赖</strong></p>
-<properties>
-    <mybatis.version>3.3.0</mybatis.version>
-    <mybatis-spring.version>1.2.3</mybatis-spring.version>
-</properties>
+          <p><em>同一项目在开发、测试、线上环境下分别使用不同配置，如何打包</em> 基于项目<a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2016/04/16/spring-basic-web/">Spring Web</a>进行开发，支持为不同环境打包功能 <strong>1. 创建文件夹src/main/config</strong> <strong>2. 创建测试环境配置文件test.properties，内容如下</strong></p>
+<p>env=test</p>
+<p><strong>3. 创建线上环境配置文件prod.properties，内容如下</strong></p>
+<p>env=prod</p>
+<p><strong>4. 修改pom.xml文件，添加如下内容</strong></p>
+<profiles>
+    <profile>
+        <id>test</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.7</version>
+                    <executions>
+                        <execution>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target>
+                                    <echo message="copy test.properties to ${project.build.directory}/classes/"/>
+                                    <copy file="src/main/config/test.properties"
+                                          tofile="${project.build.directory}/classes/application.properties"
+                                          overwrite="true"/>
+                                </target>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+    <profile>
+        <id>prod</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.7</version>
+                    <executions>
+                        <execution>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target name="prod-copying">
+                                    <echo message="copy  prod.properties to /classes/"/>
+                                    <copy file="src/main/config/prod.properties"
+                                          tofile="${project.build.directory}/classes/application.properties"
+                                          overwrite="true"/>
+                                </target>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+</profiles>
 
-<!-- mybatis -->
-<dependency>
-    <groupId>org.mybatis</groupId>
-    <artifactId>mybatis-spring</artifactId>
-    <version>${mybatis-spring.version}</version>
-</dependency>
-<dependency>
-    <groupId>org.mybatis</groupId>
-    <artifactId>mybatis</artifactId>
-    <version>${mybatis.version}</version>
-</dependency>
-
-<p> <strong>2. 创建Domain类</strong> 2.1 表结构</p>
-<p>CREATE TABLE `stock` (<br>  `code` varchar(10) NOT NULL,<br>  `name` varchar(10) NOT NULL,<br>  `count` int(11) DEFAULT NULL,<br>  `main_business` varchar(256) DEFAULT NULL,<br>  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,<br>  `price` decimal(10,2) DEFAULT NULL,<br>  PRIMARY KEY (`code`)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4</p>
-<p>2.2 Stock.java</p>
-<p>package com.zmannotes.spring.mybatis.domain;</p>
-<p>public class Stock {</p>
-<pre><code>private String code;
-
-private String name;
-
-private Integer count;
-
-private String mainBusiness;
-
-private Date createTime;
-
-private BigDecimal price;</code></pre>
-<p>//setter and getter<br>//…<br>}</p>
-<p> <strong>3. 创建Dao(Mapper)</strong></p>
-<p>package com.zmannotes.spring.mybatis.dao;</p>
-<p>import com.zmannotes.spring.mybatis.domain.Stock;</p>
-<p>public interface StockMapper {<br>    //根据PK删除<br>    int deleteByPrimaryKey(String code);<br>    //插入新纪录<br>    int insert(Stock record);<br>    //根据PK查询<br>    Stock selectByPrimaryKey(String code);<br>}</p>
-<p> <strong>4. 配置映射文件</strong></p>
-<p>//通过配置文件将 数据库表 与 对象、Dao关联起来<br><?xml version="1.0" encoding="UTF-8" ?><br><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" ><br><mapper namespace="com.zmannotes.spring.mybatis.dao.StockMapper" > <!--指定Dao--><br>  <resultMap id="BaseResultMap" type="com.zmannotes.spring.mybatis.domain.Stock" > <!--指定Domain类--><br>    <id column="code" property="code" jdbcType="VARCHAR" /><br>    <result column="name" property="name" jdbcType="VARCHAR" /><br>    <result column="count" property="count" jdbcType="INTEGER" /><br>    <result column="main\_business" property="mainBusiness" jdbcType="VARCHAR" /><br>    <result column="create\_time" property="createTime" jdbcType="TIMESTAMP" /><br>    <result column="price" property="price" jdbcType="DECIMAL" /><br>  </resultMap><br>  <sql id="Base\_Column\_List" ><br>    code, name, count, main_business, create_time, price<br>  </sql><br>  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" ><br>    select<br>    <include refid="Base\_Column\_List" /><br>    from stock<br>    where code = #{code,jdbcType=VARCHAR}<br>  </select><br>  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" ><br>    delete from stock<br>    where code = #{code,jdbcType=VARCHAR}<br>  </delete><br>  <insert id="insert" parameterType="com.zmannotes.spring.mybatis.domain.Stock" ><br>    insert into stock (code, name, count,<br>      main_business, create_time, price<br>      )<br>    values (#{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{count,jdbcType=INTEGER},<br>      #{mainBusiness,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DECIMAL}<br>      )<br>  </insert><br></xml></p>
-<p><strong>5. 配置数据源及SessionFactory</strong></p>
-<?xml version="1.0" encoding="UTF-8"?>
-<p><beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
-    xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx.xsd"><br>    <!-- dbcp2 数据源 --><br>    <bean id="stock\_dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
-          destroy-method="close"><br>        <property name="driverClassName" value="com.mysql.jdbc.Driver" /><br>        <property name="url" value="jdbc:mysql://123.57.144.1:3306/stock" /><br>        <property name="username" value="stock" /><br>        <property name="password" value="stock" /><br>        <property name="connectionInitSqls"><br>            <list><br>                <value>set names utf8mb4;</value><br>            </list><br>        </property><br>    </bean></p>
-<pre><code>&lt;!-- 事务管理器 --&gt;
-&lt;bean id=&quot;stock\_txManager&quot;
-    class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
-    &lt;property name=&quot;dataSource&quot; ref=&quot;stock\_dataSource&quot; /&gt;
-&lt;/bean&gt;
-
-&lt;tx:annotation-driven transaction-manager=&quot;stock\_txManager&quot;
-    mode=&quot;proxy&quot; proxy-target-class=&quot;true&quot; /&gt;
-
-&lt;!-- 在使用mybatis时 spring使用sqlsessionFactoryBean 来管理mybatis的sqlsessionFactory --&gt;
-&lt;!-- 创建sqlsessionFactory 并指定数据源 --&gt;
-&lt;bean id=&quot;stock\_sqlSessionFactory&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;
-    &lt;property name=&quot;dataSource&quot; ref=&quot;stock\_dataSource&quot; /&gt;
-    &lt;property name=&quot;typeAliasesPackage&quot;
-        value=&quot;com.zmannotes.spring.mybatis.domain&quot; /&gt;
-    &lt;!-- 配置扫描Mapper XML的位置 --&gt;
-    &lt;property name=&quot;mapperLocations&quot;&gt;
-        &lt;list&gt;
-            &lt;value&gt;classpath:mybatis/stock/\*.xml&lt;/value&gt;
-        &lt;/list&gt;
-    &lt;/property&gt;
-&lt;/bean&gt;
-
-&lt;!-- 使用MapperScannerConfiguer 扫描来实现 --&gt;
-&lt;!-- 这里指定了要扫描的映射接口的路径 --&gt;
-&lt;bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;&gt;
-    &lt;property name=&quot;basePackage&quot;&gt;
-        &lt;value&gt;
-            com.zmannotes.spring.mybatis.dao
-        &lt;/value&gt;
-    &lt;/property&gt;
-    &lt;property name=&quot;sqlSessionFactoryBeanName&quot; value=&quot;stock\_sqlSessionFactory&quot; /&gt;
-&lt;/bean&gt;</code></pre>
-</beans>
-
-<p><strong>6. 完成单测</strong></p>
-<p>@RunWith(SpringJUnit4ClassRunner.class)<br>@ContextConfiguration(locations = “/spring/stock-session-factory.xml”)<br>public class StockTest {<br>    @Autowired<br>    private StockMapper stockMapper;</p>
-<pre><code>/\*\*插入一条数据并自动回滚\*/
-@Transactional
-@Test
-public void test()&#123;
-    Stock stock = new Stock();
-    stock.setCode(&quot;900001&quot;);
-    stock.setName(&quot;tcl&quot;);
-    stockMapper.insert(stock);
-&#125;</code></pre>
-<p>}</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/zman2013/spring-mybatis">源码Github</a> <strong>Q&amp;A</strong> Q：无聊的2<del>4步有没有快捷完成办法？ A：当然有！那就是Mybatis Generator，自动生成2</del>4所有代码。参考 <a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2016/05/05/mybatis-generator/">LINK</a></p>
+<p><strong>5. 分别为开发、测试、线上环境打包</strong> 5.1 为开发环境打包 <code>mvn clean package</code> 5.2 为测试环境打包 <code>mvn clean package -Ptest</code> 5.3 为线上环境打包 <code>mvn clean package -Pprod</code> <a target="_blank" rel="noopener" href="https://github.com/zman2013/spring-multiple-config">源码Github</a></p>
 
       
     </div>
@@ -395,7 +357,7 @@ public void test()&#123;
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/28/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><span class="page-number current">29</span><a class="page-number" href="/page/30/">30</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/30/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/28/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><span class="page-number current">29</span><a class="page-number" href="/page/30/">30</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/30/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

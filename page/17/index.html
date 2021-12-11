@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">43</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2018/02/13/wordpress/iot/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2019/05/01/wordpress/wireshark-decrypt-tls/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2018/02/13/wordpress/iot/" class="post-title-link" itemprop="url">AWS IoT</a>
+            <a href="/2019/05/01/wordpress/wireshark-decrypt-tls/" class="post-title-link" itemprop="url">Wireshark解密TLS报文</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2018-02-13 14:54:15" itemprop="dateCreated datePublished" datetime="2018-02-13T14:54:15+08:00">2018-02-13</time>
+      <time title="Created: 2019-05-01 21:51:57" itemprop="dateCreated datePublished" datetime="2019-05-01T21:51:57+08:00">2019-05-01</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-12-01 12:42:01" itemprop="dateModified" datetime="2021-12-01T12:42:01+08:00">2021-12-01</time>
+        <time title="Modified: 2021-12-11 15:03:32" itemprop="dateModified" datetime="2021-12-11T15:03:32+08:00">2021-12-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,7 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/IoT/" itemprop="url" rel="index"><span itemprop="name">IoT</span></a>
+          <a href="/categories/tcp/" itemprop="url" rel="index"><span itemprop="name">tcp</span></a>
         </span>
     </span>
 
@@ -271,178 +271,69 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><code>去年调研了所有的IoT平台，最后总结只有两家，分别是：AWS IoT和其他IoT。本文从AWS IoT Document中摘取核心功能和特点进行说明。</code></p>
-<h2 id="1-IoT是什么？"><a href="#1-IoT是什么？" class="headerlink" title="1 IoT是什么？"></a>1 IoT是什么？</h2><p>IOT能够提供在设备与云端进行安全的双向通信的能力，可以进行数据的远程采集、分析、存储，并可以进行设备的远程控制。</p>
-<h2 id="2-功能组件"><a href="#2-功能组件" class="headerlink" title="2 功能组件"></a>2 功能组件</h2><p><a href="./aws_iot.png"><img src="./aws_iot.png" alt="aws_iot"></a><br><a href="./aws_iot_data_services.png"><img src="./aws_iot_data_services.png" alt="aws_iot_data_services"></a><br>下图是阿里的，基本没差别。<br><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2018/02/ali_iot_architecture.png"><img src="./ali_iot_architecture.png" alt="ali_iot_architecture"></a></p>
-<h2 id="3-组件介绍"><a href="#3-组件介绍" class="headerlink" title="3 组件介绍"></a>3 组件介绍</h2><h3 id="3-1-安全与认证"><a href="#3-1-安全与认证" class="headerlink" title="3.1 安全与认证"></a>3.1 安全与认证</h3><h4 id="3-1-1-原理"><a href="#3-1-1-原理" class="headerlink" title="3.1.1 原理"></a>3.1.1 原理</h4><p>任何设备都必要拥有证书才能访问Broker，所有经过IOT的数据都使用TLS进行加密。IOT基于标准的TLS协议进行设备和云端双向认证来验证双方的身份。 设备需要将包含私钥的证书埋在安全可靠的地方，并且每个设备拥有唯一的证书，云端使用对应的公钥进行验证。 设备也需要将AWS的根证书加入本地可信任证书列表中，用来验证云端的身份。</p>
-<h4 id="3-1-2-证书生成方式"><a href="#3-1-2-证书生成方式" class="headerlink" title="3.1.2 证书生成方式"></a>3.1.2 证书生成方式</h4><p>证书可以在AWS控制台直接生成，也可以通过命令行，以及RESTful API进行生成。<br><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cli/latest/reference/iot/create-keys-and-certificate.html">https://docs.aws.amazon.com/cli/latest/reference/iot/create-keys-and-certificate.html</a><br><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/apireference/API_CreateKeysAndCertificate.html">https://docs.aws.amazon.com/iot/latest/apireference/API_CreateKeysAndCertificate.html</a></p>
-<h4 id="3-1-3-授权策略"><a href="#3-1-3-授权策略" class="headerlink" title="3.1.3 授权策略"></a>3.1.3 授权策略</h4><p>IOT授权策略使用与IAM相同的规范进行管理，通过将设备唯一标识或组与策略进行关联实现权限的控制。举例如下：</p>
-<pre class="language-json" data-language="json"><code class="language-json">&#123;
-    &quot;Version&quot;: &quot;2012-10-17&quot;,
-    &quot;Statement&quot;: [&#123;
-        &quot;Effect&quot;: &quot;Allow&quot;,
-        &quot;Action&quot;:[&quot;iot:Publish&quot;],
-        &quot;Resource&quot;: [&quot;arn:aws:iot:us-east-1:123456789012:&#x2F;topic&#x2F;foo&#x2F;bar&quot;]
-    &#125;,
-    &#123;
-        &quot;Effect&quot;: &quot;Allow&quot;,
-        &quot;Action&quot;: [&quot;iot:Connect&quot;],
-        &quot;Resource&quot;: [&quot;*&quot;]
-        &#125;]
-&#125;</code></pre>
-<p>解释： 版本2012-10-17 允许进行发布到 us-east-1 区 topic/foo/bar 队列，同时允许连接到任何Broker。<br>策略列表： <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/action-resources.html">https://docs.aws.amazon.com/iot/latest/developerguide/action-resources.html</a></p>
-<p><strong>Action</strong></p>
-<p><strong>Resource</strong></p>
-<p>iot:DeleteThingShadow</p>
-<p>A thing ARN - arn:aws:iot:us-east-1:123456789012:thing/thingOne</p>
-<p>iot:Connect</p>
-<p>A client ID ARN - arn:aws:iot:us-east1:123456789012:client/myClientId</p>
-<p>iot:Publish</p>
-<p>A topic ARN - arn:aws:iot:us-east-1:123456789012:topic/myTopicName</p>
-<p>iot:Subscribe</p>
-<p>A topic filter ARN - arn:aws:iot:us-east-1:123456789012:topicfilter/myTopicFilter</p>
-<p>iot:Receive</p>
-<p>A topic ARN - arn:aws:iot:us-east-1:123456789012:topic/myTopicName</p>
-<p>iot:UpdateThingShadow</p>
-<p>A thing ARN - arn:aws:iot:us-east-1:123456789012:thing/thingOne</p>
-<h3 id="3-2-Message-Broker"><a href="#3-2-Message-Broker" class="headerlink" title="3.2 Message Broker"></a>3.2 Message Broker</h3><h4 id="3-2-1-功能"><a href="#3-2-1-功能" class="headerlink" title="3.2.1 功能"></a>3.2.1 功能</h4><p>Message Broker允许Client向某个Topic发送消息，订阅一个或多个Topic。Broker保存所有连接信息及订阅信息（这里介绍不清楚，直接影响到实现方式：所有连接信息是指当前broker上的所有连接，还是整个Broker集群的所有连接信息）。</p>
-<h4 id="3-2-2-协议"><a href="#3-2-2-协议" class="headerlink" title="3.2.2 协议"></a>3.2.2 协议</h4><h5 id="3-2-2-1-端口映射"><a href="#3-2-2-1-端口映射" class="headerlink" title="3.2.2.1 端口映射"></a>3.2.2.1 端口映射</h5><table>
-<thead>
-<tr>
-<th><strong>Protocol</strong></th>
-<th><strong>Authentication</strong></th>
-<th><strong>Port</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>MQTT</td>
-<td>Client Certificate</td>
-<td>8883</td>
-</tr>
-<tr>
-<td>HTTP</td>
-<td>Client Certificate</td>
-<td>8443</td>
-</tr>
-<tr>
-<td>HTTPS</td>
-<td>SigV4</td>
-<td>443</td>
-</tr>
-<tr>
-<td>MQTT + WebSocket</td>
-<td>SigV4</td>
-<td>443</td>
-</tr>
-</tbody></table>
-<h5 id="3-2-2-2-MQTT"><a href="#3-2-2-2-MQTT" class="headerlink" title="3.2.2.2 MQTT"></a>3.2.2.2 MQTT</h5><p>AWS IOT没有完全实现MQTT协议 <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html">aws protocols</a> 不支持QoS2； 不支持Retained消息； 不支持session持久化存储； …</p>
-<h4 id="3-2-3-Topics"><a href="#3-2-3-Topics" class="headerlink" title="3.2.3 Topics"></a>3.2.3 Topics</h4><p>Topic用来在设备和云端之间路由消息。 <code>/</code>用来对topic进行分层。 <code>$</code>表示保留topic。<br><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/topics.html">https://docs.aws.amazon.com/iot/latest/developerguide/topics.html</a><br>通配符功能如下：</p>
-<p><strong>Wildcard</strong></p>
-<p><strong>Description</strong><br><code>#</code><br>Must be the last character in the topic to which you are subscribing. Works as a wildcard by matching the current tree and all subtrees. For example, a subscription to Sensor/# will receive messages published to Sensor/,Sensor/temp, Sensor/temp/room1, but not the messages published to Sensor.<br><code>+</code><br>Matches exactly one item in the topic hierarchy. For example, a subscription to Sensor/+/room1 will receive messages published to Sensor/temp/room1, Sensor/moisture/room1, and so on.</p>
-<h4 id="3-2-4-事件"><a href="#3-2-4-事件" class="headerlink" title="3.2.4 事件"></a>3.2.4 事件</h4><p><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/life-cycle-events.html">https://docs.aws.amazon.com/iot/latest/developerguide/life-cycle-events.html</a><br>客户端建立连接时，IOT向如下topic发送事件，业务可以监听此topic获取通知： $aws/events/presence/connected/clientId 对应内容：</p>
-<pre class="language-json" data-language="json"><code class="language-json">&#123;
-    &quot;clientId&quot;: &quot;a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6&quot;,
-    &quot;timestamp&quot;: 1460065214626,
-    &quot;eventType&quot;: &quot;connected&quot;,
-    &quot;sessionIdentifier&quot;: &quot;00000000-0000-0000-0000-000000000000&quot;,
-    &quot;principalIdentifier&quot;: &quot;000000000000&#x2F;ABCDEFGHIJKLMNOPQRSTU:some-user&#x2F;ABCDEFGHIJKLMNOPQRSTU:some-user&quot;
-&#125;</code></pre>
-<p>连接断开时，对应的topic如下：<br><code>$aws/events/presence/disconnected/_clientId_ </code><br>订阅topic时：<br><code>$aws/events/subscriptions/subscribed/_clientId_</code><br>取消订阅时：<br><code>$aws/events/subscriptions/unsubscribed/_clientId_</code></p>
-<h3 id="3-3-影子服务"><a href="#3-3-影子服务" class="headerlink" title="3.3 影子服务"></a>3.3 影子服务</h3><h4 id="3-3-1-定义"><a href="#3-3-1-定义" class="headerlink" title="3.3.1 定义"></a>3.3.1 定义</h4><p>设备影子是一个json串用来存储和检索设备的当前状态。</p>
-<h4 id="3-3-2-功能"><a href="#3-3-2-功能" class="headerlink" title="3.3.2 功能"></a>3.3.2 功能</h4><p>AWS IOT提供的三个方法来操作影子服务<br>UPDATE：更新影子服务的状态，如果目标不存在就直接创建。<br>GET：获取设备在影子服务中最新的快照。<br>DELETE：删除设备对应的影子。<br><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-rest-api.html">https://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-rest-api.html</a></p>
-<h4 id="3-3-3-影子JSON内容"><a href="#3-3-3-影子JSON内容" class="headerlink" title="3.3.3 影子JSON内容"></a>3.3.3 影子JSON内容</h4><p>HTTP GET https://<em>endpoint</em>/things/<em>thingName</em>/shadow</p>
-<pre class="language-json" data-language="json"><code class="language-json">&#123;
-    &quot;state&quot;: &#123;
-        &quot;desired&quot;: &#123;
-            &quot;lights&quot;: &#123;
-                &quot;color&quot;: &quot;RED&quot;
-            &#125;,
-            &quot;engine&quot;: &quot;ON&quot;
-        &#125;,
-        &quot;reported&quot;: &#123;
-            &quot;lights&quot;: &#123;
-                &quot;color&quot;: &quot;GREEN&quot;
-            &#125;,
-            &quot;engine&quot;: &quot;ON&quot;
-        &#125;,
-        &quot;delta&quot;: &#123;
-            &quot;lights&quot;: &#123;
-                &quot;color&quot;: &quot;RED&quot;
-            &#125;
-        &#125;
-    &#125;,
-    &quot;metadata&quot;: &#123;
-        &quot;desired&quot;: &#123;
-            &quot;lights&quot;: &#123;
-                &quot;color&quot;: &#123;
-                    &quot;timestamp&quot;: 123456
-                &#125;,
-             &#125;
-             &quot;engine&quot;: &#123;
-                &quot;timestamp&quot;: 123456
-            &#125;
-        &#125;,
-        &quot;reported&quot;: &#123;
-            &quot;lights&quot;: &#123;
-                &quot;color&quot;: &#123;
-                    &quot;timestamp&quot;: 789012
-                &#125;
-            &#125;,
-            &quot;engine&quot;: &#123;
-                &quot;timestamp&quot;: 789012
-            &#125;
-        &#125;,
-        &quot;delta&quot;: &#123;
-            &quot;lights&quot;: &#123;
-                &quot;color&quot;: &#123;
-                    &quot;timestamp&quot;: 123456
-                &#125;
-            &#125;
-        &#125;
-    &#125;,
-    &quot;version&quot;: 10,
-    &quot;timestamp&quot;: 123456789
-&#125;</code></pre>
-<h3 id="3-4-规则引擎"><a href="#3-4-规则引擎" class="headerlink" title="3.4 规则引擎"></a>3.4 规则引擎</h3><h4 id="3-4-1-定义"><a href="#3-4-1-定义" class="headerlink" title="3.4.1 定义"></a>3.4.1 定义</h4><p>规则引擎提供一种将设备和云服务关联起来的能力。规则引擎基于mqtt topic stream来工作的。</p>
-<h4 id="3-4-2-功能"><a href="#3-4-2-功能" class="headerlink" title="3.4.2 功能"></a>3.4.2 功能</h4><p>过滤来自某一个设备的数据。 将数据路由到DynamoDB。 将数据保存到S3。 将数据路由到SQS。 将数据录入Elastic Search服务。 将数据路由到Amazon ML服务基于模型进行分析。 …</p>
-<h4 id="3-4-3-例子"><a href="#3-4-3-例子" class="headerlink" title="3.4.3 例子"></a>3.4.3 例子</h4><p>将目标为Topic ‘iot/test’ 的所有消息路由到名称为my-dynamodb-table的表中。</p>
-<pre class="language-json" data-language="json"><code class="language-json">&#123;
-  &quot;sql&quot;: &quot;SELECT * FROM &#39;iot&#x2F;test&#39;&quot;,
-  &quot;ruleDisabled&quot;: false,
-  &quot;awsIotSqlVersion&quot;: &quot;2016-03-23&quot;,
-  &quot;actions&quot;: [&#123;
-      &quot;dynamoDB&quot;: &#123;
-          &quot;tableName&quot;: &quot;my-dynamodb-table&quot;,
-          &quot;roleArn&quot;: &quot;arn:aws:iam::123456789012:role&#x2F;my-iot-role&quot;,
-          &quot;hashKeyField&quot;: &quot;topic&quot;,
-          &quot;hashKeyValue&quot;: &quot;$&#123;topic(2)&#125;&quot;,
-          &quot;rangeKeyField&quot;: &quot;timestamp&quot;,
-          &quot;rangeKeyValue&quot;: &quot;$&#123;timestamp()&#125;&quot;
-      &#125;
-  &#125;]
-&#125;
-&#96;&#96;
-将目标为Topic ‘some&#x2F;topic’的所有消息路由到my_sqs_queue的队列中。
-&#96;&#96;&#96;json
-&#123;
-    &quot;rule&quot;: &#123;
-        &quot;sql&quot;: &quot;SELECT * FROM &#39;some&#x2F;topic&#39;&quot;, 
-        &quot;ruleDisabled&quot;: false, 
-        &quot;actions&quot;: [&#123;
-            &quot;sqs&quot;: &#123;
-                &quot;queueUrl&quot;: &quot;https:&#x2F;&#x2F;sqs.us-east-2.amazonaws.com&#x2F;123456789012&#x2F;my_sqs_queue&quot;, 
-                &quot;roleArn&quot;: &quot;arn:aws:iam::123456789012:role&#x2F;aws_iot_sqs&quot;, 
-                &quot;useBase64&quot;: false
-            &#125;
-        &#125;]
-    &#125;
-&#125;</code></pre>
+          <h1 id="解密TLS报文"><a href="#解密TLS报文" class="headerlink" title="解密TLS报文"></a>解密TLS报文</h1><h2 id="1-预备知识"><a href="#1-预备知识" class="headerlink" title="1. 预备知识"></a>1. 预备知识</h2><ol>
+<li> 拥有服务器端证书对应的私钥</li>
+<li> 加密算法不能使DHE、ECDHE</li>
+<li> 报文必须完整，从TCP握手开始</li>
+</ol>
+<h2 id="2-操作步骤"><a href="#2-操作步骤" class="headerlink" title="2. 操作步骤"></a>2. 操作步骤</h2><h3 id="2-1-抓取报文"><a href="#2-1-抓取报文" class="headerlink" title="2.1 抓取报文"></a>2.1 抓取报文</h3><h4 id="2-1-1-Linux服务器上抓取tcp报文"><a href="#2-1-1-Linux服务器上抓取tcp报文" class="headerlink" title="2.1.1 Linux服务器上抓取tcp报文"></a>2.1.1 Linux服务器上抓取tcp报文</h4><pre class="language-shell" data-language="shell"><code class="language-shell">tcpdump -i eth0  port 10176 -w server.cap -C 50
+# -i 指定网卡名
+# -w 输出到文件 
+# -C 文件分割大小，单位M
+# port 指定监听端口</code></pre>
 
-<h3 id="3-5-监控"><a href="#3-5-监控" class="headerlink" title="3.5 监控"></a>3.5 监控</h3><h4 id="3-5-1-说明"><a href="#3-5-1-说明" class="headerlink" title="3.5.1 说明"></a>3.5.1 说明</h4><p>监控是IOT服务的重要组成部分，用来监测服务的稳定性、可用性、性能。</p>
-<h4 id="3-5-2-提出问题"><a href="#3-5-2-提出问题" class="headerlink" title="3.5.2 提出问题"></a>3.5.2 提出问题</h4><p>AWS IoT没有指明监控如何实现，但是提出了设计监控时应当考虑的问题，挺专业的）_ 监控的目标是什么？ 监控那些资源？ 监控的频率是多长时间？ 使用什么监控工具？ 谁来执行监控任务？ 当监控到错误时，由谁来处理？<br><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html">https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html</a></p>
-<h2 id="4-费用"><a href="#4-费用" class="headerlink" title="4 费用"></a>4 费用</h2><h3 id="4-1-计费"><a href="#4-1-计费" class="headerlink" title="4.1 计费"></a>4.1 计费</h3><p>单连接每百万分钟$0.08; Broker每百万条消息$1.00; 影子服务每百万次操作$1.25; 规则引擎每百万次操作$0.15; SQS每百万条消息$0.40;</p>
-<h3 id="4-2-举例"><a href="#4-2-举例" class="headerlink" title="4.2 举例"></a>4.2 举例</h3><p>以美西区为例，一百万辆车，每分钟上报两条数据，忽略（车控指令产生的费用，读取影子服务产生的费用）经过规则引擎路由到SQS计算一年中费用： 一百万辆车保持一年长连接：0.08 * 60 * 24 * 365 一百万辆车每辆车每分钟上报两条车辆状态(↑128k)：1 * 2 * 60 * 24 * 365 一百万辆车每辆车每分钟更新两次影子服务：1.25 * 2 * 60 * 24 * 365 一百万辆车每辆车每分钟触发两次规则引擎，并执行规则（触发和执行分别计费）：0.15 * 2 * 2 * 60 * 24 * 365 一百万辆车每辆车每分钟写两条消息到SQS（消费端读单独计费）：0.4 * 2 * 2 * 60 * 24 * 365 乘以6.4汇率，一百万辆车一年的保守费用：(0.08 + 1<em>2 + 1.25</em>2 + 0.15<em>2</em>2 + 0.4<em>2</em>2) * 60 * 24 * 365 * 6.4 = 22,806,836人民币。</p>
-<h2 id="5-缺点"><a href="#5-缺点" class="headerlink" title="5 缺点"></a>5 缺点</h2><p>5.1 只能通过日志查看消息的投递状态 5.2 对接依然需要较高开发成本</p>
+<h4 id="2-1-2-Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）"><a href="#2-1-2-Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）" class="headerlink" title="2.1.2 Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）"></a>2.1.2 Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）</h4><pre class="language-shell" data-language="shell"><code class="language-shell">tcpdump -i any -p port 8883 -vv -s 0 -w sdcard&#x2F;client.pcap
+# -i   指定网卡名
+# -w   输出到文件 
+# -C   文件分割大小，单位M
+# port 指定监听端口
+# -vv  输出详细报文
+# -s 0 不截取数据包</code></pre>
+
+<h3 id="2-2-设置Wireshark（v3-0-1）"><a href="#2-2-设置Wireshark（v3-0-1）" class="headerlink" title="2.2 设置Wireshark（v3.0.1）"></a>2.2 设置Wireshark（v3.0.1）</h3><h4 id="2-2-1-添加证书私钥"><a href="#2-2-1-添加证书私钥" class="headerlink" title="2.2.1 添加证书私钥"></a>2.2.1 添加证书私钥</h4><p>如果是nginx做的反向代理，一般证书会配置在nginx这一层。 Preferences -&gt; Protocols -&gt; TLS<br><a href="./Screen-Shot-2019-05-01-at-8.56.23-PM.png"><img src="./Screen-Shot-2019-05-01-at-8.56.23-PM-750x410.png" alt="wireshark_tls"></a></p>
+<p>添加私钥参数 IP Address, 服务器IP Port, 服务器端口 Protocol http（如果是http：小写，非https, Key File 选择key文件，格式pem      <br><strong>注意</strong>：私钥格式为pem，样式如下： </p>
+<pre class="language-none"><code class="language-none">-----BEGIN RSA PRIVATE KEY----- 
+... 
+-----END RSA PRIVATE KEY-----</code></pre>
+
+<h4 id="2-2-2-使用Wireshark打开-pcap文件"><a href="#2-2-2-使用Wireshark打开-pcap文件" class="headerlink" title="2.2.2 使用Wireshark打开.pcap文件"></a>2.2.2 使用Wireshark打开.pcap文件</h4><p>如果tcp报文完整（从tcp握手开始），并且私钥正确，而且加密算法不是DHE/ECDHE，你应该已经看到解密后的内容了。 </p>
+<h1 id="排查网络丢包、异常数据"><a href="#排查网络丢包、异常数据" class="headerlink" title="排查网络丢包、异常数据"></a>排查网络丢包、异常数据</h1><p><em>有时遇到网络丢包的情况，也可能遇到client收到server异常数据的情况，两者的处理方式是一样的</em></p>
+<h2 id="1-禁止Wireshark重排TCP-seq和ack"><a href="#1-禁止Wireshark重排TCP-seq和ack" class="headerlink" title="1. 禁止Wireshark重排TCP seq和ack"></a>1. 禁止Wireshark重排TCP seq和ack</h2><p>Preferences -&gt; Protocols -&gt; TLS <a href="./Screen-Shot-2019-05-01-at-9.17.41-PM.png"><img src="./Screen-Shot-2019-05-01-at-9.17.41-PM-750x410.png" alt="wireshadow_tcp"></a></p>
+<h2 id="2-client和server相同时间段内抓包"><a href="#2-client和server相同时间段内抓包" class="headerlink" title="2. client和server相同时间段内抓包"></a>2. client和server相同时间段内抓包</h2><h2 id="3-对比client和server的报文"><a href="#3-对比client和server的报文" class="headerlink" title="3. 对比client和server的报文"></a>3. 对比client和server的报文</h2><ol>
+<li> 在一端定位到异常报文，获取tcp对应seq</li>
+<li> 在另一端查询是否有相同seq的数据且时间相同</li>
+</ol>
+<h2 id="4-Go-on"><a href="#4-Go-on" class="headerlink" title="4. Go on"></a>4. Go on</h2><p>剩下的就是根据报文内容具体分析了：比如会不会是连接超时，http2 server主动发送了goaway，然后断开了连接。 -</p>
+<h1 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h1><p>Q1：如何判断当前TLS使用的加密算法<br>A：在TLS的Server Hello报文中查Cipher Suite，如下图 <a href="./Screen-Shot-2019-05-01-at-9.29.36-PM.png"><img src="./Screen-Shot-2019-05-01-at-9.29.36-PM-750x410.png" alt="tls_cipher_suite"></a> </p>
+<p>Q2：如何指定TLS使用的加密算法<br>A1：客户端指定，客户端可以通过参数的方式设定，以okhttpclient为例</p>
+<pre class="language-java" data-language="java"><code class="language-java">OkHttpClient.Builder okHttpClientBuilder &#x3D; new OkHttpClient.Builder();
+ConnectionSpec spec &#x3D; new ConnectionSpec.Builder(ConnectionSpec.MODERN\_TLS)
+                .tlsVersions(TlsVersion.TLS\_1\_2)
+                .cipherSuites(
+                        CipherSuite.TLS\_RSA\_WITH\_AES\_128\_GCM\_SHA256,
+                        CipherSuite.TLS\_RSA\_WITH\_AES\_128\_CBC\_SHA,
+                        CipherSuite.TLS\_RSA\_WITH\_AES\_256\_CBC\_SHA,
+                        CipherSuite.TLS\_RSA\_WITH\_3DES\_EDE\_CBC\_SHA)
+                .build();
+        okHttpClientBuilder.connectionSpecs(Collections.singletonList(spec));
+
+OkHttpClient okHttpClient &#x3D; okHttpClientBuilder.build();</code></pre>
+
+<p>A2：服务端通过配置的方式设定，以nginx为例</p>
+<pre class="language-none"><code class="language-none">ssl\_prefer\_server\_ciphers on;
+ssl\_ciphers AES128-GCM-SHA256;</code></pre>
+
+<p>Q3：nginx http2_module连接空闲超时时间是多少？<br>A：3min </p>
+<p>Q4：如何判断wireshark解密成功了？<br>A：观察是否http请求的url已经变成明文；http payload也是明文了（界面下方可以切换tab） </p>
+<p>Q5：DHE算法为什么不能解密？<br>A：DHE算法符合完全正向保密协议，中间人即使得到私钥也破解不了密文。 </p>
+<h1 id="Links："><a href="#Links：" class="headerlink" title="Links："></a>Links：</h1><ol>
+<li> <a target="_blank" rel="noopener" href="https://www.tcpdump.org/manpages/tcpdump.1.html">tcpdump command</a></li>
+<li> <a target="_blank" rel="noopener" href="https://packetpushers.net/using-wireshark-to-decode-ssltls-packets/">https://packetpushers.net/using-wireshark-to-decode-ssltls-packets/</a></li>
+<li> <a target="_blank" rel="noopener" href="https://www.openssl.org/docs/man1.0.2/man1/ciphers.html">openssl ciphers</a></li>
+<li> <a target="_blank" rel="noopener" href="https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.1.0/com.ibm.zos.v2r1.halu101/constatus.htm">tcp status</a></li>
+<li> <a target="_blank" rel="noopener" href="https://http2.github.io/http2-spec/#GOAWAY">http2 goaway</a></li>
+<li> <a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_v2_module.html#http2_idle_timeout">nginx http2 module</a></li>
+</ol>
 
       
     </div>
@@ -464,7 +355,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

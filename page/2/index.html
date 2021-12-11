@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">43</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/09/11/d3-and-observable/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/12/11/zipkin-elasticsearch-customize-index-mapping/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/09/11/d3-and-observable/" class="post-title-link" itemprop="url">d3 and observable</a>
+            <a href="/2021/12/11/zipkin-elasticsearch-customize-index-mapping/" class="post-title-link" itemprop="url">zipkin elasticsearch customize index mapping</a>
         </h2>
 
         <div class="post-meta-container">
@@ -241,16 +241,10 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
+      
 
-      <time title="Created: 2021-09-11 12:44:09" itemprop="dateCreated datePublished" datetime="2021-09-11T12:44:09+08:00">2021-09-11</time>
+      <time title="Created: 2021-12-11 14:39:59 / Modified: 15:03:32" itemprop="dateCreated datePublished" datetime="2021-12-11T14:39:59+08:00">2021-12-11</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-12-01 12:42:01" itemprop="dateModified" datetime="2021-12-01T12:42:01+08:00">2021-12-01</time>
-      </span>
 
   
 </div>
@@ -262,77 +256,20 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="Embedding-a-cell-on-a-web-page"><a href="#Embedding-a-cell-on-a-web-page" class="headerlink" title="Embedding a cell on a web page"></a>Embedding a cell on a web page</h1><p>有几种嵌入方式，本文只关注通过 JavaScript 方式嵌入 cell.</p>
-<h2 id="方式一：嵌入-Cell"><a href="#方式一：嵌入-Cell" class="headerlink" title="方式一：嵌入 Cell"></a>方式一：嵌入 Cell</h2><ol>
-<li>在 cell 左侧，点击更多按钮（纵向的三个点）</li>
-<li>在弹出菜单中，点击 Emebed</li>
-<li>在弹出窗口中选择 cell 名称</li>
-<li>在弹出窗口中选择 Runtime with JavaScript</li>
-<li>复制显示的 JavaScript 到项目中</li>
-</ol>
-<ul>
-<li>源码在远端，无法修改</li>
-</ul>
-<h2 id="方式二：下载插件源码"><a href="#方式二：下载插件源码" class="headerlink" title="方式二：下载插件源码"></a>方式二：下载插件源码</h2><ol>
-<li>在页面右上方，点击更多按钮（横向的三个点）</li>
-<li>在弹出菜单中，点击 Export</li>
-<li>Download Code</li>
-</ol>
-<ul>
-<li>插件源码在本地，可以修改</li>
-</ul>
-<h1 id="渲染-Cell"><a href="#渲染-Cell" class="headerlink" title="渲染 Cell"></a>渲染 Cell</h1><p>最显而易见的方式是直接在页面中显示嵌入的 notebook 的内容。Observable runtime 包含一个标准的 inspector，它从 notebook 获取内容并显示在 HTML 中。</p>
-<pre class="language-js" data-language="js"><code class="language-js">&#x2F;&#x2F; Load the Observable runtime and inspector.
-import &#123;Runtime, Inspector&#125; from &quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;@observablehq&#x2F;runtime@4&#x2F;dist&#x2F;runtime.js&quot;;
+          <p>zipkin 默认不对 tags 进行 mapping，这样无法在 kibana 中对 tags.xx 进行检索和建立图标</p>
+<h1 id="下载-zipkin-源码"><a href="#下载-zipkin-源码" class="headerlink" title="下载 zipkin 源码"></a>下载 zipkin 源码</h1><p><code>git clone https://github.com/openzipkin/zipkin.git</code></p>
+<h1 id="修改-zipkin-源码"><a href="#修改-zipkin-源码" class="headerlink" title="修改 zipkin 源码"></a>修改 zipkin 源码</h1><p>修改 <a target="_blank" rel="noopener" href="https://github.com/openzipkin/zipkin/blob/e89c86a3e930df4a3a77f4b1d060ed11579bdaf4/zipkin-storage/elasticsearch/src/main/java/zipkin2/elasticsearch/VersionSpecificTemplates.java#L114">VersionSpecificTemplates.spanIndexTemplate</a><br>在 mappings -&gt; properties 添加如下代码:</p>
+<pre class="language-java" data-language="java"><code class="language-java">+ &quot;      \&quot;tags.messaging.message_id\&quot;: &quot; + KEYWORD + &quot;,\n&quot;
++ &quot;      \&quot;tags.source.uri\&quot;: &quot; + KEYWORD + &quot;,\n&quot;
++ &quot;      \&quot;tags.messaging.destination\&quot;: &quot; + KEYWORD + &quot;,\n&quot;</code></pre>
 
-&#x2F;&#x2F; Your notebook, compiled as an ES module.
-import notebook from &quot;https:&#x2F;&#x2F;api.observablehq.com&#x2F;@jashkenas&#x2F;my-neat-notebook.js?v&#x3D;3&quot;;
+<h1 id="编译-zipkin-server"><a href="#编译-zipkin-server" class="headerlink" title="编译 zipkin server"></a>编译 zipkin server</h1><pre class="language-shell" data-language="shell"><code class="language-shell"># Build the server and also make its dependencies
+$ .&#x2F;mvnw -q --batch-mode -DskipTests --also-make -pl zipkin-server clean install
+# Run the server
+$ java -jar .&#x2F;zipkin-server&#x2F;target&#x2F;zipkin-server-*exec.jar</code></pre>
 
-&#x2F;&#x2F; Load the notebook, observing its cells with a default Inspector
-&#x2F;&#x2F; that simply renders the value of each cell into the provided DOM node.
-new Runtime().module(notebook, Inspector.into(document.body));</code></pre>
-
-<p>如果不想渲染整个 notebook，可以自定义一个方法选择只渲染哪些 cell，使用 name 来匹配的，如下：</p>
-<pre class="language-js" data-language="js"><code class="language-js">new Runtime().module(notebook, name &#x3D;&gt; &#123;
-  if (name &#x3D;&#x3D;&#x3D; &quot;chart&quot;) &#123;
-    return new Inspector(document.querySelector(&quot;#chart&quot;));
-  &#125;
-&#125;);</code></pre>
-
-<p>如果想只加载提供能力，不渲染，当匹配对应的 cell name 时返回 true，如下：</p>
-<pre class="language-js" data-language="js"><code class="language-js">(new Runtime).module(define, name &#x3D;&gt; &#123;
-  if (name &#x3D;&#x3D;&#x3D; &quot;chart&quot;) return Inspector.into(&quot;.chart&quot;)();
-  &#x2F;&#x2F; update 会被 chart 调用
-  if (name &#x3D;&#x3D;&#x3D; &quot;update&quot;) return true;
-&#125;);</code></pre>
-
-<h1 id="获取-cell-内容"><a href="#获取-cell-内容" class="headerlink" title="获取 cell 内容"></a>获取 cell 内容</h1><pre class="language-js" data-language="js"><code class="language-js">const module &#x3D; new Runtime().module(notebook);
-const value &#x3D; await module.value(&quot;chart&quot;);</code></pre>
-
-<p>还有一种方式，通过 observer 来获取，例如：</p>
-<pre class="language-js" data-language="js"><code class="language-js">new Runtime().module(notebook, name &#x3D;&gt; &#123;
-  return &#123;
-    pending() &#123; console.log(&#96;$&#123;name&#125; is running…&#96;); &#125;,
-    fulfilled(value) &#123; console.log(name, value); &#125;,
-    rejected(error) &#123; console.error(error); &#125;
-  &#125;;
-&#125;);</code></pre>
-
-<h1 id="更新-cell-的内容"><a href="#更新-cell-的内容" class="headerlink" title="更新 cell 的内容"></a>更新 cell 的内容</h1><p>通过 <a target="_blank" rel="noopener" href="https://github.com/observablehq/runtime/blob/main/README.md#module_redefine">module.redefine</a> 可以修改 cell 中定义的变量，比如图标的 data/width/height/x/y/margin。</p>
-<pre class="language-js" data-language="js"><code class="language-js">const main &#x3D; new Runtime().module(define, name &#x3D;&gt; &#123;
-  if (name &#x3D;&#x3D;&#x3D; &quot;chart&quot;) return new Inspector(document.querySelector(&quot;#observablehq-chart-3ff9aa20&quot;));
-&#125;);
-main.redefine(&quot;data&quot;, [
-	&#123;&#39;name&#39;:&#39;apple&#39;, value:100&#125;,
-	&#123;&#39;name&#39;:&#39;orange&#39;, value:100&#125;,	
-	]);
-main.redefine(&#39;height&#39;, 100)</code></pre>
-
-<h1 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h1><ol>
-<li><a target="_blank" rel="noopener" href="https://observablehq.com/@observablehq/downloading-and-embedding-notebooks">Downloading and Embedding</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/observablehq/examples">Observable Examples</a></li>
-</ol>
-
+<h1 id="停止-zipkin-服务"><a href="#停止-zipkin-服务" class="headerlink" title="停止 zipkin 服务"></a>停止 zipkin 服务</h1><h1 id="删除-ES-中已保存的-Template"><a href="#删除-ES-中已保存的-Template" class="headerlink" title="删除 ES 中已保存的 Template"></a>删除 ES 中已保存的 Template</h1><p><code>DELETE _template/&#123;your prefix&#125;-span_template</code></p>
+<h1 id="启动-zipkin-服务"><a href="#启动-zipkin-服务" class="headerlink" title="启动 zipkin 服务"></a>启动 zipkin 服务</h1>
       
     </div>
 
@@ -353,7 +290,7 @@ main.redefine(&#39;height&#39;, 100)</code></pre>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
