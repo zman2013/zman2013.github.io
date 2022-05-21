@@ -170,6 +170,11 @@ line = pe_df.iloc[index]
 # 写文件
 df.to_csv(file_path, index=False)
 
+# 保持 unicode 编码
+1. df.to_json('./external-resources/enemy-data.json'), orient = "records", force_ascii=False)
+2. df.to_json(open('./external-resources/enemy-data.json', 'w', encoding='utf-8'), orient = "records", force_ascii=False)
+
+
 # 读文件
 df = pd.read_csv(dir_path+index_code)
 
