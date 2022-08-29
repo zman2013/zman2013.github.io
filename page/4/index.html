@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">46</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/11/26/nginx-template/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/12/11/zipkin-elasticsearch-customize-index-mapping/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/26/nginx-template/" class="post-title-link" itemprop="url">nginx-template</a>
+            <a href="/2021/12/11/zipkin-elasticsearch-customize-index-mapping/" class="post-title-link" itemprop="url">zipkin elasticsearch customize index mapping</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2021-11-26 13:16:22" itemprop="dateCreated datePublished" datetime="2021-11-26T13:16:22+08:00">2021-11-26</time>
+      <time title="Created: 2021-12-11 14:39:59" itemprop="dateCreated datePublished" datetime="2021-12-11T14:39:59+08:00">2021-12-11</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2022-08-29 16:21:10" itemprop="dateModified" datetime="2022-08-29T16:21:10+08:00">2022-08-29</time>
+        <time title="Modified: 2022-08-29 16:24:57" itemprop="dateModified" datetime="2022-08-29T16:24:57+08:00">2022-08-29</time>
       </span>
 
   
@@ -262,39 +262,20 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><ol>
-<li>进入配置目录<pre class="language-none"><code class="language-none">cd &#x2F;etc&#x2F;nginx&#x2F;sites-enabled</code></pre></li>
-<li>新建文件 xiu66.site，内容如下:<pre class="language-shell" data-language="shell"><code class="language-shell">server &#123;
-  listen 80;
-  server_name xiu66.site;
-  # client 可以携带的最大 body 为 20m
-  client_max_body_size 20m;
-  # 将请求都转发到 127.0.0.1:3000
-  # 因为所有的地址都以 &#x2F; 开头，所以这条规则将匹配到所有请求
-  # 但是正则和最长字符串会优先匹配
-  location &#x2F; &#123;
-      proxy_pass_header Server;
-      proxy_set_header Host $http_host;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Scheme $scheme;
-      proxy_pass http:&#x2F;&#x2F;127.0.0.1:3000;
-  &#125;
-  # static 开头的请求会到 root 目录下寻找
-  location &#x2F;static&#x2F; &#123;
-    # 绝对路径，最终文件路径&#x3D;root+$&#123;location&#125;
-    root &#x2F;web&#x2F;xiu66&#x2F;dist&#x2F;;
-    index index.html;
-  &#125;
-&#125;</code></pre>
+          <p>zipkin 默认不对 tags 进行 mapping，这样无法在 kibana 中对 tags.xx 进行检索和建立图标</p>
+<h1 id="下载-zipkin-源码"><a href="#下载-zipkin-源码" class="headerlink" title="下载 zipkin 源码"></a>下载 zipkin 源码</h1><p><code>git clone https://github.com/openzipkin/zipkin.git</code></p>
+<h1 id="修改-zipkin-源码"><a href="#修改-zipkin-源码" class="headerlink" title="修改 zipkin 源码"></a>修改 zipkin 源码</h1><p>修改 <a target="_blank" rel="noopener" href="https://github.com/openzipkin/zipkin/blob/e89c86a3e930df4a3a77f4b1d060ed11579bdaf4/zipkin-storage/elasticsearch/src/main/java/zipkin2/elasticsearch/VersionSpecificTemplates.java#L114">VersionSpecificTemplates.spanIndexTemplate</a><br>在 mappings -&gt; properties 添加如下代码:</p>
+<pre class="language-java" data-language="java"><code class="language-java">+ &quot;      \&quot;tags.messaging.message_id\&quot;: &quot; + KEYWORD + &quot;,\n&quot;
++ &quot;      \&quot;tags.source.uri\&quot;: &quot; + KEYWORD + &quot;,\n&quot;
++ &quot;      \&quot;tags.messaging.destination\&quot;: &quot; + KEYWORD + &quot;,\n&quot;</code></pre>
 
-</li>
-</ol>
-<h1 id="URL-匹配规则"><a href="#URL-匹配规则" class="headerlink" title="URL 匹配规则"></a>URL 匹配规则</h1><ol>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/38810b49bc29">https://www.jianshu.com/p/38810b49bc29</a></li>
-<li><a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_core_module.html">http://nginx.org/en/docs/http/ngx_http_core_module.html</a></li>
-</ol>
-<h1 id="配置-https"><a href="#配置-https" class="headerlink" title="配置 https"></a>配置 https</h1><p>参考 <a target="_blank" rel="noopener" href="https://coolshell.cn/articles/18094.html">https://coolshell.cn/articles/18094.html</a></p>
+<h1 id="编译-zipkin-server"><a href="#编译-zipkin-server" class="headerlink" title="编译 zipkin server"></a>编译 zipkin server</h1><pre class="language-shell" data-language="shell"><code class="language-shell"># Build the server and also make its dependencies
+$ .&#x2F;mvnw -q --batch-mode -DskipTests --also-make -pl zipkin-server clean install
+# Run the server
+$ java -jar .&#x2F;zipkin-server&#x2F;target&#x2F;zipkin-server-*exec.jar</code></pre>
 
+<h1 id="停止-zipkin-服务"><a href="#停止-zipkin-服务" class="headerlink" title="停止 zipkin 服务"></a>停止 zipkin 服务</h1><h1 id="删除-ES-中已保存的-Template"><a href="#删除-ES-中已保存的-Template" class="headerlink" title="删除 ES 中已保存的 Template"></a>删除 ES 中已保存的 Template</h1><p><code>DELETE _template/&#123;your prefix&#125;-span_template</code></p>
+<h1 id="启动-zipkin-服务"><a href="#启动-zipkin-服务" class="headerlink" title="启动 zipkin 服务"></a>启动 zipkin 服务</h1>
       
     </div>
 
@@ -315,7 +296,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

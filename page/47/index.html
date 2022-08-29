@@ -26,27 +26,27 @@
 
   <meta property="og:type" content="website">
 <meta property="og:title" content="zmannotes">
-<meta property="og:url" content="http://zman2013.github.io/categories/RPC/index.html">
+<meta property="og:url" content="http://zman2013.github.io/page/47/index.html">
 <meta property="og:site_name" content="zmannotes">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="zman">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://zman2013.github.io/categories/RPC/">
+<link rel="canonical" href="http://zman2013.github.io/page/47/">
 
 
 <script class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : false,
+    isHome : true,
     isPost : false,
     lang   : 'en'
   };
 </script>
 
-  <title>Category: RPC | zmannotes</title>
+  <title>zmannotes</title>
   
 
 
@@ -205,94 +205,115 @@
 </noscript>
 
 
-    <div class="main-inner category posts-collapse">
+    <div class="main-inner index posts-expand">
       
 
       
+    
 
+
+<div class="post-block">
   
   
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h2 class="collection-header">RPC
-          <small>Category</small>
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/10/12/wordpress/install-wordpress-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zman">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zmannotes">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2015/10/12/wordpress/install-wordpress-2/" class="post-title-link" itemprop="url">WordPress安装步骤</a>
         </h2>
-      </div>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2015-10-13 07:29:24" itemprop="dateCreated datePublished" datetime="2015-10-13T07:29:24+08:00">2015-10-13</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2022-08-29 16:24:57" itemprop="dateModified" datetime="2022-08-29T16:24:57+08:00">2022-08-29</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/WordPress/" itemprop="url" rel="index"><span itemprop="name">WordPress</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><em>安装WordPress的详细步骤。</em> 在阿里云租用了一台ECS，用Ubuntu 14.04 64位系统。 WordPress是一个php网站，因此只需搭建一个php+apache+mysql服务器环境，即可正常使用。 <strong>1. 更新ubuntu的源列表</strong></p>
+<p><a target="_blank" rel="noopener" href="http://wiki.ubuntu.org.cn/%E6%BA%90%E5%88%97%E8%A1%A8">http://wiki.ubuntu.org.cn/%E6%BA%90%E5%88%97%E8%A1%A8</a> （我选择了清华服务器）</p>
+<p><strong>2. 安装php</strong></p>
+<p>sudo apt-get install php5-cli</p>
+<p><strong>3. 安装apache及php模块</strong></p>
+<p>sudo apt-get install apache2</p>
+<p>sudo apt-get install libapache2-mod-php5</p>
+<p><strong>4. 安装mysql及php模块</strong></p>
+<p>wget <a target="_blank" rel="noopener" href="http://dev.mysql.com/get/mysql-apt-config/_0.3.7-1ubuntu14.04/_all.deb">http://dev.mysql.com/get/mysql-apt-config\_0.3.7-1ubuntu14.04\_all.deb</a><br>sudo dpkg -i mysql-apt-config_0.3.7-1ubuntu14.04_all.deb<br>sudo apt-get update<br>sudo apt-get install mysql-server</p>
+<p>(mysql官方安装文档: <a target="_blank" rel="noopener" href="http://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/index.html#apt-repo-fresh-install">http://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/index.html#apt-repo-fresh-install</a>)</p>
+<p>#创建wordpress专用数据库<br>mysql -uroot -p<br>#sql: create database wordpress<br>#安装php mysql拓展<br>sudo apt-get install php5-mysql php5-curl php5-gd php5-idn php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl</p>
+<p><strong>5. 下载并安装WordPress</strong> 5.1 下载4.3.1 wget <a target="_blank" rel="noopener" href="https://wordpress.org/wordpress-4.3.1.zip">https://wordpress.org/wordpress-4.3.1.zip</a> 5.2 解压到/var/www目录下 sudo unzip wordpress-4.3.1-zh_CN.zip -d /var/www 5.3 修改apache2的配置，编辑文件/etc/apache2/sites-available/000-default.conf如下：</p>
+<p>#DocumentRoot /var/www/html<br>DocumentRoot /var/www/wordpress</p>
+<p>5.4 重启apache2</p>
+<p>apachectl restart</p>
+<p>5.5 在浏览器输入阿里云ECS的IP即可访问WordPress。 5.6 第一次访问WordPress默认进入数据库配置页面，输入如下信息：</p>
+<p>数据库地址</p>
+<p>用户名/密码</p>
+<p>数据库名称（在步骤4创建的名为wordpress数据库)</p>
+<p>5.7 点击完成 <strong>6. 至此为WordPress的全部安装过程，开始第一篇blog吧。</strong>   Q：安装插件时FTP问题 A：通过web安装插件时，wordpress有可能要求输入ftp凭证。 这是由权限问题引起的：apache的运行用户与wordpress目录的用户不同，将wordpress目录（包含子目录）的拥有者修改apache的运行用户即可。（apache默认用户为www-data） Q：禁止googleapi fonts A：后台搜索‘disable google fonts’，安装、激活。</p>
 
       
-    <div class="collection-year">
-      <span class="collection-header">2015</span>
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2015-10-31T09:04:44+08:00"
-              content="2015-10-31">
-          10-31
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2015/10/31/wordpress/dubbo/" itemprop="url">
-            <span itemprop="name">Dubbo</span>
-          </a>
-      </div>
-
+    <footer class="post-footer">
+        <div class="post-eof"></div>
       
-    </header>
+    </footer>
   </article>
+</div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2015-10-27T07:00:23+08:00"
-              content="2015-10-27">
-          10-27
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2015/10/26/wordpress/popular-rpc-framework/" itemprop="url">
-            <span itemprop="name">主流RPC框架</span>
-          </a>
-      </div>
 
-      
-    </header>
-  </article>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2015-10-22T07:22:47+08:00"
-              content="2015-10-22">
-          10-22
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2015/10/21/wordpress/rpc/" itemprop="url">
-            <span itemprop="name">RPC</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-    </div>
-  </div>
-  
-  
-  
 
   
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/46/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><span class="page-number current">47</span>
+  </nav>
 
 
 
