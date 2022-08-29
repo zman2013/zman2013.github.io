@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2019/10/28/wordpress/spring-http-request-response-log/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2019/05/01/wordpress/wireshark-decrypt-tls/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2019/10/28/wordpress/spring-http-request-response-log/" class="post-title-link" itemprop="url">Spring HTTP Request Log</a>
+            <a href="/2019/05/01/wordpress/wireshark-decrypt-tls/" class="post-title-link" itemprop="url">Wireshark解密TLS报文</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2019-10-28 21:13:55" itemprop="dateCreated datePublished" datetime="2019-10-28T21:13:55+08:00">2019-10-28</time>
+      <time title="Created: 2019-05-01 21:51:57" itemprop="dateCreated datePublished" datetime="2019-05-01T21:51:57+08:00">2019-05-01</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2022-08-29 16:24:57" itemprop="dateModified" datetime="2022-08-29T16:24:57+08:00">2022-08-29</time>
+        <time title="Modified: 2022-08-29 16:28:47" itemprop="dateModified" datetime="2022-08-29T16:28:47+08:00">2022-08-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,11 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/log/" itemprop="url" rel="index"><span itemprop="name">log</span></a>
+          <a href="/categories/tcp/" itemprop="url" rel="index"><span itemprop="name">tcp</span></a>
         </span>
     </span>
 
@@ -275,41 +271,68 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="1-Controller-Log"><a href="#1-Controller-Log" class="headerlink" title="1. Controller Log"></a>1. Controller Log</h1><h2 id="1-1-确认是Spring-Boot项目"><a href="#1-1-确认是Spring-Boot项目" class="headerlink" title="1.1 确认是Spring Boot项目"></a>1.1 确认是Spring Boot项目</h2><h2 id="1-2-创建Filter"><a href="#1-2-创建Filter" class="headerlink" title="1.2 创建Filter"></a>1.2 创建Filter</h2><pre class="language-java" data-language="java"><code class="language-java">import org.springframework.web.filter.CommonsRequestLoggingFilter;
+          <h1 id="解密TLS报文"><a href="#解密TLS报文" class="headerlink" title="解密TLS报文"></a>解密TLS报文</h1><h2 id="1-预备知识"><a href="#1-预备知识" class="headerlink" title="1. 预备知识"></a>1. 预备知识</h2><ol>
+<li> 拥有服务器端证书对应的私钥</li>
+<li> 加密算法不能使DHE、ECDHE</li>
+<li> 报文必须完整，从TCP握手开始</li>
+</ol>
+<h2 id="2-操作步骤"><a href="#2-操作步骤" class="headerlink" title="2. 操作步骤"></a>2. 操作步骤</h2><h3 id="2-1-抓取报文"><a href="#2-1-抓取报文" class="headerlink" title="2.1 抓取报文"></a>2.1 抓取报文</h3><h4 id="2-1-1-Linux服务器上抓取tcp报文"><a href="#2-1-1-Linux服务器上抓取tcp报文" class="headerlink" title="2.1.1 Linux服务器上抓取tcp报文"></a>2.1.1 Linux服务器上抓取tcp报文</h4><pre class="language-shell" data-language="shell"><code class="language-shell">tcpdump -i eth0  port 10176 -w server.cap -C 50
+# -i 指定网卡名
+# -w 输出到文件 
+# -C 文件分割大小，单位M
+# port 指定监听端口</code></pre>
 
-import javax.servlet.http.HttpServletRequest;
+<h4 id="2-1-2-Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）"><a href="#2-1-2-Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）" class="headerlink" title="2.1.2 Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）"></a>2.1.2 Android上抓取tcp报文（如果无特殊需要抓一方的报文就够了）</h4><pre class="language-shell" data-language="shell"><code class="language-shell">tcpdump -i any -p port 8883 -vv -s 0 -w sdcard&#x2F;client.pcap
+# -i   指定网卡名
+# -w   输出到文件 
+# -C   文件分割大小，单位M
+# port 指定监听端口
+# -vv  输出详细报文
+# -s 0 不截取数据包</code></pre>
 
-public class ApiAccessFilter extends CommonsRequestLoggingFilter &#123;
+<h3 id="2-2-设置Wireshark（v3-0-1）"><a href="#2-2-设置Wireshark（v3-0-1）" class="headerlink" title="2.2 设置Wireshark（v3.0.1）"></a>2.2 设置Wireshark（v3.0.1）</h3><h4 id="2-2-1-添加证书私钥"><a href="#2-2-1-添加证书私钥" class="headerlink" title="2.2.1 添加证书私钥"></a>2.2.1 添加证书私钥</h4><p>如果是nginx做的反向代理，一般证书会配置在nginx这一层。 Preferences -&gt; Protocols -&gt; TLS<br><a href="./Screen-Shot-2019-05-01-at-8.56.23-PM.png"><img src="./Screen-Shot-2019-05-01-at-8.56.23-PM-750x410.png" alt="wireshark_tls"></a></p>
+<p>添加私钥参数 IP Address, 服务器IP Port, 服务器端口 Protocol http（如果是http：小写，非https, Key File 选择key文件，格式pem      <br><strong>注意</strong>：私钥格式为pem，样式如下： </p>
+<pre class="language-none"><code class="language-none">-----BEGIN RSA PRIVATE KEY----- 
+... 
+-----END RSA PRIVATE KEY-----</code></pre>
 
+<h4 id="2-2-2-使用Wireshark打开-pcap文件"><a href="#2-2-2-使用Wireshark打开-pcap文件" class="headerlink" title="2.2.2 使用Wireshark打开.pcap文件"></a>2.2.2 使用Wireshark打开.pcap文件</h4><p>如果tcp报文完整（从tcp握手开始），并且私钥正确，而且加密算法不是DHE/ECDHE，你应该已经看到解密后的内容了。 </p>
+<h1 id="排查网络丢包、异常数据"><a href="#排查网络丢包、异常数据" class="headerlink" title="排查网络丢包、异常数据"></a>排查网络丢包、异常数据</h1><p><em>有时遇到网络丢包的情况，也可能遇到client收到server异常数据的情况，两者的处理方式是一样的</em></p>
+<h2 id="1-禁止Wireshark重排TCP-seq和ack"><a href="#1-禁止Wireshark重排TCP-seq和ack" class="headerlink" title="1. 禁止Wireshark重排TCP seq和ack"></a>1. 禁止Wireshark重排TCP seq和ack</h2><p>Preferences -&gt; Protocols -&gt; TLS <a href="./Screen-Shot-2019-05-01-at-9.17.41-PM.png"><img src="./Screen-Shot-2019-05-01-at-9.17.41-PM-750x410.png" alt="wireshadow_tcp"></a></p>
+<h2 id="2-client和server相同时间段内抓包"><a href="#2-client和server相同时间段内抓包" class="headerlink" title="2. client和server相同时间段内抓包"></a>2. client和server相同时间段内抓包</h2><h2 id="3-对比client和server的报文"><a href="#3-对比client和server的报文" class="headerlink" title="3. 对比client和server的报文"></a>3. 对比client和server的报文</h2><ol>
+<li> 在一端定位到异常报文，获取tcp对应seq</li>
+<li> 在另一端查询是否有相同seq的数据且时间相同</li>
+</ol>
+<h2 id="4-Go-on"><a href="#4-Go-on" class="headerlink" title="4. Go on"></a>4. Go on</h2><p>剩下的就是根据报文内容具体分析了：比如会不会是连接超时，http2 server主动发送了goaway，然后断开了连接。 -</p>
+<h1 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h1><p>Q1：如何判断当前TLS使用的加密算法<br>A：在TLS的Server Hello报文中查Cipher Suite，如下图 <a href="./Screen-Shot-2019-05-01-at-9.29.36-PM.png"><img src="./Screen-Shot-2019-05-01-at-9.29.36-PM-750x410.png" alt="tls_cipher_suite"></a> </p>
+<p>Q2：如何指定TLS使用的加密算法<br>A1：客户端指定，客户端可以通过参数的方式设定，以okhttpclient为例</p>
+<pre class="language-java" data-language="java"><code class="language-java">OkHttpClient.Builder okHttpClientBuilder &#x3D; new OkHttpClient.Builder();
+ConnectionSpec spec &#x3D; new ConnectionSpec.Builder(ConnectionSpec.MODERN\_TLS)
+                .tlsVersions(TlsVersion.TLS\_1\_2)
+                .cipherSuites(
+                        CipherSuite.TLS\_RSA\_WITH\_AES\_128\_GCM\_SHA256,
+                        CipherSuite.TLS\_RSA\_WITH\_AES\_128\_CBC\_SHA,
+                        CipherSuite.TLS\_RSA\_WITH\_AES\_256\_CBC\_SHA,
+                        CipherSuite.TLS\_RSA\_WITH\_3DES\_EDE\_CBC\_SHA)
+                .build();
+        okHttpClientBuilder.connectionSpecs(Collections.singletonList(spec));
 
-    @Override
-    protected void beforeRequest(HttpServletRequest request, String message) &#123;
-        super.beforeRequest(request, &quot;recevied http request&quot;);
-    &#125;
+OkHttpClient okHttpClient &#x3D; okHttpClientBuilder.build();</code></pre>
 
-    @Override
-    protected String createMessage(HttpServletRequest request, String prefix, String suffix) &#123;
-        return request.getMethod() + &quot; &quot; + super.createMessage(request, prefix, suffix);
-    &#125;
+<p>A2：服务端通过配置的方式设定，以nginx为例</p>
+<pre class="language-none"><code class="language-none">ssl\_prefer\_server\_ciphers on;
+ssl\_ciphers AES128-GCM-SHA256;</code></pre>
 
-&#125;</code></pre>
-<h2 id="1-3-Java-Configuration"><a href="#1-3-Java-Configuration" class="headerlink" title=" 1.3 Java Configuration"></a> 1.3 Java Configuration</h2><pre class="language-java" data-language="java"><code class="language-java">@Bean
-public CommonsRequestLoggingFilter logFilter() &#123;
-    CommonsRequestLoggingFilter filter &#x3D; new ApiAccessFilter();
-    filter.setIncludeQueryString(true);
-    filter.setIncludePayload(true);
-    filter.setIncludeClientInfo(false);
-    filter.setMaxPayloadLength(1000);
-    filter.setIncludeHeaders(true);
-    filter.setAfterMessagePrefix(&quot;&quot;);
-    return filter;
-&#125;</code></pre>
-<h2 id="1-4-设置logback配置"><a href="#1-4-设置logback配置" class="headerlink" title=" 1.4 设置logback配置"></a> 1.4 设置logback配置</h2><pre class="language-xml" data-language="xml"><code class="language-xml">&lt;logger name&#x3D;&quot;com.example.spring.log.ApiAccessFilter&quot; additivity&#x3D;&quot;false&quot;&gt;
-    &lt;level value&#x3D;&quot;DEBUG&quot;&#x2F;&gt;
-&lt;&#x2F;logger&gt;</code></pre>
-
-<h1 id="LINK"><a href="#LINK" class="headerlink" title="LINK"></a>LINK</h1><ol>
-<li> <a target="_blank" rel="noopener" href="https://www.baeldung.com/spring-http-logging">https://www.baeldung.com/spring-http-logging</a></li>
+<p>Q3：nginx http2_module连接空闲超时时间是多少？<br>A：3min </p>
+<p>Q4：如何判断wireshark解密成功了？<br>A：观察是否http请求的url已经变成明文；http payload也是明文了（界面下方可以切换tab） </p>
+<p>Q5：DHE算法为什么不能解密？<br>A：DHE算法符合完全正向保密协议，中间人即使得到私钥也破解不了密文。 </p>
+<h1 id="Links："><a href="#Links：" class="headerlink" title="Links："></a>Links：</h1><ol>
+<li> <a target="_blank" rel="noopener" href="https://www.tcpdump.org/manpages/tcpdump.1.html">tcpdump command</a></li>
+<li> <a target="_blank" rel="noopener" href="https://packetpushers.net/using-wireshark-to-decode-ssltls-packets/">https://packetpushers.net/using-wireshark-to-decode-ssltls-packets/</a></li>
+<li> <a target="_blank" rel="noopener" href="https://www.openssl.org/docs/man1.0.2/man1/ciphers.html">openssl ciphers</a></li>
+<li> <a target="_blank" rel="noopener" href="https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.1.0/com.ibm.zos.v2r1.halu101/constatus.htm">tcp status</a></li>
+<li> <a target="_blank" rel="noopener" href="https://http2.github.io/http2-spec/#GOAWAY">http2 goaway</a></li>
+<li> <a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_v2_module.html#http2_idle_timeout">nginx http2 module</a></li>
 </ol>
 
       
@@ -332,7 +355,7 @@ public CommonsRequestLoggingFilter logFilter() &#123;
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/17/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><span class="page-number current">18</span><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/19/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/17/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><span class="page-number current">18</span><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><a class="extend next" rel="next" href="/page/19/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/04/16/wordpress/spring-mvc-web/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/04/16/wordpress/spring-basic-web/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/04/16/wordpress/spring-mvc-web/" class="post-title-link" itemprop="url">Spring MVC项目框架</a>
+            <a href="/2016/04/16/wordpress/spring-basic-web/" class="post-title-link" itemprop="url">快速开发Spring Web应用</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2016-04-16 20:43:47" itemprop="dateCreated datePublished" datetime="2016-04-16T20:43:47+08:00">2016-04-16</time>
+      <time title="Created: 2016-04-16 17:28:03" itemprop="dateCreated datePublished" datetime="2016-04-16T17:28:03+08:00">2016-04-16</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2022-08-29 16:24:57" itemprop="dateModified" datetime="2022-08-29T16:24:57+08:00">2022-08-29</time>
+        <time title="Modified: 2022-08-29 16:28:47" itemprop="dateModified" datetime="2022-08-29T16:28:47+08:00">2022-08-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,146 +271,83 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>搭建基本的Spring MVC项目框架</em> 最终目录结构 <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2016/04/1-1.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2016/04/1-1.jpg" alt="spring mvc web structure"></a> <strong>1. 创建Maven Web项目</strong></p>
-<p>// 建立名为spring-mvc-web的maven web项目<br>$ mvn archetype:generate -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false -DgroupId=com.zmannotes.spring -DartifactId=spring-mvc-web</p>
-<p>2. 修改pom.xml如下</p>
-<?xml version="1.0"?>
-<p><project
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><br>    <modelVersion>4.0.0</modelVersion></p>
-<pre><code>&lt;groupId&gt;com.zmannotes.spring&lt;/groupId&gt;
-&lt;artifactId&gt;spring-mvc-web&lt;/artifactId&gt;
-&lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-&lt;packaging&gt;war&lt;/packaging&gt;
-&lt;name&gt;spring mvc web&lt;/name&gt;
-
-&lt;properties&gt;
-    &lt;spring.version&gt;4.2.5.RELEASE&lt;/spring.version&gt;
-&lt;/properties&gt;
+          <p><em>基于spring boot可以秒建一个基本__web应用</em> <strong>1. 创建maven项目</strong></p>
+<p>//创建名为spring-basic-web的maven项目<br>$ mvn -B archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DgroupId=com.zmannotes.spring -DartifactId=spring-basic-web</p>
+<p><em>（详细说明请参考: <a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2016/04/16/spring-basic-application/">快速开发Spring Application</a>)</em> <strong>2. 导入STS/Eclipse/IntelliJ</strong> <strong>3. 修改pom.xml内容如下</strong></p>
+<p><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4\_0\_0.xsd"><br>    <modelVersion>4.0.0</modelVersion><br>    <groupId>com.zmannotes.spring</groupId><br>    <artifactId>spring-basic-web</artifactId><br>    <packaging>jar</packaging><br>    <version>1.0-SNAPSHOT</version><br>    <name>spring-basic-web</name></p>
+<pre><code>&lt;!-- 父配置文件，继承通用的配置 --&gt;
+&lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;1.3.3.RELEASE&lt;/version&gt;
+&lt;/parent&gt;
 
 &lt;dependencies&gt;
-
-    &lt;!-- spring mvc --&gt;
+    &lt;!-- spring web 依赖 --&gt;
     &lt;dependency&gt;
-        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
-        &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
     &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;junit&lt;/groupId&gt;
+        &lt;artifactId&gt;junit&lt;/artifactId&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
 
-&lt;/dependencies&gt;</code></pre>
+&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;!-- 打包用插件 --&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;</code></pre>
 </project>
 
-<p>3. 修改web.xml如下</p>
-<?xml version="1.0" encoding="UTF-8"?>
-<p><web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://java.sun.com/xml/ns/javaee" xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app\_3\_0.xsd"
-    version="3.0"></p>
-<pre><code>&lt;display-name&gt;Spring MVC Web&lt;/display-name&gt;
+<p><strong>4. 例子</strong> 建立一个web服务，访问Url，返回json串。 4.1 创建json串对应的Java对象</p>
+<p>package com.zmannotes.spring.domain;</p>
+<p>public class HomeResponse {<br>    /** 响应码 */<br>    private int code;<br>    /** 响应信息 */<br>    private String message;</p>
+<pre><code>public HomeResponse(int code, String msg) &#123;
+    this.code = code;
+    this.message = msg;
+&#125;
 
-&lt;!-- 默认加载配置文件applicationContext.xml，配置web运行的上下文 --&gt;
-&lt;listener&gt;
-    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
-&lt;/listener&gt;
+public int getCode() &#123;
+    return code;
+&#125;
 
-&lt;!-- 指定请求分发器，所有.htm结尾的请求都会统一交给DispatcherServlet进行分发 --&gt;
-&lt;servlet&gt;
-    &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;
-    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
-&lt;/servlet&gt;
-&lt;servlet-mapping&gt;
-    &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;
-    &lt;url-pattern&gt;\*.htm&lt;/url-pattern&gt;
-&lt;/servlet-mapping&gt;
-
-&lt;!-- 指定request和response编码，统一为utf-8 --&gt;
-&lt;filter&gt;
-    &lt;filter-name&gt;CharacterFilter&lt;/filter-name&gt;
-    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
-    &lt;init-param&gt;
-        &lt;param-name&gt;encoding&lt;/param-name&gt;
-        &lt;param-value&gt;utf-8&lt;/param-value&gt;
-    &lt;/init-param&gt;
-    &lt;init-param&gt;
-        &lt;param-name&gt;force&lt;/param-name&gt;
-        &lt;param-value&gt;true&lt;/param-value&gt;
-    &lt;/init-param&gt;
-&lt;/filter&gt;
-&lt;filter-mapping&gt;
-    &lt;filter-name&gt;CharacterFilter&lt;/filter-name&gt;
-    &lt;url-pattern&gt;/\*&lt;/url-pattern&gt;
-&lt;/filter-mapping&gt;</code></pre>
-</web-app>
-
-<p>4. 添加配置文件applicationContext.xml</p>
-<?xml version="1.0" encoding="UTF-8"?>
-<p><beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xsi:schemaLocation="  http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd "></p>
-<pre><code>&lt;!-- 此文件定义共享的配置信息 --&gt;
-
-&lt;!-- 加载配置文件 --&gt;
-&lt;context:property-placeholder
-        location=&quot;classpath:application.properties&quot;/&gt;</code></pre>
-</beans>
-
-<p>5. 添加配置文件dispatcher-servlet.xml</p>
-<?xml version="1.0" encoding="UTF-8"?>
-<p><beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:mvc="http://www.springframework.org/schema/mvc"
-    xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd
-        http://www.springframework.org/schema/mvc 
-        http://www.springframework.org/schema/mvc/spring-mvc.xsd"></p>
-<pre><code>&lt;!-- 扫描指定package下的Controller类 --&gt;
-&lt;context:component-scan base-package=&quot;com.zmannotes.spring.web.controller&quot; /&gt;
-
-&lt;!-- 激活spring mvc功能 --&gt;
-&lt;mvc:annotation-driven/&gt;
-
-&lt;!-- 指定web页面根路径和拓展名 --&gt;
-&lt;bean id=&quot;viewResolver&quot;
-    class=&quot;org.springframework.web.servlet.view.UrlBasedViewResolver&quot;&gt;
-    &lt;property name=&quot;viewClass&quot;
-        value=&quot;org.springframework.web.servlet.view.JstlView&quot; /&gt;
-    &lt;property name=&quot;prefix&quot; value=&quot;/view/&quot; /&gt;
-    &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot; /&gt;
-&lt;/bean&gt;</code></pre>
-</beans>
-
-<p>6 创建key-value配置文件application.properties（非必须）</p>
-<p>key1=value1</p>
-<p>7 创建HomeController.java</p>
-<p>package com.zmannotes.spring.web.controller;</p>
-<p>import org.springframework.stereotype.Controller;<br>import org.springframework.ui.Model;<br>import org.springframework.web.bind.annotation.RequestMapping;<br>import org.springframework.web.bind.annotation.RequestParam;</p>
-<p>@Controller                     // 标明此类是一个Controller<br>@RequestMapping(“/home”)        // 标明Url根路径为/home<br>public class HomeController {</p>
-<pre><code>@RequestMapping(&quot;hi&quot;)       // 标明Url子路径为hi
-public String hi(
-        @RequestParam(name = &quot;name&quot;, defaultValue = &quot;hacker&quot;) String name,
-        Model model) &#123;
+public String getMessage() &#123;
+    return message;
+&#125;</code></pre>
+<p>}</p>
+<p>4.2 创建Controller对象</p>
+<p>package com.zmannotes.spring.controller;</p>
+<p>import org.springframework.web.bind.annotation.RequestMapping;<br>import org.springframework.web.bind.annotation.RequestParam;<br>import org.springframework.web.bind.annotation.RestController;</p>
+<p>import com.zmannotes.spring.domain.HomeResponse;</p>
+<p>@RestController                 //标明此类是一个Controller<br>@RequestMapping(“/home”)        //标明Url根路径为/home<br>public class HomeController {</p>
+<pre><code>@RequestMapping(&quot;hi&quot;)       //标明Url子路径为hi
+public HomeResponse hi(
+        @RequestParam(name = &quot;name&quot;, defaultValue = &quot;hacker&quot;) String name) &#123;
 
     String msg = String.format(&quot;Welcome %s&quot;, name);
 
-    model.addAttribute(&quot;msg&quot;, msg);
+    HomeResponse response = new HomeResponse(0, msg);
 
-    // 返回名为home的页面
-    return &quot;home&quot;;
+    return response;
 &#125;</code></pre>
 <p>}</p>
-<p>8 启动Web 8.1 启动</p>
-<p>$ mvn jetty:run</p>
-<p>8.2 看到如下信息，表明启动成功</p>
-<p>…<br>[INFO] Started ServerConnector@2d64160c{HTTP/1.1,[http/1.1]}{0.0.0.0:8080}<br>[INFO] Started @12089ms<br>[INFO] Started Jetty Server</p>
-<p>8.3 访问Url: localhost:8080/home/hi.htm?name=zman <a target="_blank" rel="noopener" href="https://github.com/zman2013/spring-mvc-web">源码 GitHub</a> Q&amp;A Q：applicationContext.xml与xxx-servlet.xml的关系？ A：servlet可以有多个，每个xxx-servlet.xml配置应当只配置此servlet专有的信息。而applicationContext.xml用来配置多个servlet共享的bean等信息，且是非必须的。</p>
+<p>4.3 修改App.java</p>
+<p>package com.zmannotes.spring;</p>
+<p>import org.springframework.boot.SpringApplication;<br>import org.springframework.boot.autoconfigure.SpringBootApplication;</p>
+<p>@SpringBootApplication<br>public class App {<br>    public static void main(String[] args) {<br>        SpringApplication.run(App.class, args);<br>    }<br>}</p>
+<p>至此开发阶段完成！ <strong>5. 打包、运行</strong> 5.1 打包 <code>$ mvn clean package</code> 5.2 运行</p>
+<p>$ java -jar target/spring-basic-web-1.0-SNAPSHOT.jar</p>
+<p><strong>6. 测试</strong> 6.1 访问Url：<a target="_blank" rel="noopener" href="http://localhost:8080/home/hi?name=zman">http://localhost:8080/home/hi?name=zman</a> 6.2 返回信息如下：</p>
+<p>{<br>    code: 0,<br>    message: “Welcome zman”<br>}</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/zman2013/spring-basic-web">源码 GitHub</a> <strong>Q&amp;A</strong> Q：为什么没有用到tomcat这类的容器？ A：Spring boot已经在项目依赖中自动内嵌了tomcat，因此不需要外置的tomcat容器了。</p>
 
       
     </div>
@@ -432,7 +369,7 @@ public String hi(
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/34/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><span class="page-number current">35</span><a class="page-number" href="/page/36/">36</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/36/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/34/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><span class="page-number current">35</span><a class="page-number" href="/page/36/">36</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><a class="extend next" rel="next" href="/page/36/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

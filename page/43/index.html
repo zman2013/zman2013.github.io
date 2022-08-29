@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/10/31/wordpress/dubbo/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/10/26/wordpress/popular-rpc-framework/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/10/31/wordpress/dubbo/" class="post-title-link" itemprop="url">Dubbo</a>
+            <a href="/2015/10/26/wordpress/popular-rpc-framework/" class="post-title-link" itemprop="url">主流RPC框架</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2015-10-31 09:04:44" itemprop="dateCreated datePublished" datetime="2015-10-31T09:04:44+08:00">2015-10-31</time>
+      <time title="Created: 2015-10-27 07:00:23" itemprop="dateCreated datePublished" datetime="2015-10-27T07:00:23+08:00">2015-10-27</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2022-08-29 16:24:57" itemprop="dateModified" datetime="2022-08-29T16:24:57+08:00">2022-08-29</time>
+        <time title="Modified: 2022-08-29 16:28:47" itemprop="dateModified" datetime="2022-08-29T16:28:47+08:00">2022-08-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,123 +271,47 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>详解Dubbo设计结构和实现原理。</em></p>
-<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前已经有许多介绍Dubbo的文章，但大部分内容比较粗糙或者内容是直接从Dubbo官网复制的，也有少部分内容详实的专题系列，却有不免于流水账式分析Dubbo的源代码。于是计划写一篇关于Dubbo设计结构和实现原理的总结，寄希望帮助读者阅读Dubbo源码时可以清晰明白各个模块如此设计的原理，进而可以轻松阅读Dubbo源码。</p>
-<h3 id="设计结构"><a href="#设计结构" class="headerlink" title="设计结构"></a>设计结构</h3><p>Dubbo是一个分布式的支持服务治理功能的RPC框架，整个系统必然无法逃脱标准的<a target="_blank" rel="noopener" href="http://www.evoops.com/index.php/2015/10/22/rpc/">RPC设计结构</a>，如下图。 <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/dubbo_rpc_invoke.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/dubbo_rpc_invoke.jpg"></a> 上图即是Dubbo的基础结构，所有模块都是以此为核心扩展出来，完整的Dubbo结构如下图： <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E7%B3%BB%E7%BB%9F%E7%BB%93%E6%9E%84.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E7%B3%BB%E7%BB%9F%E7%BB%93%E6%9E%84.jpg" alt="系统结构"></a> 上图左侧为Dubbo的组成模块，右侧淡蓝色部分是使用的技术(思想)。 <strong>组成模块</strong> Remote Communication(通信层)：负责数据传输，Client发送Request，Server返回Response。 Protocol(编解码协议)：负责数据编码、解码，协议层接收到数据后，将数据编码后交给通信层，解码后交给Invoker层。 Invoker(逻辑层)：RPC的主要逻辑都在此实现，所有服务治理的接口都抽象为Invoker，组成一个Invoker链，每个完整的请求都会层层经过此链，链中每个invoker完成各自的责任。 Proxy(代理层 )：负责将Client的调用转为Invoker链的调用。 Interface Implement(实现层)：即接口的实现，也叫做业务逻辑层，是Client最终期望引用的远程逻辑。 Spring Config(配置层)：负责将Spring配置实例化为对象，使开发人员只需进行简单的spring配置就完成服务暴露、引用代理实例化，具体实现逻辑透明化。 <strong>底层技术</strong> SPI(Service Provider Interface)：字面意思是服务提供方接口，核心系统规定服务接口，所有实现遵循服务接口规定，当系统需要升级时不需要改动核心代码而是切换服务接口的实现。Dubbo就是基于此思想实现微内核+插件的设计结构，所有模块均可以自行实现和替换。 Proxy：我认为代理模式是RPC的核心模式，通过Client端的代理来调用Server端的实现。 Class Loader：类加载器。Dubbo重新实现SPI，不同模块在程序运行时按需加载到容器中，为了支持此行为，Class Loader自然而然被引入。 NIO：Dubbo数据传输层默认使用NIO框架Netty，NIO降低了服务端的线程数量，进而提高资源利用率。 Spring Schema Ext：Spring Schema扩展实现比较简单，按特定规则完成配置项的定义和解析即可，却实现了通过简单配置替代编码的目的。 <strong>SPI</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2015-10-31-%E4%B8%8A%E5%8D%887.41.58.png"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2015-10-31-%E4%B8%8A%E5%8D%887.41.58.png"></a> 如上图，基于SPI设计结构的系统一般有两部分：核心程序（主程序）与接口实现程序（插件）。 主程序负责定义SPI(即Interface)和按特定规则加载插件；插件负责实现主程序定义的SPI并按特定规则定义配置文件。 我们几乎每天都在使用标准Java SPI是JDBC定义的java.sql.Driver，用的时候只需要把目标数据库依赖的jar放入Classpath，JDBC主程序会自动找到各DB Driver，准备后续使用。 <strong><a target="_blank" rel="noopener" href="https://github.com/zman2013/java-spi-demo">SPI例子</a></strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2015-10-31-%E4%B8%8A%E5%8D%888.01.58.png"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2015-10-31-%E4%B8%8A%E5%8D%888.01.58-300x213.png"></a> 主程序</p>
-<p>　定义SPI</p>
-<p>　在主程序内部加载并调用SPI</p>
-<p>插件</p>
-<p>　为SPI提供实现逻辑</p>
-<p>　在固定位置声明自身为SPI的提供者</p>
-<p>  下面介绍一个加密程序的例子：为了达到信息安全防止被破解的目的，设计的一套加密程序并计划不定时更换加密算法，为了在不改动主程序的情况下灵活切换、新增加密算法，于是使用SPI设计结构，具体实现如下。 主程序</p>
-<p>/**<br> * 此接口为标准Java SPI，<br>   所有加密算法实现实现应当遵循此SPI。<br> */<br>public interface Encryption {</p>
-<pre><code>/\*\*
- \* 对data进行加密，然后返回加密数据。
- \* 
- \* @param data
- \*            字节数组
- \* @return 加密后的数据
- \*/
-byte\[\] encrypt(byte\[\] data);</code></pre>
-<p>}</p>
-<p>/**<br> * 加密器主程序<br> * 负责加载、调用加密算法的Provider。<br> */<br>public class EncryptorApplication {</p>
-<pre><code>public static void main(String\[\] args) &#123;
-
-    //准备加密数组
-    byte\[\] data = new byte\[\] &#123; 1, 2, 3, 4, 5, 6, 7, 8, 9 &#125;;
-
-    //加载所有加密算法
-    ServiceLoader&lt;Encryption&gt; encryptions = ServiceLoader.load(Encryption.class);
-    Iterator&lt;Encryption&gt; encryptionIter = encryptions.iterator();
-
-    if (!encryptionIter.hasNext()) &#123;
-        System.out.println(&quot;there is no provider for encryption algorithm.&quot;);
-    &#125;
-    //进行组合加密
-    while (encryptionIter.hasNext()) &#123;
-        Encryption encryption = encryptionIter.next();
-        data = encryption.encrypt(data);
-    &#125;
-    //输出加密后数据
-    for (int i = 0; i &lt; data.length; i++) &#123;
-        System.out.print(data\[i\] + &quot;,&quot;);
-    &#125;
-&#125;</code></pre>
-<p>}</p>
-<p>插件（加密算法）</p>
-<p>/**<br> * 遍历所有字节，对所有字节+1。<br> */<br>public class IncrementAlgorithm implements Encryption {</p>
-<pre><code>/\*\*
- \* 对数组中所有字节+1，返回修改后的字节数组。
- \*/
-@Override
-public byte\[\] encrypt(byte\[\] data) &#123;
-    if (null == data  data.length == 0) &#123;
-        return data;
-    &#125;
-    for (int i = 0; i &lt; data.length; i++) &#123;
-        data\[i\] = (byte) (data\[i\] + 1);
-    &#125;
-
-    return data;
-&#125;</code></pre>
-<p>}</p>
-<p>配置文件META-INF/services/tutorial.jdk.spi.Encryption<br>    tutorial.jdk.spi.ReverseAlgorithm<br>    tutorial.jdk.spi.IncrementAlgorithm</p>
-<p>为了介绍方便，这个例子将主程序与插件放在同一个project里，线上产品是将各加密算法拆分为单独的project，主程序希望调用哪个算法或者进行组合调用，就将对应的.jar放入Classpath，部署起来要方便的多。 <strong>Proxy</strong> 代理模式是每一个RPC框架的核心设计模式。 Dubbo消费者的配置如下：</p>
-<p>&lt;dubbo:reference id=”demoService” interface=”com.alibaba.dubbo.demo.DemoService” /&gt;</p>
-<p>此配置信息在消费者端生成接口DemoService的代理DemoServiceProxy，DemoServiceProxy完成了网络数据通信的具体过程，且Proxy的内部逻辑对开发人员完全透明，使用起来就像调用本地的接口一样方便。 代理模式也是每天都会用到，最多的应该是Spring的事务。Proxy的实现技术有多个：最强大的是Aspectj，还有Cglib和基于接口的JDK Proxy。 <strong><a target="_blank" rel="noopener" href="https://github.com/zman2013/java-proxy-demo">Proxy例子</a></strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/proxy%E4%BE%8B%E5%AD%90.png"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/proxy%E4%BE%8B%E5%AD%90.png"></a> 调用方</p>
-<p>public class Client {</p>
-<pre><code>public static void main(String\[\] args) &#123;
-    //通过代理工厂获取proxy
-    HelloWorld proxy = HelloWorldProxyFactory.getProxy();
-    //调用proxy代理的方法
-    proxy.sayHelloWorld();
-&#125;</code></pre>
-<p>}</p>
-<p>Proxy的回调方法</p>
-<p>/**<br> * 该类对应HelloWorld Proxy的具体调用逻辑。<br> */<br>public class HelloWorldHandler implements InvocationHandler {</p>
-<pre><code>//被代理的原始对象
-private Object obj;
-
-public HelloWorldHandler(Object obj) &#123;
-    super();
-    this.obj = obj;
-&#125;
-
-@Override
-public Object invoke(Object proxy, Method method, Object\[\] args) throws Throwable &#123;
-    Object result = null;
-    //调用sayHelloWorld方法前的动作
-    System.out.println(&quot;Firstly, open mouth!&quot;);
-    //调用sayHelloWorld方法
-    result = method.invoke(obj, args);
-    //调用sayHelloWorld方法后续动作
-    System.out.println(&quot;At last, close mouth!&quot;);
-
-    return result;
-&#125;</code></pre>
-<p>}</p>
-<p>代理工厂</p>
-<p>/**<br> * 代理工厂类<br> * 代理工厂可参考:org.springframework.aop.framework.ProxyFactory<br> */<br>public class HelloWorldProxyFactory {</p>
-<pre><code>/\*\*
- \* 获得HelloWorld的代理对象。
- \*/
-public static HelloWorld getProxy() &#123;
-    //接口的实现类
-    HelloWorld helloWorld = new HelloWorldImpl();
-
-    //proxy的调用类
-    InvocationHandler handler = new HelloWorldHandler(helloWorld);
-
-    //生成proxy
-    HelloWorld proxy = (HelloWorld) Proxy.newProxyInstance(
-            helloWorld.getClass().getClassLoader(),
-            helloWorld.getClass().getInterfaces(),
-            handler);
-
-    return proxy;
-&#125;</code></pre>
-<p>}</p>
-<p>基于Proxy如何实现RPC框架？请参考<a target="_blank" rel="noopener" href="http://www.evoops.com/index.php/2015/10/22/rpc/">《RPC》</a>。 <em>顺便说一句，Dubbo的设计思想的确很优秀，只是代码质量不堪入目，实在太差了。</em></p>
+          <p><em>介绍目前在互联网公司比较流行的开源的RPC框架。</em></p>
+<h3 id="RPC框架比较"><a href="#RPC框架比较" class="headerlink" title="RPC框架比较"></a>RPC框架比较</h3><p>语言</p>
+<p>协议</p>
+<p>​服务治理</p>
+<p>​社区</p>
+<p>机构</p>
+<p>Hessian</p>
+<p>多语言</p>
+<p>hessian</p>
+<p>-</p>
+<p>不活跃</p>
+<p>Caucho</p>
+<p>Thrift</p>
+<p>多语言</p>
+<p>thrift</p>
+<p>-</p>
+<p>活跃</p>
+<p>Apache</p>
+<p>Finagle</p>
+<p>Java/Scala</p>
+<p>多协议</p>
+<p>支持</p>
+<p>活跃</p>
+<p>Twitter</p>
+<p>TChannel</p>
+<p>多语言</p>
+<p>thrift</p>
+<p>支持</p>
+<p>活跃</p>
+<p>Uber</p>
+<p>Dubbo</p>
+<p>Java</p>
+<p>支持拓展</p>
+<p>支持</p>
+<p>停滞</p>
+<p>阿里</p>
+<h3 id="详细介绍"><a href="#详细介绍" class="headerlink" title="详细介绍"></a>详细介绍</h3><p><strong><a target="_blank" rel="noopener" href="http://hessian.caucho.com/#IntroductiontoHessian">Hassian</a></strong> Hassian被广泛用做二进制编码协议，但本身也是一个Web Service框架对RPC调用提供支持，功能简单，使用起来也方便。 有些像《<a target="_blank" rel="noopener" href="http://www.evoops.com/index.php/2015/10/22/rpc/">RPC</a>》介绍的SimpleRPCFramework，只是把编码协议从Java Serialization替换为hassian。 <strong><a target="_blank" rel="noopener" href="http://thrift.apache.org/">Thrift</a></strong> Thrift是一个跨语言的RPC框架，自带的代码生成引擎大幅提高了开发效率，从而使它如此流行。 最初由Facebook团队设计开发，现在已贡献给Apache。 Thrift基于接口描述语言定义的Model(契约)，Thrift Compiler进行解析并自动生成目标语言Client和Server端的代码框架，直接基于此框架开发服务或者与现有系统集成都可以较方便实现。 基于Thrift开发远程服务调用，后续Model的改动会导致上下游产生较大升级成本，因此服务双方应先仔细定义Model。 公司内部所有Model应由专门的系统进行统一版本管理、编译、发布。 <strong><a target="_blank" rel="noopener" href="http://twitter.github.io/finagle/">Finagle</a></strong> Finagle是一个专门为Java/Scala设计的、成熟的RPC框架。 简单、高效、支持基本服务治理功能，所有服务治理功能均在Client端集成：服务发现、负载均衡、容错、日志收集等。 使用Scala开发，国内没有听说过有团队使用此框架。 <strong><a target="_blank" rel="noopener" href="https://github.com/uber/tchannel">TChannel</a></strong> TChannel是一个支持多语言的RPC框架，主要编码协议为thrift，同时又参考Finagle基于Dapper设计自己的集群监控实现。 服务治理与Finagle不同，由类似系统总线的独立的路由系统进行服务治理，本身这种系统结构存在单点故障风险，已经被多数公司放弃。但优点显而易见，功能集中在一个系统中，对于系统维护和升级要方便得多，极大降低降低各语言终端的开发成本和框架升级引入的潜在风险。 <strong><a target="_blank" rel="noopener" href="http://dubbo.io/">Dubbo</a></strong> Dubbo是阿里巴巴开源的专门为Java设计的、成熟的RPC框架。 支持基本的服务治理，所有服务治理功能均在Client端集成：服务发现、负载均衡、容错、监控等。 采用微内核+插件体系，所有组件都可以遵循一定的规则进行替换，拥有较强的拓展性。 主流的搭配：</p>
+<p>zookeeper作服务中心</p>
+<p>thrift/dubbo作为编码协议</p>
+<p>netty作为底层通信模块</p>
+<p>Dubbo定义了自己的spring schema，与spring项目进行集成相当方便。 如果是Java系统推荐使用Dubbo，如果是多语言系统可以为Dubbo添加thrift原生协议支持（Dubbo本身不支持原生的thrift协议），通过thrift代码生成引擎支持多语言调用。</p>
 
       
     </div>
@@ -409,7 +333,7 @@ public static HelloWorld getProxy() &#123;
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/42/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><span class="page-number current">43</span><a class="page-number" href="/page/44/">44</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/44/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/42/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><span class="page-number current">43</span><a class="page-number" href="/page/44/">44</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><a class="extend next" rel="next" href="/page/44/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
