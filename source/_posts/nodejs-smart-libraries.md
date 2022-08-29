@@ -1,5 +1,5 @@
 ---
-title: smart-libraries
+title: nodejs-smart-libraries
 date: 2022-08-29 15:59:19
 tags:
 ---
