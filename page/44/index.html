@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/10/18/wordpress/devenv/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/10/21/wordpress/rpc/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/10/18/wordpress/devenv/" class="post-title-link" itemprop="url">开发环境初始化</a>
+            <a href="/2015/10/21/wordpress/rpc/" class="post-title-link" itemprop="url">RPC</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2015-10-18 08:51:27" itemprop="dateCreated datePublished" datetime="2015-10-18T08:51:27+08:00">2015-10-18</time>
+      <time title="Created: 2015-10-22 07:22:47" itemprop="dateCreated datePublished" datetime="2015-10-22T07:22:47+08:00">2015-10-22</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2022-05-21 11:47:43" itemprop="dateModified" datetime="2022-05-21T11:47:43+08:00">2022-05-21</time>
+        <time title="Modified: 2022-08-29 16:14:17" itemprop="dateModified" datetime="2022-08-29T16:14:17+08:00">2022-08-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,7 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" itemprop="url" rel="index"><span itemprop="name">开发环境</span></a>
+          <a href="/categories/RPC/" itemprop="url" rel="index"><span itemprop="name">RPC</span></a>
         </span>
     </span>
 
@@ -271,73 +271,137 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>从虚拟机安装到基础的开发环境配置完成。</em> <strong>基础开发环境：</strong> VirtualBox+Ubuntu emacs+免密码登录配置 chrome+SwithySharp JDK+STS+Git+Maven+Gradle</p>
-<h3 id="1-VirtualBox"><a href="#1-VirtualBox" class="headerlink" title="1. VirtualBox"></a><strong>1. VirtualBox</strong></h3><p>VirtualBox普通的安装就不介绍了，本段介绍下移动VirtualBox的Virtual Disk Image和手动扩大磁盘大小的方法。 <strong>移动VirtualBox存储位置</strong> 背景：默认的Virtual Disk Image 存放在 <code>C:\Users\&#123;UserName&#125;\VirtualBox VMs</code> ，随着C盘空间越来越小，需要移动Virtual Disk Image的位置。 操作步骤：</p>
+          <p>详细介绍基于RPC的系统与本地调用程序、常用的网络系统的区别，和基本的RPC系统如何实现。</p>
+<h3 id="RPC是什么"><a href="#RPC是什么" class="headerlink" title="RPC是什么"></a>RPC是什么</h3><p>RPC（Remote Procedure Call）从字面理解就是远程过程调用，即像调用本地方法一样调用网络另一端系统中的一段逻辑。我们常说的RPC指的是RPC框架，一个把网络请求、数据编码都封装好的框架或者lib库，内部逻辑对开发人员是透明的，开发人员只关心调用了一个（远程）方法，然后得到了结果。</p>
+<h3 id="RPC的好处"><a href="#RPC的好处" class="headerlink" title="RPC的好处"></a>RPC的好处</h3><p>RPC使得引用方在本地直接调用服务接口就可以完成远端逻辑的执行，省去网络请求、数据编码解码等步骤，无疑可以极大提高开发效率。同时由于所有的请求都交给框架处理，我们又可以进一步扩展框架负责的功能，比如：服务发现、容错、负载均衡、路由等，自然而然服务治理就产生了。</p>
+<h3 id="RPC介绍"><a href="#RPC介绍" class="headerlink" title="RPC介绍"></a>RPC介绍</h3><p>通过介绍简单的本地调用结构、HTTP调用结构、PRC调用结构，可以直观地理解RPC究竟是什么、做了哪些事情。 <strong>本地调用结构</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E6%9C%AC%E5%9C%B0%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%841.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E6%9C%AC%E5%9C%B0%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%841.jpg" alt="本地调用结构"></a> 本地调用结构中所有模块都在一个系统里面，Caller可以直接调用另一段代码逻辑。简单、方便、高效，但耦合度高。 <strong>HTTP API调用结构</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/HTTP-API%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/HTTP-API%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg" alt="HTTP-API调用结构"></a> 目前中小型的互联网公司均使用HTTP API方式实现系统间的调用，此结构相比本地调用，已经实现了解耦，使得开发工作更加灵活，只要保持API不变，不同功能开发互不影响。但增加了调用端和服务器端的工作量，对于每个服务：服务端要进行数据与json的双向转换（或映射）并封装为HTTP接口，调用端同样要进行数据与json的双向转换并实现http请求的调用逻辑。 <strong>RPC调用结构</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84.jpg" alt="RPC调用结构"></a> 如上图，调用方调用‘API Proxy’即完成远端服务调用过程，RPC框架隐式地完成网络通信逻辑。服务提供方也只需要实现相应的服务逻辑，使工程师将更多精力集中在业务上。 <em>‘API Proxy’是什么？</em> <em>服务接口的代理，是RPC Framework暴露出的供调用方使用的，输入输出与Implement一样（可参考代理模式）。</em> <strong>完整RPC调用过程</strong> <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/%E8%AF%A6%E7%BB%86RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%842.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/%E8%AF%A6%E7%BB%86RPC%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%842.jpg" alt="详细RPC调用结构"></a> 上图中所有蓝色块是RPC框架实现的功能模块。 在公司内部，为了实现对系统的监控、增强稳健性、扩展性，经常需要做一些额外的工作。 例如：为了统计接口的调用次数、响应时间，一般是通过日志记录；服务器地址或端口改动时，引起下游消费端进行相应配置改动；负载均衡通过各种第三方工具实现…… 由于所有服务调用均通过RPC框架，因而很容易拓展RPC框架实现服务治理功能，如下图：   <a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%861.jpg"><img src="https://www.zmannotes.com/wp-content/uploads/2015/10/RPC%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%861.jpg" alt="RPC服务治理1"></a></p>
+<h3 id="RPC-Demo"><a href="#RPC-Demo" class="headerlink" title="RPC Demo"></a>RPC Demo</h3><p>先假设RPC框架已经完成，基于RPC框架开发系统需要做那些事情呢？ 以Calculator为例，上游系统调用下游的计算系统获取结果。 <strong>1. 设计接口/契约</strong></p>
+<p>public interface Calculator {</p>
+<pre><code>/\*\*
+ \* @return a \* b
+ \*/
+int multiply(int a, int b);
+
+/\*\*
+ \* @return a / b
+ \*/
+int devide(int a, int b);</code></pre>
+<p>}</p>
+<p><strong>2. 上游系统(Caller)实现</strong></p>
+<p>public class CalculatorCaller {</p>
+<pre><code>public static void main(String\[\] args) &#123;
+    SimpleRPCFramework rpc = new SimpleRPCFramework();   //实例化RPC框架
+
+    Calculator calc = rpc.getProxy(Calculator.class);    //获得Calculator代理
+
+    for (int i = 0; i &lt; 10; i++) &#123;                       //把Calculator代理当做Calculator具体实现来调用,
+        int result = calc.multiply(i, (i + 1));          //剩下的事情RPC框架会自行处理
+        System.out.println(result);
+    &#125;
+&#125;</code></pre>
+<p>}</p>
+<p><em>（有木有很简单？就像本地调用一样简单）</em> <strong>3. 下游系统(Server)实现</strong></p>
+<p>public class CalculatorImpl implements Calculator {      //实现Calculator接口</p>
+<pre><code>@Override
+public int multiply(int a, int b) &#123;
+    return a \* b;
+&#125;
+
+@Override
+public int devide(int a, int b) &#123;
+    return a / b;
+&#125;</code></pre>
+<p>}</p>
+<p>public class CalculatorServer {</p>
+<pre><code>public static void main(String\[\] args) throws IOException &#123;
+    //实例化helloWorld
+    CalculatorImpl calculator = new CalculatorImpl();
+    //创建rpc框架实例
+    SimpleRPCFramework rpc = new SimpleRPCFramework();
+    //注册接口和对应实现
+    rpc.registerImplements(Calculator.class, calculator);     //开放更多服务，只需修改此处
+    //暴露服务接口，监听服务
+    rpc.expose();
+&#125;</code></pre>
+<p>}</p>
+<p>至此，接口设计、上下游所有开发工作完成。接下来看下神奇的RPC框架究竟如何实现~ <strong>4. Simple RPC Framework</strong> 根据上面的例子，可以发现该RPC框架有三个接口：</p>
+<p>public interface RPC {</p>
+<pre><code>/\*\*
+ \* 服务器端注册接口与相应实现。
+ \*
+ \* @param inteface
+ \* @param instance
+ \*/
+void registerImplements(Class&lt;?&gt; inteface, Object instance);
+
+/\*\*
+ \* 服务器端暴露端口，并监听调用请求
+ \*/
+void expose() throws IOException;
+
+/\*\*
+ \* 调用端获取接口的代理
+ \*/
+&lt;T&gt; T getProxy(final Class&lt;T&gt; inteface);</code></pre>
+<p>}</p>
+<p>下面看一下具体实现：</p>
+<p>/**<br> * @from zmannotes.com<br> */<br>public class SimpleRPCFramework {</p>
+<pre><code>/\*\* 存储接口与实现的对应关系 \*/
+private final Map&lt;Class&lt;?&gt;, Object&gt; implCache = new ConcurrentHashMap&lt;&gt;();
+
+/\*\* 存储接口与代理的对应关系 \*/
+private final Map&lt;Class&lt;?&gt;, Object&gt; proxyCache = new ConcurrentHashMap&lt;&gt;();
+
+public synchronized void registerImplements(Class&lt;?&gt; inteface, Object instance) &#123;
+    //检测接口是否已经存在
+    if (implCache.containsKey(inteface)) &#123;
+        throw new RuntimeException(&quot;This interface\[&quot; + inteface.getName() + &quot;\] have already been exposed.&quot;);
+    &#125; else &#123;
+        implCache.put(inteface, instance);
+    &#125;
+&#125;
+
+public void expose() throws IOException &#123;
+    //……
+&#125;
+
+public synchronized &lt;T&gt; T getProxy(final Class&lt;T&gt; inteface) &#123;
+   //……
+&#125;</code></pre>
+<p>}</p>
+<p>registerImplements没有复杂逻辑，只是检测缓存中是否已经包含目标接口，完全可以并入expose中，但为使逻辑简单，故为之。 下面是具体的服务暴露逻辑，采用基于Socket的通信方式，编码解码直接使用Java IO自带的序列化流。 原理比较简单，就是上面介绍的三个模块：</p>
 <ol>
-<li> 将原始XXX.vdi文件移动到D盘。</li>
-<li> 删除Virtual Box图形界面程序中删除旧的虚拟电脑。</li>
-<li> 新建虚拟电脑，名称必须与旧的虚拟电脑名称一样，在第3部‘虚拟硬盘’，选择‘使用已有的虚拟硬盘文件’，然后选择在第一部中移动到D盘的XXX.vdi文件即可。</li>
+<li> 服务器负责监听端口和接收/发送数据。</li>
+<li> 协议模块负责编码/解码数据。</li>
+<li> Dispatcher负责将请求分发到对应的实现逻辑。</li>
 </ol>
-<p><strong>手动扩大磁盘大小</strong> 背景：随着虚拟机内容的增多，很可能遇到最初配置的硬盘大小不够用，需要扩大硬盘大小。 操作步骤：</p>
-<ol>
-<li><p> 打开cmd</p>
-</li>
-<li><p> 进入VirtualBox安装目录 <code>cd C:\Program Files\Oracle\VirtualBox</code></p>
-</li>
-<li><p> 调整虚拟磁盘大小 <code>VBoxManage modifyhd “D:\virtual-host\dev.vdi” –-resize 10240</code> (单位M)</p>
-</li>
-<li><p>进入虚拟机，打开console，输入lsblk查看设备块信息 ，发现sda盘多了10G空间：</p>
-<p> zman@zman:/data/zman$ lsblk<br> NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT<br> sda      8:0    0  29.3G  0 disk<br> ├─sda1   8:1    0   5.5G  0 part /<br> ├─sda2   8:2    0     1K  0 part<br> └─sda5   8:5    0   2.5G  0 part [SWAP]<br> sr0     11:0    1  1024M  0 rom</p>
-</li>
-<li><p> 使用gparted分配空间，使用方式与windows下一样，安装命令<code>sudo apt-get install gparted</code></p>
-</li>
-<li><p>查看新分区sda3的UUID</p>
-<p> zman@zman:/data/zman$ sudo blkid /dev/sda3<br> /dev/sda3: LABEL=”data” UUID=”4aba2e9c-6347-4386-bdbf-b0362604222a” TYPE=”ext4”</p>
-</li>
-<li><p> 设置sda3分区自动挂载，修改配置文件/etc/fstab添加如下一行：<code>UUID=4aba2e9c-6347-4386-bdbf-b0362604222a /data ext4 defaults 0 0</code> UUID为在第6步获取得。</p>
-</li>
-<li><p> 我习惯将/home目录下的用户空间软链到/data目录下 <code>ln -s /data/zman /home</code>。</p>
-</li>
-</ol>
-<h3 id="2-Ubuntu"><a href="#2-Ubuntu" class="headerlink" title="2. Ubuntu"></a>2. Ubuntu</h3><p><strong>分区配置</strong></p>
-<p>/home/zman/apps            #常用工具安装目录<br>/home/zman/tmp             #临时文件存放目录<br>/home/zman/workspace       #开发工作空间<br>/home/lib/                 #公用库安装目录</p>
-<h3 id="3-Emacs"><a href="#3-Emacs" class="headerlink" title="3. Emacs"></a>3. Emacs</h3><p>sudo apt-get install emacs</p>
-<h3 id="4-免密码登录配置"><a href="#4-免密码登录配置" class="headerlink" title="4. 免密码登录配置"></a>4. 免密码登录配置</h3><p>1. 修改~/.ssh/config，添加目标机器信息：</p>
-<p>Host aliHost<br>  HostName 122.56.112.1<br>  User root</p>
-<p>2. 在本机生成公私钥 <code>ssh-keygen -t rsa -P &#39;&#39;</code> ：id_rsa和id_rsa.pub。 3. 将id_rsa.pub传至目标机器 <code>scp ~/.ssh/id_rsa.pub aliHost:~/tmp</code> 4. 在目标机器上，将id_rsa.pub内容添加到auththorized_keys文件中 <code>cat ~/tmp/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</code> 5. 在本机修改.bashrc，添加alias命令 <code>alias aliHost=&#39;ssh aliHost&#39;</code> 6. 在本机console中输入aliHost即可连接目标机器 <strong>**  工作中经常遇到本地机器不能直连目标机器，需经过跳板机，直连配置步骤与上面相同，但需要修改~/.ssh/config对目标机器开始代理透传</strong></p>
-<p>Host proxyHost<br>  HostName 123.123.155.155<br>  User zman<br>Host targetHost<br>  HostName 134.134.155.155<br>  User zman<br>  ProxyComand ssh proxyHost nc -w 120 %h 22</p>
-<h3 id="5-chrome-SwithySharp"><a href="#5-chrome-SwithySharp" class="headerlink" title="5. chrome+SwithySharp"></a>5. chrome+SwithySharp</h3><p>我习惯使用chrome+SwithySharp搭配，只要墙外有台机器，本地ssh连接时开始socks代理即可。 chrome可以在google.cn下载，SwithSharp可以在<a target="_blank" rel="noopener" href="http://chrome-extension-downloader.com/%E6%90%9C%E7%B4%A2%E2%80%98https://chrome.google.com/webstore/detail/proxy-switchysharp/dpplabbmogkhghncfbfdeeokoefdjegm?utm%5C_source=chrome-ntp-icon%E2%80%99%E4%B8%8B%E8%BD%BD%E3%80%82">http://chrome-extension-downloader.com/搜索‘https://chrome.google.com/webstore/detail/proxy-switchysharp/dpplabbmogkhghncfbfdeeokoefdjegm?utm\_source=chrome-ntp-icon’下载。</a></p>
-<h3 id="6-JDK"><a href="#6-JDK" class="headerlink" title="6. JDK"></a>6. JDK</h3><p>cd ~/downloads  #进入下载目录<br>wget <a target="_blank" rel="noopener" href="http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-linux-x64.tar.gz">http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-linux-x64.tar.gz</a> –no-check-certificate –no-cookies –header “Cookie: oraclelicense=accept-securebackup-cookie” #下载<br>tar zxvf jdk-8u60-linux-x64.tar.gz -C /usr/lib/jvm/ #解压<br>emacs -nw ~/.bashrc #添加如下内容</p>
-<p>#java<br>export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_60<br>export JRE_HOME=${JAVA_HOME}/jre<br>export PATH=${JAVA_HOME}/bin:$PATH</p>
-<p><strong>下载地址：<a target="_blank" rel="noopener" href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</a></strong></p>
-<h3 id="7-STS（已经转战IntelliJ了）"><a href="#7-STS（已经转战IntelliJ了）" class="headerlink" title="7. STS（已经转战IntelliJ了）"></a>7. STS（已经转战IntelliJ了）</h3><p>cd ~/downloads<br>wget <a target="_blank" rel="noopener" href="http://dist.springsource.com/release/STS/3.7.1.RELEASE/dist/e4.5/spring-tool-suite-3.7.1.RELEASE-e4.5.1-linux-gtk-x86/_64.tar.gz">http://dist.springsource.com/release/STS/3.7.1.RELEASE/dist/e4.5/spring-tool-suite-3.7.1.RELEASE-e4.5.1-linux-gtk-x86\_64.tar.gz</a><br>tar zxvf spring-tool-suite-3.7.1.RELEASE-e4.5.1-linux-gtk-x86_64.tar.gz -C ~/apps</p>
-<p>自定义配置：</p>
-<ol>
-<li> 安装主题 <a target="_blank" rel="noopener" href="http://marketplace.eclipse.org/content/eclipse-color-theme%EF%BC%8C">http://marketplace.eclipse.org/content/eclipse-color-theme，</a></li>
-<li> General -&gt; Appearance -&gt; Theme：选择Dark。</li>
-<li> General -&gt; Appearance -&gt; Color Theme：选择Solarized Dark。</li>
-<li> General -&gt; Appearance -&gt; Colors and Fonts -&gt; Text Font: 选择Courier 10。</li>
-<li> General -&gt; Keys -&gt; Scheme: Emacs</li>
-<li> General -&gt; Editors -&gt; Text Editors: 选中’Insert spaces for tabs’。</li>
-<li> General -&gt; Java -&gt; Code Style -&gt; Formatter: 使用Java Conventions，并编辑：Indentation-&gt;Tab: Space Only, Off/On Tags: 选择Enable。</li>
-<li> General -&gt; Network Connections 配置SOCKS到本地开出的SOCKS端口，我的是：Host: 127.0.0.1，Port: 1080。</li>
-</ol>
-<p>或者引入旧配置：</p>
-<p>Import -&gt; Preferences -&gt; All (选择导出的配置文件*.epf)</p>
-<p><strong>下载地址：<a target="_blank" rel="noopener" href="http://spring.io/tools/sts/all">http://spring.io/tools/sts/all</a></strong> <em>国内下载特别慢，可以先在ec2下载好，再scp到本地。</em></p>
-<h3 id="8-Git"><a href="#8-Git" class="headerlink" title="8. Git"></a>8. Git</h3><p>sudo apt-get install git</p>
-<h3 id="9-Maven"><a href="#9-Maven" class="headerlink" title="9. Maven"></a>9. Maven</h3><p>cd ~/downloads<br>wget <a target="_blank" rel="noopener" href="http://mirror.bit.edu.cn/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz">http://mirror.bit.edu.cn/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz</a><br>tar zxvf apache-maven-3.3.3-bin.tar.gz -C ~/apps<br>emacs -nw ~/.bashrc #添加如下内容：</p>
-<p>#maven<br>export PATH=/home/zman/apps/apache-maven-3.3.3/bin:$PATH</p>
-<p>添加oschina镜像：</p>
-<p>mkdir ~/.m2<br>emacs -nw ~/.m2/settings.xml 内容如下：</p>
-<p><settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0                                                                                                                                             
-                          http://maven.apache.org/xsd/settings-1.0.0.xsd"><br>      <localRepository/><br>      <interactiveMode/><br>      <usePluginRegistry/><br>      <offline/><br>      <pluginGroups/><br>      <servers/><br>      <mirrors><br>        <mirror><br>          <id>nexus-osc</id><br>          <mirrorOf>*</mirrorOf><br>          <name>Nexus osc</name><br>          <url><a target="_blank" rel="noopener" href="http://maven.oschina.net/content/groups/public/">http://maven.oschina.net/content/groups/public/</a></url><br>        </mirror><br>      </mirrors><br>      <proxies/><br>      <profiles/><br>      <activeProfiles/><br></settings></p>
-<p>配置STS： Preferences -&gt; Maven -&gt; Installations: Add Maven的安装目录。 <strong>下载地址：<a target="_blank" rel="noopener" href="https://maven.apache.org/download.cgi">https://maven.apache.org/download.cgi</a></strong></p>
-<h3 id="10-Gradle"><a href="#10-Gradle" class="headerlink" title="10. Gradle"></a>10. Gradle</h3><p>cd ~/downloads<br>wget <a target="_blank" rel="noopener" href="https://services.gradle.org/distributions/gradle-2.7-all.zip">https://services.gradle.org/distributions/gradle-2.7-all.zip</a><br>unzip gradle-2.7-all.zip -d ~/apps<br>emacs -nw ~/.bashrc 添加如下内容</p>
-<p>#gradle<br>export PATH=/home/zman/apps/gradle-2.7/bin:$PATH</p>
-<p>配置STS： Preferences -&gt; Gradle -&gt; Gradle Distribution -&gt; Folder: /data/zman/apps/gradle-2.7 Preferences -&gt; Gradle -&gt; Gradle User Home -&gt; Directory: /data/zman <strong>下载地址：<a target="_blank" rel="noopener" href="http://gradle.org/">http://gradle.org/</a></strong></p>
+<p>public void expose() throws IOException {<br>        //暴露服务端口<br>        ServerSocket server = new ServerSocket(2008);<br>        while (true) {<br>            final Socket socket = server.accept();<br>            new Thread(new Runnable() {<br>                public void run() {<br>                    try (<br>                            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());<br>                            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {<br>                        //获取请求数据 - 接收请求,并解码<br>                        Class<?> inter = (Class<?>) in.readObject();<br>                        String methodName = in.readUTF();<br>                        Class<?>\[\] parameterTypes = (Class<?>[]) in.readObject();<br>                        Object[] args = (Object[]) in.readObject();<br>                        //根据接口信息获得对应的接口实现 - Dispatcher<br>                        Object instance = implCache.get(inter);<br>                        //调用接口实现 - invoke<br>                        Method method = instance.getClass().getMethod(methodName, parameterTypes);<br>                        Object result = method.invoke(instance, args);<br>                        //返回结果 - 编码,并返回结果<br>                        out.writeObject(result);<br>                    } catch (Exception e) {<br>                        throw new RuntimeException(e);<br>                    }<br>                }<br>            }).run();<br>        }<br>    }</p>
+<p>下面是接口代理类的生成逻辑，采用JDK自带的Proxy生成机制来实现，具体流程参见‘完整RPC调用过程’。</p>
+<p>public synchronized <T> T getProxy(final Class<T> inteface) {<br>        //检测接口是否已经存在<br>        if (proxyCache.containsKey(inteface)) {<br>            return (T) proxyCache.get(inteface);<br>        }</p>
+<pre><code>    T proxy = (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+            new Class&lt;?&gt;\[\] &#123; inteface &#125;, new InvocationHandler() &#123;
+                public Object invoke(Object proxy, Method method, Object\[\] args) throws Throwable &#123;
+                    Socket socket = new Socket(InetAddress.getLocalHost(), 2008);
+                    try(
+                            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+                            ObjectInputStream input = new ObjectInputStream(socket.getInputStream())
+                            )&#123;
+                        //发送请求数据 - 编码,并发送请求
+                        output.writeObject(inteface);
+                        output.writeUTF(method.getName());
+                        output.writeObject(method.getParameterTypes());
+                        output.writeObject(args);
+                        //接收结果 - 接受数据,并解码
+                        Object result = input.readObject();
+
+                        return result;
+                    &#125;
+                &#125;
+            &#125;);
+    proxyCache.put(inteface, proxy);
+    return proxy;
+&#125;</code></pre>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2015/10/22/rpc/">总结</a></h3><p>本文对RPC的原理和模块进行较详细介绍，并与其它系统间调用方式进行对比，最后给出简单的RPC框架实现。 例子中各模块都可以进一步扩展、优化，以提高框架的运行效率、稳定性、扩展性。完整Demo代码存于Github: <a target="_blank" rel="noopener" href="https://github.com/zman2013/simple-rpc-demo">Go</a>。</p>
 
       
     </div>
@@ -359,7 +423,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/43/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><span class="page-number current">44</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/45/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/43/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><span class="page-number current">44</span><a class="page-number" href="/page/45/">45</a><a class="page-number" href="/page/46/">46</a><a class="extend next" rel="next" href="/page/45/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

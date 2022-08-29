@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/11/22/wordpress/java-jni/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/01/17/wordpress/rocketmq/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/11/22/wordpress/java-jni/" class="post-title-link" itemprop="url">Java JNI</a>
+            <a href="/2016/01/17/wordpress/rocketmq/" class="post-title-link" itemprop="url">RocketMQ，队列选型</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2015-11-22 22:39:20" itemprop="dateCreated datePublished" datetime="2015-11-22T22:39:20+08:00">2015-11-22</time>
+      <time title="Created: 2016-01-17 21:05:44" itemprop="dateCreated datePublished" datetime="2016-01-17T21:05:44+08:00">2016-01-17</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2022-05-21 11:47:43" itemprop="dateModified" datetime="2022-05-21T11:47:43+08:00">2022-05-21</time>
+        <time title="Modified: 2022-08-29 16:14:17" itemprop="dateModified" datetime="2022-08-29T16:14:17+08:00">2022-08-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,7 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+          <a href="/categories/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
         </span>
     </span>
 
@@ -271,64 +271,46 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>介绍C++调用Java JNI例子和原理</em> <strong>简单的步骤</strong></p>
+          <p><em>介绍RocketMQ和队列选型方法</em> <strong><a target="_blank" rel="noopener" href="https://github.com/alibaba/RocketMQ">RocketMQ</a></strong> RocketMQ是国内比较成功的开源消息队列，由阿里的团队贡献，不少互联网公司使用。 性能好，Broker收发速率都是万级别水平。 水平扩展很方便，Broker不够用，直接加机器。 已消费的消息可以再次消费。 不支持任何消息协议，如：AMQP,STOMP,MQTT。 开源客户端只有Java版（C版有开源，但未完成，无法使用）。 没有监控机制。 <strong>多语言支持</strong> RocketMQ只有Java客户端，C是一个未成品。 RocketMQ客户端的逻辑很重，既要从nameserver获取broker信息，又包含负载均衡逻辑，还会向broker同步offset信息。 经评估，用JNI封装一个C客户端成本更低。开发完成一定要进行长时间大数据性能测试，观察cpu、memory使用情况。 Php使用php-java-bridge做为agent来间接实现，太不舒服了。 最初选型是看上了RocketMQ已消费消息可查的特性，但目前综合来看，RocketMQ并不是一个好的选择。已消费消息可查是否有必要作为mq的特性呢？ <strong>主从切换</strong> 主从切换主要是对于有序消费有用。 具体实现步骤：(涉及nameserver与broker逻辑改动）</p>
 <ol>
-<li> 完成普通的Java类，没有限制，没有规则。如果已经有了现成的类，就直接拿来用吧。</li>
-<li> 编译Java代码，没有限制，没有规则。</li>
-<li> 开发C++代码: 初始化JVM，通过Java JNI Functions调用Java逻辑。</li>
-<li> 编译、运行C++ 应用。</li>
+<li> Master与Slave断开连接后，Slave会在时间窗口(30s)内尝试与Master重连，超时后，Slave向NameServer申请升级为Master。</li>
+<li> 如果此时NameServer也与Master没有连接，则授权Slave升级为Master。</li>
+<li> Slave收到确认信息后，停止申请请求。停止ReputMessageService，启动ScheduleMessageService。</li>
+<li> Slave修改自身brokerId为0，修改自身标志位ASYNC_SLAVE。</li>
+<li> Slave向NameServer注册为Master。</li>
+<li> NameServer新增逻辑支持每个BrokerName有且仅有一个Master(保证old Master不能重新注册)。</li>
 </ol>
-<p><strong>例子（<a target="_blank" rel="noopener" href="https://github.com/zman2013/java-jni-demo.git">源码</a>）</strong> <strong>1.</strong> 一个简单的Java类</p>
-<p>package zman.demo.jni.cpp.invoke.java;</p>
-<p>public class CppInvokeJava{<br>    //求和计算<br>    public int sum(int a, int b, int c) {<br>        return a + b + c;<br>    }</p>
-<p>}</p>
-<p><strong>2.</strong> 编译一下</p>
-<p>zman@zman:find . -name “*.java”  xargs javac -d build</p>
-<p>-d build: 指定class输出路径。</p>
-<p><strong>3.</strong> 完成C++代码 <strong>3.1</strong> 声明一个类CppInvokeJava，文件名：cppinvokejava.h</p>
-<p>#ifndef __CPP_INVOKE_JAVA_H__<br>#define __CPP_INVOKE_JAVA_H__</p>
-<p>#include &lt;jni.h&gt;</p>
-<p>class CppInvokeJava<br>{<br>public:<br>  //init nested jvm, and init java instance.<br>  CppInvokeJava();<br>  //destroy jvm<br>  ~CppInvokeJava();<br>  //normal method<br>  int Sum(int a, int b, int c);</p>
-<p>private:<br>  JavaVM *m_jvm;<br>  JNIEnv *m_env;<br>  //the java class of CppInvokeJava<br>  jclass m_cppinvokejava_class;<br>  //the java instace of the class CppInvokeJava<br>  jobject m_cppinvokejava;<br>  //the java method id of the java sum method which will be invoked by the above ‘sum’ method.<br>  jmethodID m_sum_method;<br>};</p>
-<p>#endif</p>
-<p><strong>3.2</strong> 完成相应的实现逻辑，文件名：cppinvokejava.cpp</p>
-<p>#include &lt;jni.h&gt;<br>#include &lt;string.h&gt;<br>#include “cppinvokejava.h”</p>
-<p>CppInvokeJava::CppInvokeJava()<br>{<br>  //1. prepare jvm args<br>  JavaVMInitArgs vm_args;<br>  vm_args.version = JNI_VERSION_1_8;</p>
-<p>  JavaVMOption options[1];<br>  options[0].optionString = “-Djava.class.path=build”;<br>  vm_args.nOptions = 1;<br>  vm_args.options = options;</p>
-<p>  //2. create jvm<br>  long jvmStatus = JNI_CreateJavaVM(&amp;m_jvm, (void **)&amp;m_env, &amp;vm_args);<br>  if( jvmStatus == JNI_ERR ){<br>    printf(“Creating JVM failed.\n”);<br>  }</p>
-<p>  printf(“Created JVM successfully.\n”);</p>
-<p>  //3. find the CppInvokeJava class<br>  m_cppinvokejava_class = m_env-&gt;FindClass(“zman/demo/jni/cpp/invoke/java/CppInvokeJava”);<br>  if( m_cppinvokejava_class == 0 ){<br>    printf(“Not found class CppInvokeJava.\n”);<br>  }<br>  //4. get the constructor method id<br>  jmethodID cppinvokejava_constructor = m_env-&gt;GetMethodID(m_cppinvokejava_class, “<init>“, “()V”);<br>  if( cppinvokejava_constructor == 0 ){<br>    printf(“Not found CppInvokeJava’s constructor.\n”);<br>  }<br>  //5. create CppInvokeJava instance<br>  m_cppinvokejava = m_env-&gt;NewObject(m_cppinvokejava_class, cppinvokejava_constructor);<br>  if( m_cppinvokejava == 0 ){<br>    printf(“Creating CppInvokeJava instance failed.\n”);<br>  }</p>
-<p>  //6. find the sum method id<br>  m_sum_method = m_env-&gt;GetMethodID(m_cppinvokejava_class, “sum”, “(III)I”);<br>  if( m_sum_method == 0 ){<br>    printf(“Not found sum method.\n”);<br>  }</p>
-<p>}</p>
-<p>CppInvokeJava::~CppInvokeJava()<br>{<br>  m_jvm-&gt;DestroyJavaVM();<br>}</p>
-<p>int CppInvokeJava::Sum(int a, int b, int c)<br>{<br>  return m_env-&gt;CallIntMethod(m_cppinvokejava, m_sum_method, a, b, c);<br>}</p>
-<p>int main()<br>{<br>  CppInvokeJava cppInvokeJava;<br>  int sum = cppInvokeJava.Sum(1, 2, 3);<br>  printf(“The sum is: %d.\n”, sum);<br>}</p>
+<p><strong>队列选型</strong> 队列选型可以从以下几个指标出发：</p>
 <ol>
-<li> 准备虚拟机参数</li>
-<li> 创建虚拟机</li>
-<li> 调用JNI FindClass方法找到CppInvokeJava class</li>
-<li> 调用JNI GetMethodID方法找到CppInvokeJava的构造方法</li>
-<li> 调用JNI NewObject方法创建CppInvokeJava对象</li>
-<li> 调用JNI GetMethodID方法找到CppInvokeJava的sum方法</li>
+<li> 支持什么语言？</li>
+<li> 是否有监控？</li>
+<li> HA如何？</li>
+<li> 是否支持持久化？</li>
+<li> 是否支持有序消费？</li>
+<li> 是否支持延迟消息？</li>
+<li> 开发团队是否可以理解并修改源码？</li>
+<li> 社区是否活跃，响应是否迅速？</li>
+<li> 性能</li>
 </ol>
-<p><strong>4.</strong> 编译、运行 <strong>4.1</strong> 编译</p>
-<p>//Linux 版<br>zman@zman:g++ -o cppinvokejava src/main/java/zman/demo/jni/cpp/invoke/java/cppinvokejava.cpp -I ${JAVA_HOME}/include/ -I ${JAVA_HOME}/include/linux/ -L ${JAVA_HOME}/jre/lib/amd64/server/ -ljvm</p>
-<p>//Mac 版<br>$ g++ -o cppinvokejava src/main/java/zman/demo/jni/cpp/invoke/java/cppinvokejava.cpp -I ${JAVA_HOME}/include/ -I ${JAVA_HOME}/include/darwin/ -L ${JAVA_HOME}/jre/lib/server/ -ljvm<br>//JDK&gt;1.6时，Mac运行JNI会提示需要安装JDK6，可以通过一下命令解决。<br>$ sudo mkdir /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/<br>$ sudo mkdir /System/Library/Java/Support/Deploy.bundle/</p>
-<p>编译cppinvokejava.cpp，输出到cppinvokejava。</p>
-<p>-I：指定头文件的位置（jni.h等）</p>
-<p>-L：指定动态链接库的位置（libjvm.so）</p>
-<p>-l：指定动态链接库名称（jvm）</p>
-<p><strong>4.2</strong> 指定动态链接库环境变量</p>
-<p>zman@zman:export LD_LIBRARY_PATH=${JAVA_HOME}/jre/lib/amd64/server/</p>
-<p><strong>4.3</strong> 运行</p>
-<p>zman@zman:java-jni-demo$ ./cppinvokejava<br>Created JVM successfully.<br>The sum is: 6.<br>zman@zman:java-jni-demo$</p>
-<p><strong>原理</strong> 正如我们一直了解的，java的字节码是在JVM中加载执行的。C++调用java，事实上是启动一个JVM，java的字节码依然是运行在JVM中，C++通过Java JNI提供的方法与JVM进行通信，达到调用java逻辑的目的。 注意 <strong>*</strong> 对于java对象，C++代码获得的都是引用，C++需要通过JNI Function调用对象提供的方法实现对象的修改。 <strong>*</strong> C++不能直接获得java String字符串，需要通过GetStringUTFRegion将字符串内容复制到C++的空间中；也可以通过SetStringUTFRegion将C++中的字符串赋值给java String对象。 <strong>*</strong> 数组操作与String操作基本相同。 <strong>*</strong> C++中的局部变量如果是java对象的引用，C++方法运行结束时，局部变量自动释放，而相应java对象由JVM自动回收。（如果C++使用完java对象，后续有比较耗时的逻辑，可以调用JNI Function主动释放java对象的引用，不必等到方法结束） <strong>调试</strong> 1. 调试Java程序 设置JVM参数如下，然后在IDE中启动Remote Debug模式:</p>
-<p>JavaVMOption options[2];<br>options[0].optionString = “-Djava.class.path=build”;<br>//添加debug参数<br>options[1].optionString = “-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y”;<br>vm_args.nOptions = 2;<br>vm_args.options = options;</p>
-<p>2. 调试C++程序</p>
-<p>zman@zman: gdb ./cppinvokejava     //调试程序<br>(gdb) r        //启动<br>(gdb) c        //继续执行<br>(gdb&gt; info s   //查看stack信息</p>
-<p><strong>内存泄露</strong> 1. 创建字符串引起内存泄露 实际开发中，在本地方法里，创建字符串并获得本地引用（LocalReference），此本地引用不会返回到上层函数，依然会引起引起内存泄露。 这一现象和JNI Guide and Specification第五章“Local and Global References”描述的机制不一样。 <em>Local and global references have different lifetimes. Local references are</em> <em>automatically freed, whereas global and weak global references remain valid</em> <em>until they are freed by the programmer.</em> <em>It is acceptable to leave up to 16 local references in use for the virtual machine</em> <em>to delete after the native method returns.</em> 推荐：无论何时字符串对象不会再被引用，就手工释放引用。</p>
-<p>void createString()<br>{<br>    jstring localRef = env-&gt;NewStringUTF(“some content”);<br>    …<br>    env-&gt;DeleteLocalRef( localRef );<br>    …<br>}</p>
-<p><strong><a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2015/11/22/java-jni/">LINK</a></strong> 1. <a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/jniTOC.html">JNI Guide from Oracle</a> 2. <a target="_blank" rel="noopener" href="http://www.ibm.com/developerworks/java/tutorials/j-jni/j-jni.html">Java programming with JNI</a> 3. <a target="_blank" rel="noopener" href="http://www.e-booksdirectory.com/details.php?ebook=325">JNI Guide and Specification</a></p>
+<p><strong>Q：</strong>支持什么语言的客户端？ <strong>A：</strong>我觉得这是最优先考虑的，如果没有你期望的语言，可以直接放弃。因为开发一个新语言版本，首先要求对client与broker的通信协议有清楚的了解，另外从编码完成到成熟稳定一般是一个长期过程。（其实也可以通过jni或者agent来间接封装client，事实我们就是这么做的，但终究失去了美感）</p>
+<p>RocketMQ只有Java版本。</p>
+<p>ActiveMQ和RabbitMQ支持所有主流变成语言，由于都支持AMQP、STOMP，于是基本覆盖了全部语言。</p>
+<p><strong>Q：</strong>是否有监控？ <strong>A：</strong>没监控的直接pass，否则mq响应慢，甚至挂了都不知道。直观了解各queue的状态信息也能为业务优化带来很大便利。</p>
+<p>RabbitMQ监控平台最友好，ActiveMQ次之，RocketMQ的第三方监控平台可以用。</p>
+<p><strong>Q：</strong>高可用性？是否支持failover？failover过程中是否会丢消息？ <strong>A：</strong>高可用性差，MQ就会变成系统的单点，进而引起上下游系统的容错性、稳定性问题。</p>
+<p>RabbitMQ集群化最方便，而且能动态配置，集群中所有节点拥有相同的元数据。所有client都与master进行通信，master将update同步给所有slave。slave过多会占用较多网络带宽。(<a target="_blank" rel="noopener" href="http://www.rabbitmq.com/ha.html">LINK</a>)</p>
+<p>ActiveMQ有三种集群化方式，共享文件系统、数据库方式、备份方式。备份方式不支持延迟消息。主从切换过程中非持久化消息会丢失。(<a target="_blank" rel="noopener" href="http://activemq.apache.org/masterslave.html">LINK</a>)</p>
+<p>RocketMQ可以配置多Master，且每个Master可以配置一个Slave。如果一个Master挂掉，此Master对应Slave不会自动升级为Master但会继续提供读服务，写只能向其他Master写。</p>
+<p>以上三种在failover过程中，都可能出现重复消息。</p>
+<p><strong>Q：</strong>持久化、有序性、延迟消息？ <strong>A：</strong>Rabbit、Active、RocketMQ都支持消息持久化和有序消费。RabbitMQ不支持延迟消息，Active和RocketMQ支持延迟消息。 <strong>Q：</strong>自己的开发团队能够掌握源码并进行功能开发？社区活跃度？ <strong>A：</strong>这个比较关键，随时都可能遇到一个罕见的bug或者业务需要定制的功能，如果开发团队不能hold住，那就真没办法了。</p>
+<p>ActiveMQ和RabbitMQ社区很活跃，问题也能及时得到响应，RabbitMQ用Erlang开发的。RocketMQ没有社区。。</p>
+<p><strong>Q：</strong>单机broker性能？ <strong>A：</strong>RocketMQ &gt; RabbitMQ &gt; ActiveMQ。对于一般业务，性能不会是瓶颈，也不是选型的核心指标，没必要花费较多时间在上面。单机4000、5000的qps，足够了，不够建集群。 <strong>Q：</strong>有没有MQ可以避免消息重复？ <strong>A：</strong>N/A，消费端做好幂等吧~ <strong>踩过的坑</strong> <strong>1.</strong> 低版本的ActiveMQ存在hang住情况，broker拒绝接受producer的消息，consumer接受不到任何消息。</p>
+<p>由非持久化消息的临时存储文件泄露导致无法自动删除引起。</p>
+<p>5.9.0以后的版本已经修复了这bug。</p>
+<p><strong>2.</strong> RabbitMQ消息堆积，超出内存限制引起数据写入硬盘会导致producer生产、consumer消费极慢。</p>
+<p>从硬盘读取消息，然后在五个内部队列间切换消息状态，导致消息消费极慢，进而流控消息写入的速度。</p>
+<p>只要消息堆积过多，引起写入硬盘就有此问题。</p>
+<p>  <em>RocketMQ的代码跟他妈狗屎一样。</em></p>
 
       
     </div>
@@ -350,7 +332,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/38/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><span class="page-number current">39</span><a class="page-number" href="/page/40/">40</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/40/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/38/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><span class="page-number current">39</span><a class="page-number" href="/page/40/">40</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><a class="extend next" rel="next" href="/page/40/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
