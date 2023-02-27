@@ -11,7 +11,8 @@ date: 2017-09-24 22:24:16
 ```shell
 docker pull gcr.io/google_containers/pause-amd64 
 docker commit -m \'message\' 
-docker push docker images 
+docker push 
+docker images 
 docker rmi imageId 
 docker run -i -t ubuntu /bin/bash 
 docker run --name demo -d ubuntu 
@@ -34,4 +35,5 @@ docker run -d -p 27017-27019:27017-27019 --name mongodb mongo
 docker exec -it mongodb bash
 ```
 
-
+# Links
+https://docs.docker.com/engine/reference/commandline/docker/
