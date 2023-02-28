@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">46</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/12/11/zipkin-elasticsearch-customize-index-mapping/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/12/11/elasticsearch-command/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/11/zipkin-elasticsearch-customize-index-mapping/" class="post-title-link" itemprop="url">zipkin elasticsearch customize index mapping</a>
+            <a href="/2021/12/11/elasticsearch-command/" class="post-title-link" itemprop="url">elasticsearch command</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2021-12-11 14:39:59" itemprop="dateCreated datePublished" datetime="2021-12-11T14:39:59+08:00">2021-12-11</time>
+      <time title="Created: 2021-12-11 14:54:06" itemprop="dateCreated datePublished" datetime="2021-12-11T14:54:06+08:00">2021-12-11</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2023-02-28 13:40:57" itemprop="dateModified" datetime="2023-02-28T13:40:57+08:00">2023-02-28</time>
+        <time title="Modified: 2023-02-28 13:51:55" itemprop="dateModified" datetime="2023-02-28T13:51:55+08:00">2023-02-28</time>
       </span>
 
   
@@ -262,20 +262,47 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>zipkin 默认不对 tags 进行 mapping，这样无法在 kibana 中对 tags.xx 进行检索和建立图标</p>
-<h1 id="下载-zipkin-源码"><a href="#下载-zipkin-源码" class="headerlink" title="下载 zipkin 源码"></a>下载 zipkin 源码</h1><p><code>git clone https://github.com/openzipkin/zipkin.git</code></p>
-<h1 id="修改-zipkin-源码"><a href="#修改-zipkin-源码" class="headerlink" title="修改 zipkin 源码"></a>修改 zipkin 源码</h1><p>修改 <a target="_blank" rel="noopener" href="https://github.com/openzipkin/zipkin/blob/e89c86a3e930df4a3a77f4b1d060ed11579bdaf4/zipkin-storage/elasticsearch/src/main/java/zipkin2/elasticsearch/VersionSpecificTemplates.java#L114">VersionSpecificTemplates.spanIndexTemplate</a><br>在 mappings -&gt; properties 添加如下代码:</p>
-<pre class="language-java" data-language="java"><code class="language-java">+ &quot;      \&quot;tags.messaging.message_id\&quot;: &quot; + KEYWORD + &quot;,\n&quot;
-+ &quot;      \&quot;tags.source.uri\&quot;: &quot; + KEYWORD + &quot;,\n&quot;
-+ &quot;      \&quot;tags.messaging.destination\&quot;: &quot; + KEYWORD + &quot;,\n&quot;</code></pre>
+          <h1 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h1><ol>
+<li><p>创建索引<br>创建名为<code>xxx-span-2021-12-11</code>的索引</p>
+<pre class="language-none"><code class="language-none">PUT &#x2F;xxx-span-2021-12-11
+&#123;
+  &quot;mappings&quot;: &#123;
+      &quot;properties&quot;: &#123;
+        &quot;tags.source.uri&quot;: &#123;
+          &quot;type&quot;:       &quot;keyword&quot;
+        &#125;
+      &#125;
+  &#125;
+&#125;</code></pre>
+</li>
+<li><p>查看索引和映射<br>有了映射才能在 Kibana 中做查询和图标</p>
+<pre class="language-none"><code class="language-none">GET &#x2F;xxx-span-2021-12-11
+GET &#x2F;xxx-span-2021-12-11&#x2F;_mapping</code></pre>
+</li>
+<li><p>删除索引</p>
+<pre class="language-none"><code class="language-none">DELETE &#x2F;index_*</code></pre>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/_deleting_an_index.html">LINK</a></p>
+</li>
+<li><p>模板操作</p>
+<pre class="language-none"><code class="language-none">GET _template&#x2F;xxx-span_template
+DELETE _template&#x2F;xxx-span_template</code></pre>
+</li>
+<li><p>查询</p>
+<pre class="language-none"><code class="language-none">GET &#x2F;xxx-span-2021-12-11&#x2F;_search
+&#123;
+  &quot;query&quot;: &#123;
+    &quot;match&quot;: &#123;
+      &quot;traceId&quot;: &#123;
+        &quot;query&quot;: &quot;bf2a201e835028ecae23c324e85b9855&quot;
+      &#125;
+    &#125;
+  &#125;
+&#125;</code></pre>
 
-<h1 id="编译-zipkin-server"><a href="#编译-zipkin-server" class="headerlink" title="编译 zipkin server"></a>编译 zipkin server</h1><pre class="language-shell" data-language="shell"><code class="language-shell"># Build the server and also make its dependencies
-$ .&#x2F;mvnw -q --batch-mode -DskipTests --also-make -pl zipkin-server clean install
-# Run the server
-$ java -jar .&#x2F;zipkin-server&#x2F;target&#x2F;zipkin-server-*exec.jar</code></pre>
+</li>
+</ol>
+<h1 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h1><p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/cn/kibana/current/tutorial-visualizing.html">Kibana 可视化</a></p>
 
-<h1 id="停止-zipkin-服务"><a href="#停止-zipkin-服务" class="headerlink" title="停止 zipkin 服务"></a>停止 zipkin 服务</h1><h1 id="删除-ES-中已保存的-Template"><a href="#删除-ES-中已保存的-Template" class="headerlink" title="删除 ES 中已保存的 Template"></a>删除 ES 中已保存的 Template</h1><p><code>DELETE _template/&#123;your prefix&#125;-span_template</code></p>
-<h1 id="启动-zipkin-服务"><a href="#启动-zipkin-服务" class="headerlink" title="启动 zipkin 服务"></a>启动 zipkin 服务</h1>
       
     </div>
 
@@ -296,7 +323,7 @@ $ java -jar .&#x2F;zipkin-server&#x2F;target&#x2F;zipkin-server-*exec.jar</code>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

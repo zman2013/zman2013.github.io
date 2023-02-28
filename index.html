@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">46</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2022/08/29/nodejs-smart-libraries/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2023/02/28/oh-my-zsh/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/08/29/nodejs-smart-libraries/" class="post-title-link" itemprop="url">nodejs-smart-libraries</a>
+            <a href="/2023/02/28/oh-my-zsh/" class="post-title-link" itemprop="url">oh-my-zsh</a>
         </h2>
 
         <div class="post-meta-container">
@@ -241,16 +241,10 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
+      
 
-      <time title="Created: 2022-08-29 15:59:19" itemprop="dateCreated datePublished" datetime="2022-08-29T15:59:19+08:00">2022-08-29</time>
+      <time title="Created: 2023-02-28 13:50:35 / Modified: 13:51:55" itemprop="dateCreated datePublished" datetime="2023-02-28T13:50:35+08:00">2023-02-28</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2023-02-28 13:40:57" itemprop="dateModified" datetime="2023-02-28T13:40:57+08:00">2023-02-28</time>
-      </span>
 
   
 </div>
@@ -262,57 +256,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="stmux"><a href="#stmux" class="headerlink" title="stmux"></a>stmux</h1><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/stmux">https://www.npmjs.com/package/stmux</a></p>
-<p>Simple Terminal Multiplexing for Node Environments</p>
-<p>This utility is primarily intended to be used from within a package.json script to easily side-by-side run various NPM-based commands in a Node.js build-time environment.</p>
-<h1 id="blessed、blessed-contrib"><a href="#blessed、blessed-contrib" class="headerlink" title="blessed、blessed-contrib"></a>blessed、blessed-contrib</h1><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/blessed">https://www.npmjs.com/package/blessed</a><br><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/blessed-contrib">https://www.npmjs.com/package/blessed-contrib</a></p>
-<p>A <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Curses_(programming_library)">curses-like</a> library with a high level terminal interface API for node.js.</p>
-<h1 id="shimmer"><a href="#shimmer" class="headerlink" title="shimmer"></a>shimmer</h1><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/shimmer">https://www.npmjs.com/package/shimmer</a></p>
-<p>shimmer does a bunch of the work necessary to wrap other methods in a wrapper you provide.</p>
-<h1 id="v8-profiler-next"><a href="#v8-profiler-next" class="headerlink" title="v8-profiler-next"></a>v8-profiler-next</h1><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/v8-profiler-next">https://www.npmjs.com/package/v8-profiler-next</a></p>
-<p>v8-profiler-next provides node bindings for the v8 profiler.</p>
-<h1 id="heapdump"><a href="#heapdump" class="headerlink" title="heapdump"></a>heapdump</h1><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/heapdump">https://www.npmjs.com/package/heapdump</a></p>
-<p>Make a dump of the V8 heap for later inspection.</p>
-<h1 id="yargs"><a href="#yargs" class="headerlink" title="yargs"></a>yargs</h1><p><a target="_blank" rel="noopener" href="https://github.com/yargs/yargs">https://github.com/yargs/yargs</a></p>
-<p>Yargs helps you build interactive command line tools, by parsing arguments and generating an elegant user interface.</p>
-<pre class="language-typescript" data-language="typescript"><code class="language-typescript"># tsnd src&#x2F;index.ts add --title &#39;title-A&#39; --body &#39;body-A&#39; 
+          <h1 id="极简的主题"><a href="#极简的主题" class="headerlink" title="极简的主题"></a>极简的主题</h1><pre class="language-none"><code class="language-none">PROMPT&#x3D;&quot;%(?:%&#123;$fg_bold[green]%&#125;➜ :%&#123;$fg_bold[red]%&#125;➜ )&quot;
+RPROMPT&#x3D;&#39;%&#123;$fg[cyan]%&#125;%c%&#123;$reset_color%&#125;  $(git_prompt_info)&#39;
 
-import yargs, &#123; Arguments, Argv, CommandModule &#125; from &#39;yargs&#39;
-import &#123; hideBin &#125; from &quot;yargs&#x2F;helpers&quot;;
-
-
-console.log(process.argv)
-
-type PrepareArgs &#x3D; &#123; title: string, body: string &#125;
-class ABC implements CommandModule&lt;&#123;&#125;, PrepareArgs&gt;&#123;
-    constructor(
-      public command &#x3D; &quot;add&quot;, 
-      public describe &#x3D; &quot;Add a new note&quot;)&#123;
-    &#125;
-    builder(argv: Argv&lt;&#123;&#125;&gt;): Argv&lt;PrepareArgs&gt;&#123;
-        return argv
-      .option(&quot;title&quot;, &#123;
-        desc: &quot;name prefix&quot;,
-        type: &quot;string&quot;,
-        demandOption: true,
-      &#125;)
-      .option(&quot;body&quot;, &#123;
-        desc: &quot;directory containing video files&quot;,
-        type: &quot;string&quot;,
-        demandOption: true,
-      &#125;);
-    &#125;
-    async handler(args: Arguments&lt;PrepareArgs&gt;)&#123;
-        console.log(args.title, args.body)
-    &#125;
-&#125;    
-
-&#x2F;&#x2F; Create add command 
-yargs(hideBin(process.argv))    &#x2F;&#x2F; 删除 process.argv 包含的头两个字段: &#x2F;bin&#x2F;node, filePath
-    .scriptName(&quot;yargs-test&quot;)
-    .command(new ABC() as any)
-    .command(new XXX() as any)  &#x2F;&#x2F; XXX is another command
-    .parseAsync();</code></pre>
+ZSH_THEME_GIT_PROMPT_PREFIX&#x3D;&quot;%&#123;$fg_bold[blue]%&#125;git:(%&#123;$fg[red]%&#125;&quot;
+ZSH_THEME_GIT_PROMPT_SUFFIX&#x3D;&quot;%&#123;$reset_color%&#125; &quot;
+ZSH_THEME_GIT_PROMPT_DIRTY&#x3D;&quot;%&#123;$fg[blue]%&#125;) %&#123;$fg[yellow]%&#125;✗&quot;
+ZSH_THEME_GIT_PROMPT_CLEAN&#x3D;&quot;%&#123;$fg[blue]%&#125;)&quot;</code></pre>
       
     </div>
 
@@ -333,7 +283,7 @@ yargs(hideBin(process.argv))    &#x2F;&#x2F; 删除 process.argv 包含的头两
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

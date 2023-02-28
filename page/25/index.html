@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">46</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/09/25/wordpress/system-performance-optimize/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2017/09/24/wordpress/container-tech/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/09/25/wordpress/system-performance-optimize/" class="post-title-link" itemprop="url">系统性能优化</a>
+            <a href="/2017/09/24/wordpress/container-tech/" class="post-title-link" itemprop="url">容器技术</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2016-09-25 11:09:43" itemprop="dateCreated datePublished" datetime="2016-09-25T11:09:43+08:00">2016-09-25</time>
+      <time title="Created: 2017-09-24 10:49:42" itemprop="dateCreated datePublished" datetime="2017-09-24T10:49:42+08:00">2017-09-24</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2023-02-28 13:40:57" itemprop="dateModified" datetime="2023-02-28T13:40:57+08:00">2023-02-28</time>
+        <time title="Modified: 2023-02-28 13:51:55" itemprop="dateModified" datetime="2023-02-28T13:51:55+08:00">2023-02-28</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,7 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/performance-optimize/" itemprop="url" rel="index"><span itemprop="name">performance_optimize</span></a>
+          <a href="/categories/container/" itemprop="url" rel="index"><span itemprop="name">container</span></a>
         </span>
     </span>
 
@@ -271,60 +271,78 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>在并发量一定的情况下如何对系统响应时间进行详细分析</em> <strong>1. 分析步骤</strong> 1.1 在关键点位添加日志信息 -&gt; 缩小目标范围</p>
-<p>a) 主要函数耗时</p>
-<p>b) 访问外部系统耗时：DB、MQ、Cache、FileSystem、RPC、HTTP等</p>
-<p>c) 接口内不同逻辑耗时百分比/绝对值</p>
-<p>1.2 详细分析瓶颈出现原因</p>
-<p>a) 技术层面：优先考虑</p>
-<p>b) 业务逻辑：业务逻辑改造一般影响较大、耗时较长，优先级低</p>
-<p>1.3 针对性解决问题</p>
-<p>一旦定位了问题原因，解决问题的方法都相当容易</p>
-<p><strong>2. 技术层面</strong> 2.1 代码实现</p>
-<p>a) 串行逻辑是否可以并行化</p>
-<p>b) 串行请求是否可以批量(batch)请求</p>
-<p>c) SQL是否需要优化</p>
-<p>d) 算法复杂度是否需要优化</p>
-<p>e) 语言核心库是否提供了性能更高的使用方式</p>
-<p>f) 引用的第三方库是否存在性能问题</p>
-<p>g) 每次外部请求是否都重新建立连接</p>
-<p>2.2 内核/硬件层面</p>
-<p>a) CPU使用率</p>
-<p>b) 内存使用率</p>
-<p>c) 磁盘IO状况</p>
-<p>d) 网络状况</p>
-<p>d) 瓶颈是否由调用的内核函数引起？</p>
-<p>该函数是如何工作的；新版本内核是否已经对此优化；如何调整使用方式可以更高效</p>
-<p>2.3 日志</p>
-<p>线程会争夺日志锁，在高并发情况下，同步写日志很影响性能。异步写又可能引起OOM。</p>
-<p>*2.4 垃圾回收</p>
-<p>拥有垃圾回收机制的语言，需要关注垃圾回收的情况如何。例如：jvm的gc状况。</p>
-<p><strong>3. 业务逻辑</strong></p>
-<p>随着业务的增长，接口负担的功能原来越复杂，逻辑链路越来越长，事务越来越大，性能越来越差，越来越没办法维护。（如果有人负责把控、从相对长远些的角度设计系统的迭代，这种情况本是可以避免的）</p>
-<p>优化办法只有一个就是：保留主链路，旁支链路异步化。</p>
-<p><strong>4. 常用工具</strong> 4.1 内核</p>
-<p>a) CPU: top、vmstat</p>
-<p>b) MEM: top、free</p>
-<p>c) disk IO: iostat</p>
-<p>例: iostat -kx 1 //每秒统计一次io</p>
-<p>iotop -o //查看磁盘使用率较高的进程</p>
-<p>d) 网络</p>
-<p>流量：sar -n DEV 1 3 //每秒统计一次所有网卡流量，共3次</p>
-<p>网络抓包: tmpdump，可配合tmptrace、wireshark分析</p>
-<p>TCP连接状况：netstat -an grep TIME_WAIT //client端近期关闭tcp连接数量</p>
-<p>e) 查看/proc/xxx中的系统详细信息</p>
-<p>4.2 java</p>
-<p>a) gc: jstat -gcutil pid 1s</p>
-<p>b) 性能分析工具: jprofiler</p>
-<p><strong>5. 小知识</strong></p>
-<p>a) 网络抖动引起tcp重传，一般内部系统之间的调用，linux设置的重传时间间隔为至少200ms以上。</p>
-<p>b) 服务之间通过网络调用，网络开销在500us ~ 2ms</p>
-<p>c) 机械磁盘寻址: 20ms</p>
-<p>d) 磁盘的某page中如果存在数据，程序写此page时如果不会填充整个page，内核会先载入整个page，再输出整个page，保证磁盘数据不丢。这会导致一次被动读磁盘，性能损耗会很大。否则会直接写入磁盘高速缓存，间隔固定时间刷盘一次(5s)。</p>
-<p>e) java遍历map使用map.entrys</p>
-<p>f) java字符串拼接使用stringbuilder</p>
-<p>g) 日志使用log4j2异步</p>
-<p><strong>*</strong> 随着系统并发量的增加，系统响应时间会逐步下降甚至雪崩，一般是由多线程之间、模块之间、子系统之间争夺资源（锁）引起的。</p>
+          <p><em>介绍容器和容器管理相关技术</em></p>
+<h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a><strong>Docker</strong></h2><h3 id="1-特性"><a href="#1-特性" class="headerlink" title="1. 特性"></a>1. 特性</h3><p>轻量（相比VM）</p>
+<p>隔离 隔离 隔离</p>
+<p>交付完整的运行环境</p>
+<p><em>是的，就是这样几个简单、质朴的特性，颠覆互联网DevOps领域的整个交付流程。</em></p>
+<h3 id="2-Docker发展历史"><a href="#2-Docker发展历史" class="headerlink" title="2. Docker发展历史"></a>2. Docker发展历史</h3><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_history.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_history-1024x371.png" alt="docker_history"></a></p>
+<p>docker测试版本一经推出便立刻获得业界认可、热捧、支持，公司果断卖掉当前主业，全力发展docker，公司名称也改为Docker。</p>
+<p>2015年后Docker公司便一直在努力打造围绕docker容器的商业化的生态圈。至2017年3月推出了EE和CE两个系列。</p>
+<p>提及LXC，是因为docker最初的版本就是基于lxc实现的轻量容器化。</p>
+<h3 id="3-Docker-Archetecture"><a href="#3-Docker-Archetecture" class="headerlink" title="3. Docker Archetecture"></a>3. Docker Archetecture</h3><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_archetecture.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_archetecture-300x157.png" alt="docker_archetecture"></a></p>
+<p>docker真正干活的就是Docker daemon，而它的核心任务就是基于镜像创建容器。</p>
+<p>SDE通过docker client或者restful API向docker daemon发送指令，docker daemon接收、解析指令，从镜像仓库拉取镜像，基于镜像创建容器。</p>
+<h3 id="4-镜像分层"><a href="#4-镜像分层" class="headerlink" title="4 镜像分层"></a>4 镜像分层</h3><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_image.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_image-300x232.png" alt="docker_image"></a></p>
+<p>镜像是分层的，docker daemon可以基于任何一层创建容器。且镜像一旦生成就无法被更改。只有在容器内可以修改数据，如果我们想，可以把改动作为新的一层，生成一个镜像。 上层的改动是可以覆盖下层的，举例： 我们在镜像第二层安装了emacs，又在第三层卸载了emacs。 当基于第二层镜像创建容器时，容器中是有emacs的。 当基于第三层镜像创建容器时，容器中就没有emacs了。</p>
+<h3 id="5-docker基本原理"><a href="#5-docker基本原理" class="headerlink" title="5 docker基本原理"></a>5 docker基本原理</h3><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_theory.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/docker_theory-300x225.png" alt="docker_theory"></a></p>
+<p>Docker自身有些类似拉皮条的，所有的特性都是调用操作系统内核来实现的，而核心依赖的linux技术有namespaces、cgroup、aufs。</p>
+<p>我更倾向于将namespaces理解为命名空间的隔离：进程ID、网络隔离、用户空间隔离等</p>
+<p>cgroup是纯资源隔离：cpu、memory、device、blkio。在不适合使用容器的场景下，可以很方便的使用cgroup进行资源隔离。</p>
+<p>aufs是实现镜像分层的根本技术手段</p>
+<p><strong><em>至此可以忘掉docker，如今它已经完全褪去了高大上的光环（虽然一开始就没有神秘的技术），而它的位置亦沦落为容器化的、稳定的、可信赖的工具。</em></strong></p>
+<h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h2><h3 id="1-诱人的标签"><a href="#1-诱人的标签" class="headerlink" title="1. 诱人的标签"></a>1. 诱人的标签</h3><p>Inspired and informed by Google’s experience and internal system</p>
+<p>automate deploying, automate scaling, automate operating</p>
+<p>container orchestration</p>
+<p>open-source platform</p>
+<h3 id="2-Kubernetes-Archetecture"><a href="#2-Kubernetes-Archetecture" class="headerlink" title="2. Kubernetes Archetecture"></a>2. Kubernetes Archetecture</h3><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/kubernetes_archetecture.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/kubernetes_archetecture-300x130.png" alt="kubernetes_archetecture"></a></p>
+<p>典型的Master、Node模式，Master无状态可以配置多个、Node亦是可以横向扩展。</p>
+<p>Master核心组件：</p>
+<p>ApiServer：网关</p>
+<p>Scheduler：任务调度服务</p>
+<p>Replication Controller：副本管理服务</p>
+<p>Node核心组件：</p>
+<p>Kubelet：负责节点与apiserver通信和执行指令的全部工作</p>
+<p>Kube-Proxy：网络代理和轻量负载均衡，创建service的必要组件</p>
+<p>Docker：容器组件</p>
+<h3 id="3-Kubernetes术语"><a href="#3-Kubernetes术语" class="headerlink" title="3. Kubernetes术语"></a>3. Kubernetes术语</h3><p><strong>3.1 Pod</strong></p>
+<p>Kubernetes <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/">Pods</a> are mortal. Pods in fact have a <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/">lifecycle</a>. When a worker node dies, the Pods running on the Node are also lost. A <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/user-guide/replication-controller/#what-is-a-replicationcontroller">ReplicationController</a> might then dynamically drive the cluster back to desired state via creation of new Pods to keep your application running.</p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tutorials/kubernetes-basics/expose-intro/">https://kubernetes.io/docs/tutorials/kubernetes-basics/expose-intro/</a></p>
+<p>Each Pod in a Kubernetes cluster has a unique IP address, even Pods on the same Node</p>
+<p><strong>3.2 Service</strong></p>
+<p>A Service in Kubernetes is an abstraction which defines a logical set of Pods and a policy by which to access them. Services enable a loose coupling between dependent Pods.</p>
+<p>Although each Pod has a unique IP address, those IPs are not exposed outside the cluster without a Service.</p>
+<p><strong>3.3 Deployment</strong></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-intro/">https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-intro/</a></p>
+<p>you create a Kubernetes Deploymentconfiguration. The Deployment instructs Kubernetes how to create and update instances of your application. Once you’ve created a Deployment, the Kubernetes master schedules mentioned application instances onto individual Nodes in the cluster.</p>
+<p><strong>3.4 Kubelet</strong></p>
+<p>The kubelet daemon is the primary agent that runs on each node. The kubelet daemon watches the master API server and ensures the appropriate local containers are started, remain healthy, and continue to run.</p>
+<p><strong>3.5 Kube-Proxy</strong></p>
+<p>The kube-proxy daemon runs on each node as a simple network proxy and load balancer for the services on that node.</p>
+<p><strong>3.6 Replication Controller</strong></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/#what-is-a-replicationcontroller">https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/#what-is-a-replicationcontroller</a></p>
+<p>A ReplicationController ensures that a specified number of pod replicas are running at any one time. In other words, a ReplicationController makes sure that a pod or a homogeneous set of pods is always up and available.</p>
+<p><strong>3.7 Service</strong></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tutorials/kubernetes-basics/expose-intro/">https://kubernetes.io/docs/tutorials/kubernetes-basics/expose-intro/</a></p>
+<p>A Service in Kubernetes is an abstraction which defines a logical set of Pods and a policy by which to access them. Services enable a loose coupling between dependent Pods.</p>
+<p>Although each Pod has a unique IP address, those IPs are not exposed outside the cluster without a Service. Services allow your applications to receive traffic.</p>
+<p><strong>3.8 Namespace</strong></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/">https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/</a></p>
+<p>Create a namespace so that the resources you create in this exercise are isolated from the rest of your cluster.</p>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="1-镜像层级划分"><a href="#1-镜像层级划分" class="headerlink" title="1.  镜像层级划分"></a>1.  镜像层级划分</h3><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/image_design.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/image_design.png" alt="image_design"></a></p>
+<h2 id="2-集群建设"><a href="#2-集群建设" class="headerlink" title="2. 集群建设"></a>2. 集群建设</h2><p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/cluster_topology.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/cluster_topology-300x248.png" alt="cluster_topology"></a></p>
+<p>基于docker和kubernetes的特性可以很方便搭建互相隔离的集群环境。</p>
+<p>底层网络基于coreos贡献的flannel，使得集群内部的容器可以互相通信，简单好用，原理也容易理解。</p>
+<p><strong>3. DevOps流程</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.zmannotes.com/wp-content/uploads/2017/09/deploy_flow.png"><img src="https://www.zmannotes.com/wp-content/uploads/2017/09/deploy_flow-1024x334.png" alt="deploy_flow"></a></p>
+<p><strong>Link</strong></p>
+<ol>
+<li> <a target="_blank" rel="noopener" href="https://docs.docker.com/">Docker</a></li>
+<li> <a target="_blank" rel="noopener" href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html-single/resource_management_guide/">Cgroup</a></li>
+<li> <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/home/">Kubernetes</a></li>
+<li> <a target="_blank" rel="noopener" href="https://github.com/coreos/flannel">Flannel</a></li>
+</ol>
+<p>  <em>感谢读完~</em></p>
 
       
     </div>
@@ -346,7 +364,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/24/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><a class="extend next" rel="next" href="/page/26/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/24/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/26/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
