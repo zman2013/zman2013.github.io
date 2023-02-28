@@ -14,3 +14,9 @@ ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[blue]%}) %{$fg[yellow]%}✗"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%})"
 ```
+# 存放路径
+.oh-my-zsh/custom/themes/zman.zsh-theme
+
+# 配置文件
+文件: ~/.zshrc
+修改配置项: ZSH_THEME="zman"
