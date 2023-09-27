@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">48</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2019/11/01/wordpress/unity-2d-core-knowledge/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2019/11/01/wordpress/unity-2d-skills/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2019/11/01/wordpress/unity-2d-core-knowledge/" class="post-title-link" itemprop="url">Unity 2D 基础知识</a>
+            <a href="/2019/11/01/wordpress/unity-2d-skills/" class="post-title-link" itemprop="url">Unity 2D 常用技巧</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2019-11-01 21:39:02" itemprop="dateCreated datePublished" datetime="2019-11-01T21:39:02+08:00">2019-11-01</time>
+      <time title="Created: 2019-11-01 21:52:42" itemprop="dateCreated datePublished" datetime="2019-11-01T21:52:42+08:00">2019-11-01</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2023-02-28 13:54:34" itemprop="dateModified" datetime="2023-02-28T13:54:34+08:00">2023-02-28</time>
+        <time title="Modified: 2023-09-27 20:46:39" itemprop="dateModified" datetime="2023-09-27T20:46:39+08:00">2023-09-27</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,21 +271,138 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="1-层级关系"><a href="#1-层级关系" class="headerlink" title="1. 层级关系"></a>1. 层级关系</h1><p>2D世界的物体都在Z轴同一位面（z=0），摄像机在z=-10进行拍摄。物体之间的层级关系通过Y轴的高地来进行计算遮挡关系，从而产生立体感。 设置步骤： </p>
-<ol>
-<li>设置根据Y轴进行排序<br>Edit -&gt; Project Setting -&gt; Graphics -&gt; Camera Settings -&gt; Transparent Sort Mode =&gt; (x=0,y=1,z=0) </li>
-<li>设置排序为Sprite中心点<br>Inspector -&gt; Sprite Render -&gt; Sprite Sort Point -&gt; Pivot 3. 调整Sprite的中心点 Assets -&gt; 选中目标Sprite -&gt; Edit Sprite -&gt; 调整Pivot</li>
-</ol>
-<h1 id="2-刚体、碰撞"><a href="#2-刚体、碰撞" class="headerlink" title="2. 刚体、碰撞"></a>2. 刚体、碰撞</h1><p>UnityEngine模拟了物理世界基本定律：可以通过给GameObject添加刚体（Rigidbody 2D）组件，GameObject便开始收到物理定律的影响（记得把Gravity置为0）。通过添加Collider2D实现碰撞效果。 </p>
-<ol>
-<li>防止GameObject沿Z轴旋转<br>Inspector -&gt; Rigidbody 2D -&gt; Constraints -&gt; Freeze Rotation -&gt; 勾选z </li>
-<li>Collider调整到物体下半部分效果比较真实，即正好是物体的占地面积。 </li>
-<li>OnTriggerEnter2D 任意一方勾选了Collider的trigger属性，使用此方法。物体之间可以发生碰撞，同时可以互相进入对方空间内部。 OnCollisionEnter2D不勾选trigger时使用，物体之间发生碰撞，无法进入对方空间。</li>
-</ol>
-<h1 id="3-动画"><a href="#3-动画" class="headerlink" title="3. 动画"></a>3. 动画</h1><p>Animation -&gt; 动画（内容） Animator -&gt; GameObject的Component Animation Controller -&gt; 动画状态控制器，可以从一个状态转变为另一个状态 Blend State 挺有趣的（组合多个状态进行叠加）</p>
-<h1 id="4-声音"><a href="#4-声音" class="headerlink" title="4. 声音"></a>4. 声音</h1><p>Audio Source -&gt; 声源 Audio Listener -&gt; 喇叭 Audio Clip -&gt; 声音内容 Clip 放到 Source 中进行播放，Listener负责接收</p>
-<h1 id="5-RectTransform"><a href="#5-RectTransform" class="headerlink" title="5. RectTransform"></a>5. RectTransform</h1><p>UI对象的中心点(Pivot) -&gt; Unity开始渲染图像时从中心点开始渲染 UI对象的锚点(Anchor) -&gt; 与父对象的相对位置是通过计算与Anchor的相对位置计算的 UI的对象在Screen坐标中，不在World坐标，需要进行转换。</p>
-<h1 id="6-Tile"><a href="#6-Tile" class="headerlink" title="6. Tile"></a>6. Tile</h1><p>Tile的依存关系： Grid - TileMap1 - Tile1 - Tile2 - TileMap2 - Tile3 这样组织场景会比较方便管理。 Pallete挺好用的，尤其RulePallete、RandomPallete、LinePallete。</p>
+          <h1 id="1-点击屏幕选中物体"><a href="#1-点击屏幕选中物体" class="headerlink" title="1. 点击屏幕选中物体"></a>1. 点击屏幕选中物体</h1><pre class="language-csharp" data-language="csharp"><code class="language-csharp">&#x2F;&#x2F; 核心是坐标转化：屏幕坐标 -&gt; 世界坐标 -&gt; 射线碰撞
+Vector3 mousePos &#x3D; Camera.main.ScreenToWorldPoint(Input.mousePosition);
+Vector2 mousePos2D &#x3D; new Vector2(mousePos.x, mousePos.y);
+RaycastHit2D hit &#x3D; Physics2D.Raycast(mousePos2D, Vector2.zero);</code></pre>
+
+<h1 id="2-多个血条显示"><a href="#2-多个血条显示" class="headerlink" title="2. 多个血条显示"></a>2. 多个血条显示</h1><pre class="language-csharp" data-language="csharp"><code class="language-csharp">&#x2F;&#x2F; 核心是坐标转换：世界坐标转为屏幕坐标
+&#x2F;&#x2F; GameObject所在的世界坐标转为屏幕坐标
+Vector3 position &#x3D; Camera.main.WorldToScreenPoint(transform.position);
+&#x2F;&#x2F; 设置血条的位置，并调整偏移量
+bloodGameObject.gameObject.transform.position &#x3D; new Vector3(position.x-35, position.y + 110, position.z);
+
+&#x2F;&#x2F; 设置血条长度
+image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, originalSize \* percent);</code></pre>
+
+<h1 id="3-移动"><a href="#3-移动" class="headerlink" title="3. 移动"></a>3. 移动</h1><pre class="language-csharp" data-language="csharp"><code class="language-csharp">&#x2F;&#x2F; 刚体移动使用rig.MovePosition，防止物体抖动
+&#x2F;&#x2F; 使用MoveTowards计算移动的新位置， 防止速度过快时总是偏离目标位置
+if( Vector3.Distance(rig.position, targetPosition) &gt; Mathf.Epsilon)
+&#123;
+   float distance &#x3D; attackMoveSpeed \* Time.deltaTime;
+   Vector3 newPosition &#x3D; Vector3.MoveTowards(rig.position, targetPosition, distance);
+   rig.MovePosition(newPosition);
+&#125;</code></pre>
+<h1 id="4-拖拽物品"><a href="#4-拖拽物品" class="headerlink" title="4. 拖拽物品"></a>4. 拖拽物品</h1><pre class="language-csharp" data-language="csharp"><code class="language-csharp">using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+public class ItemDrag : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+&#123;
+
+    &#x2F;&#x2F; 鼠标起点
+    private Vector2 originalLocalPointerPosition;
+    &#x2F;&#x2F; 面板起点
+    private Vector3 originalLocalPanelPosition;
+    &#x2F;&#x2F; 当前物体
+    private RectTransform panelRectTransform;
+    &#x2F;&#x2F; 父节点
+    private RectTransform parentRectTransform;
+
+    &#x2F;&#x2F; 格子列表, 在gridList上一层添加一个新的空对象作为父节点
+    private GameObject gridManager;
+    &#x2F;&#x2F; 记录物品拖拽前的位置
+    private GameObject originalGrid;
+
+    private static int siblingIndex &#x3D; 0;
+
+
+    void Awake()
+    &#123;
+        panelRectTransform &#x3D; transform as RectTransform;
+        parentRectTransform &#x3D; GameObject.FindGameObjectWithTag(&quot;ScrollRect&quot;).GetComponent&lt;RectTransform&gt;() as RectTransform;
+        gridManager &#x3D; GameObject.Find(&quot;GridManager&quot;);
+
+    &#125;
+
+    &#x2F;&#x2F; 按下鼠标
+    public void OnPointerDown(PointerEventData eventData)
+    &#123;
+        &#x2F;&#x2F; 记录物品当前所在格子信息
+        originalGrid &#x3D; panelRectTransform.parent.gameObject;
+        &#x2F;&#x2F; 将物品设置在gridManager下，并设置层级，保证物品显示在整个背包之上
+        panelRectTransform.SetParent(parentRectTransform.transform);
+        siblingIndex &#x3D; 10;
+        panelRectTransform.SetSiblingIndex(siblingIndex);
+        &#x2F;&#x2F; 记录当前物品的起点位置
+        originalLocalPanelPosition &#x3D; panelRectTransform.localPosition;
+
+        &#x2F;&#x2F; 通过屏幕中的鼠标点，获取在父节点中的鼠标点
+        &#x2F;&#x2F; parentRectTransform 父节点
+        &#x2F;&#x2F; data.position当前鼠标位置
+        &#x2F;&#x2F; data.pressEventCamera当前事件的摄像机
+        &#x2F;&#x2F; originalLocalPointerPosition获取当前鼠标起点
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRectTransform, eventData.position, eventData.pressEventCamera,
+            out originalLocalPointerPosition);
+
+        Debug.Log(originalLocalPointerPosition.x + &quot; : &quot; + originalLocalPointerPosition.y);
+    &#125;
+
+    &#x2F;&#x2F; 拖动
+    public void OnDrag(PointerEventData eventData)
+    &#123;
+        if(panelRectTransform &#x3D;&#x3D; null  parentRectTransform &#x3D;&#x3D; null)
+        &#123;
+            return;
+        &#125;
+
+        Vector2 localPointerPosition;
+        &#x2F;&#x2F; 获取鼠标本地位置
+        if( RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRectTransform, eventData.position, eventData.pressEventCamera,
+            out localPointerPosition))
+        &#123;
+            &#x2F;&#x2F; 移动位置 &#x3D; 本地鼠标位置 - 鼠标起点位置
+            Vector3 offsetToOriginal &#x3D; localPointerPosition - originalLocalPointerPosition;
+            &#x2F;&#x2F; 当前物品位置 &#x3D; 当前物品起点位置 + 移动位置
+            panelRectTransform.transform.localPosition &#x3D; originalLocalPanelPosition + offsetToOriginal;
+        &#125;
+    &#125;
+
+    
+
+    public void OnPointerUp(PointerEventData eventData)
+    &#123;
+        RaycastHit2D hit &#x3D; Physics2D.Raycast(Input.mousePosition, -Vector2.up);
+        
+        if( hit.collider !&#x3D; null)
+        &#123;
+
+            GameObject g &#x3D; hit.transform.gameObject;
+            Debug.Log(&quot; hit &quot; + g.tag + &quot; &quot;);
+            Debug.Log(g.transform.Find(&quot;Item(Clone)&quot;));
+            if ( hit.collider.gameObject.tag &#x3D;&#x3D; &quot;Grid&quot; &amp;&amp; hit.collider.gameObject.transform.Find(&quot;Item(Clone)&quot;)&#x3D;&#x3D;null)
+            &#123;
+                transform.SetParent(hit.transform);
+            &#125;
+            else
+            &#123;
+                transform.SetParent(originalGrid.transform);
+            &#125;
+        &#125;
+        else
+        &#123;
+            Debug.Log(&quot;not hit&quot;);
+            transform.SetParent(originalGrid.transform);
+        &#125;
+        &#x2F;&#x2F; 重置物品位置
+        transform.localPosition &#x3D; Vector3.zero;
+    &#125;
+
+&#125;</code></pre>
+
+
 
       
     </div>
@@ -307,7 +424,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

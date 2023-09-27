@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">48</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/05/08/wordpress/spring-rabbitmq/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2016/05/08/wordpress/resttemplate-detailed-config/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/05/08/wordpress/spring-rabbitmq/" class="post-title-link" itemprop="url">Spring RabbitMQ</a>
+            <a href="/2016/05/08/wordpress/resttemplate-detailed-config/" class="post-title-link" itemprop="url">RestTemplate详细配置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2016-05-08 20:57:06" itemprop="dateCreated datePublished" datetime="2016-05-08T20:57:06+08:00">2016-05-08</time>
+      <time title="Created: 2016-05-08 21:15:34" itemprop="dateCreated datePublished" datetime="2016-05-08T21:15:34+08:00">2016-05-08</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2023-02-28 13:54:34" itemprop="dateModified" datetime="2023-02-28T13:54:34+08:00">2023-02-28</time>
+        <time title="Modified: 2023-09-27 20:46:39" itemprop="dateModified" datetime="2023-09-27T20:46:39+08:00">2023-09-27</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,11 +257,11 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
         </span>
           , 
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+          <a href="/categories/HttpClient/" itemprop="url" rel="index"><span itemprop="name">HttpClient</span></a>
         </span>
     </span>
 
@@ -275,80 +275,157 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>spring项目使用rabbitmq</em> <strong>1. 项目依赖</strong></p>
-<!-- rabbitmq -->
-<dependency>
-    <groupId>org.springframework.amqp</groupId>
-    <artifactId>spring-amqp</artifactId>
-    <version>1.5.5.RELEASE</version>
-</dependency>
-<dependency>
-    <groupId>org.springframework.amqp</groupId>
-    <artifactId>spring-rabbit</artifactId>
-    <version>1.5.5.RELEASE</version>
-</dependency>
-
-<p> <strong>2. 配置文件</strong></p>
-<?xml version="1.0" encoding="UTF-8" ?>
+          <p><strong>1. 配置文件如下</strong></p>
+<?xml version="1.0" encoding="UTF-8"?>
 <p><beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/rabbit
-        http://www.springframework.org/schema/rabbit/spring-rabbit.xsd"></p>
-<pre><code>&lt;!-- 声明rabbitmq连接 --&gt;
-&lt;rabbit:connection-factory id=&quot;rabbitmqConnectionFactory&quot;
-                           host=&quot;$&#123;rabbitmq.host&#125;&quot;
-                           virtual-host=&quot;$&#123;rabbitmq.vhost&#125;&quot;
-                           username=&quot;$&#123;rabbitmq.username&#125;&quot;
-                           password=&quot;$&#123;rabbitmq.password&#125;&quot;/&gt;
-&lt;!-- 创建rabbitmq admin，用来管理queue、exchanger、binding --&gt;
-&lt;rabbit:admin connection-factory=&quot;rabbitmqConnectionFactory&quot;/&gt;
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd"></p>
+<pre><code>&lt;!-- 声明连接池，指定大小 --&gt;
+&lt;bean id=&quot;pollingConnectionManager&quot;
+    class=&quot;org.apache.http.impl.conn.PoolingHttpClientConnectionManager&quot;&gt;
+    &lt;property name=&quot;maxTotal&quot; value=&quot;$&#123;resttemplate.http.connection.max\_total&#125;&quot; /&gt;
+    &lt;property name=&quot;defaultMaxPerRoute&quot; value=&quot;$&#123;resttemplate.http.default\_max\_per\_route&#125;&quot; /&gt;
+&lt;/bean&gt;
 
-&lt;!-- 声明队列 --&gt;
-&lt;rabbit:queue id=&quot;queue-bean-1&quot; durable=&quot;true&quot; name=&quot;$&#123;rabbitmq.queuename1&#125;&quot;/&gt;
-&lt;rabbit:queue id=&quot;queue-bean-2&quot; durable=&quot;true&quot; name=&quot;$&#123;rabbitmq.queuename2&#125;&quot;/&gt;
+&lt;!-- 声明http client工厂 --&gt;
+&lt;bean id=&quot;httpClientBuilder&quot; class=&quot;org.apache.http.impl.client.HttpClientBuilder&quot;
+    factory-method=&quot;create&quot;&gt;
+    &lt;property name=&quot;connectionManager&quot; ref=&quot;pollingConnectionManager&quot; /&gt;
+&lt;/bean&gt;
 
-&lt;!-- 声明exchange，这里使用的direct-exchange，与rabbitmq服务器的exchange类型对应 --&gt;
-&lt;rabbit:direct-exchange name=&quot;$&#123;rabbitmq.exchange.name&#125;&quot;&gt;
-    &lt;rabbit:bindings&gt;
-        &lt;rabbit:binding queue=&quot;queue-bean-1&quot; key=&quot;$&#123;rabbitmq.route.key1&#125;&quot;&gt;&lt;/rabbit:binding&gt;
-        &lt;rabbit:binding queue=&quot;queue-bean-2&quot; key=&quot;$&#123;rabbitmq.route.key2&#125;&quot;&gt;&lt;/rabbit:binding&gt;
-    &lt;/rabbit:bindings&gt;
-&lt;/rabbit:direct-exchange&gt;
+&lt;!-- 声明http client --&gt;
+&lt;bean id=&quot;httpClient&quot; factory-bean=&quot;httpClientBuilder&quot;
+    factory-method=&quot;build&quot; /&gt;
 
-&lt;!-- 声明消息消费者（监听者） --&gt;
-&lt;bean id=&quot;rabbitmqListener1&quot; class=&quot;com.zmannotes.spring.mq.listener.RabbitMQListener1&quot;/&gt;
-&lt;bean id=&quot;rabbitmqListener2&quot; class=&quot;com.zmannotes.spring.mq.listener.RabbitMQListener2&quot;/&gt;
+&lt;!-- 声明http rquest工厂，指定超时时间 --&gt;
+&lt;bean id=&quot;clientHttpRequestFactory&quot;
+    class=&quot;org.springframework.http.client.HttpComponentsClientHttpRequestFactory&quot;&gt;
+    &lt;constructor-arg ref=&quot;httpClient&quot; /&gt;
+    &lt;property name=&quot;connectTimeout&quot; value=&quot;$&#123;resttemplate.http.connect\_timeout&#125;&quot; /&gt;
+    &lt;property name=&quot;readTimeout&quot; value=&quot;$&#123;resttemplate.http.read\_timeout&#125;&quot; /&gt;
+&lt;/bean&gt;
 
-&lt;!-- 声明消费者容器，并将queue和listener关联，此处指定自动返回ack --&gt;
-&lt;rabbit:listener-container
-        connection-factory=&quot;rabbitmqConnectionFactory&quot; acknowledge=&quot;auto&quot;&gt;
-    &lt;rabbit:listener queues=&quot;queue-bean-1&quot; ref=&quot;rabbitmqListener1&quot;
-                     method=&quot;onMessage&quot;/&gt;
-    &lt;rabbit:listener queues=&quot;queue-bean-2&quot; ref=&quot;rabbitmqListener2&quot;
-                     method=&quot;onMessage&quot;/&gt;
-&lt;/rabbit:listener-container&gt;
+&lt;!-- 声明converter，指定编码 --&gt;
+&lt;bean id=&quot;utf8TextConverter&quot; class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;&gt;
+        &lt;property name=&quot;supportedMediaTypes&quot;&gt;
+            &lt;list&gt;
+                &lt;value&gt;text/html;charset=UTF-8&lt;/value&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
 
-&lt;!-- 消息生产者 --&gt;
-&lt;rabbit:template id=&quot;rabbitmqTemplate&quot; connection-factory=&quot;rabbitmqConnectionFactory&quot;
-    reply-timeout=&quot;2000&quot; routing-key=&quot;remoting.binding&quot;
-    exchange=&quot;rabbitmqExchange&quot;/&gt;</code></pre>
+&lt;!-- 最终的RestTemplate --&gt;
+&lt;bean id=&quot;restTemplate&quot; class=&quot;org.springframework.web.client.RestTemplate&quot;&gt;
+    &lt;constructor-arg ref=&quot;clientHttpRequestFactory&quot; /&gt;
+    &lt;property name=&quot;messageConverters&quot;&gt;
+        &lt;list&gt;
+            &lt;ref bean=&quot;utf8TextConverter&quot; /&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</code></pre>
 </beans>
 
-<p><strong>3. 实现XXXListener</strong></p>
-<p>import org.springframework.amqp.core.Message;<br>import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;</p>
-<p>public class RabbitMQListener implements ChannelAwareMessageListener {</p>
-<pre><code>public void onMessage(Message message, Channel channel) throws Exception &#123;
-    String msg = new String(message.getBody());
-    System.out.println( msg );
+<p> <strong>2. 封装RestTemplate</strong></p>
+<p>public class HttpClientWrapper {</p>
+<pre><code>protected Logger logger = LoggerFactory.getLogger(HttpClientWrapper.class);
+
+@Autowired
+protected RestTemplate restTemplate;
+
+protected ObjectMapper mapper = Jackson2ObjectMapperBuilder.json().build();
+
+/\*\*
+ \* 请求指定url，并获得返回对象
+ \* @param url http://google.com?key1=value1&amp;key2=value2...
+ \* @param method GET
+ \* @param tClass XXXResponse.class
+ \* @return XXXResponse instance
+ \*/
+public&lt;T&gt; T request(String url, HttpMethod method, Class&lt;T&gt; tClass) &#123;
+    JavaType returnType = TypeFactory.defaultInstance().constructType(
+            tClass);
+    String content = this.requestForString(url, method, null, null);
+    if (content != null) &#123;
+        try &#123;
+            T object = mapper.readValue(content, returnType);
+            return object;
+        &#125; catch (JsonParseException e) &#123;
+            logger.error(&quot;JSON parse exception: \\n&quot;);
+            logger.error(&quot;Content: &quot; + content);
+            logger.error(e.getMessage(), e);
+        &#125; catch (JsonMappingException e) &#123;
+            logger.error(&quot;JSON mapping exception: \\n&quot;);
+            logger.error(&quot;Content: &quot; + content);
+            logger.error(e.getMessage(), e);
+        &#125; catch (IOException e) &#123;
+            logger.error(e.getMessage(), e);
+        &#125;
+    &#125; else &#123;
+        logger.error(&quot;请求返回空, method:&#123;&#125;, url:&#123;&#125;&quot;, method, url);
+    &#125;
+
+    return null;
+
+&#125;
+
+/\*\*
+ \* 记录Request、Response内容和请求耗时
+ \*/
+private String requestForString(String url, HttpMethod method,
+        Map&lt;String, Object&gt; pathVariables, HttpEntity&lt;String&gt; httpEntity) &#123;
+    ResponseEntity&lt;String&gt; response = null;
+
+    if (httpEntity == null) &#123;
+        httpEntity = new HttpEntity&lt;String&gt;(&quot;&quot;);
+    &#125;
+
+    this.logRequest(url, method, pathVariables, httpEntity);
+    long start = System.currentTimeMillis();
+    try &#123;
+        if (pathVariables == null) &#123;
+            response = restTemplate.exchange(url, method, httpEntity,
+                    String.class);
+        &#125; else &#123;
+            response = restTemplate.exchange(url, method, httpEntity,
+                    String.class, pathVariables);
+        &#125;
+    &#125; catch (Exception e) &#123;
+        logger.error(e.getMessage(), e);
+        return null;
+    &#125;
+    long end = System.currentTimeMillis();
+    logger.info(&quot;Time: &quot; + (end - start));
+
+    if (response.getStatusCode() != HttpStatus.OK) &#123;
+        logger.error(&quot;Http response is NOT 200, URL: &quot; + method + &quot; &quot; + url
+                + &quot;; HTTP status: &quot; + response.getStatusCode());
+        return null;
+    &#125;
+
+    String content = response.getBody();
+
+    return content;
+&#125;
+
+protected void logRequest(String url, HttpMethod method,
+        Map&lt;String, Object&gt; pathVariables, HttpEntity&lt;String&gt; httpEntity) &#123;
+
+    if (pathVariables != null) &#123;
+        URI expanded = new UriTemplate(url).expand(pathVariables);
+        url = expanded.toString();
+    &#125;
+
+    logger.info(&quot;Http Invoke: &quot; + method + &quot; &quot; + url);
+    if (!StringUtils.isEmpty(httpEntity.getBody())) &#123;
+        logger.info(&quot;Body: &quot; + httpEntity.toString());
+    &#125;
+
 &#125;</code></pre>
-<p>}</p>
-<p><strong>4. 发送消息</strong></p>
-<p>void send(Message message) throws AmqpException;</p>
-<p>void send(String routingKey, Message message) throws AmqpException;</p>
-<p>void send(String exchange, String routingKey, Message message) throws AmqpException;</p>
-<p><strong>LINK</strong> <a target="_blank" rel="noopener" href="http://docs.spring.io/spring-amqp/reference/html/_introduction.html#quick-tour">官方文档 1</a> <a target="_blank" rel="noopener" href="http://docs.spring.io/spring-amqp/reference/html/_reference.html">官方文档 2</a></p>
 
       
     </div>
@@ -370,7 +447,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/27/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><span class="page-number current">28</span><a class="page-number" href="/page/29/">29</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/29/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/27/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><span class="page-number current">28</span><a class="page-number" href="/page/29/">29</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" href="/page/29/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

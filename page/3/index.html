@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">48</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2021/12/11/elasticsearch-command/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2022/08/29/nodejs-smart-libraries/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/11/elasticsearch-command/" class="post-title-link" itemprop="url">elasticsearch command</a>
+            <a href="/2022/08/29/nodejs-smart-libraries/" class="post-title-link" itemprop="url">nodejs-smart-libraries</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2021-12-11 14:54:06" itemprop="dateCreated datePublished" datetime="2021-12-11T14:54:06+08:00">2021-12-11</time>
+      <time title="Created: 2022-08-29 15:59:19" itemprop="dateCreated datePublished" datetime="2022-08-29T15:59:19+08:00">2022-08-29</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2023-02-28 13:54:34" itemprop="dateModified" datetime="2023-02-28T13:54:34+08:00">2023-02-28</time>
+        <time title="Modified: 2023-09-27 20:46:39" itemprop="dateModified" datetime="2023-09-27T20:46:39+08:00">2023-09-27</time>
       </span>
 
   
@@ -262,47 +262,57 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h1><ol>
-<li><p>创建索引<br>创建名为<code>xxx-span-2021-12-11</code>的索引</p>
-<pre class="language-none"><code class="language-none">PUT &#x2F;xxx-span-2021-12-11
-&#123;
-  &quot;mappings&quot;: &#123;
-      &quot;properties&quot;: &#123;
-        &quot;tags.source.uri&quot;: &#123;
-          &quot;type&quot;:       &quot;keyword&quot;
-        &#125;
-      &#125;
-  &#125;
-&#125;</code></pre>
-</li>
-<li><p>查看索引和映射<br>有了映射才能在 Kibana 中做查询和图标</p>
-<pre class="language-none"><code class="language-none">GET &#x2F;xxx-span-2021-12-11
-GET &#x2F;xxx-span-2021-12-11&#x2F;_mapping</code></pre>
-</li>
-<li><p>删除索引</p>
-<pre class="language-none"><code class="language-none">DELETE &#x2F;index_*</code></pre>
-<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/_deleting_an_index.html">LINK</a></p>
-</li>
-<li><p>模板操作</p>
-<pre class="language-none"><code class="language-none">GET _template&#x2F;xxx-span_template
-DELETE _template&#x2F;xxx-span_template</code></pre>
-</li>
-<li><p>查询</p>
-<pre class="language-none"><code class="language-none">GET &#x2F;xxx-span-2021-12-11&#x2F;_search
-&#123;
-  &quot;query&quot;: &#123;
-    &quot;match&quot;: &#123;
-      &quot;traceId&quot;: &#123;
-        &quot;query&quot;: &quot;bf2a201e835028ecae23c324e85b9855&quot;
-      &#125;
+          <h1 id="stmux"><a href="#stmux" class="headerlink" title="stmux"></a>stmux</h1><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/stmux">https://www.npmjs.com/package/stmux</a></p>
+<p>Simple Terminal Multiplexing for Node Environments</p>
+<p>This utility is primarily intended to be used from within a package.json script to easily side-by-side run various NPM-based commands in a Node.js build-time environment.</p>
+<h1 id="blessed、blessed-contrib"><a href="#blessed、blessed-contrib" class="headerlink" title="blessed、blessed-contrib"></a>blessed、blessed-contrib</h1><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/blessed">https://www.npmjs.com/package/blessed</a><br><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/blessed-contrib">https://www.npmjs.com/package/blessed-contrib</a></p>
+<p>A <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Curses_(programming_library)">curses-like</a> library with a high level terminal interface API for node.js.</p>
+<h1 id="shimmer"><a href="#shimmer" class="headerlink" title="shimmer"></a>shimmer</h1><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/shimmer">https://www.npmjs.com/package/shimmer</a></p>
+<p>shimmer does a bunch of the work necessary to wrap other methods in a wrapper you provide.</p>
+<h1 id="v8-profiler-next"><a href="#v8-profiler-next" class="headerlink" title="v8-profiler-next"></a>v8-profiler-next</h1><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/v8-profiler-next">https://www.npmjs.com/package/v8-profiler-next</a></p>
+<p>v8-profiler-next provides node bindings for the v8 profiler.</p>
+<h1 id="heapdump"><a href="#heapdump" class="headerlink" title="heapdump"></a>heapdump</h1><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/heapdump">https://www.npmjs.com/package/heapdump</a></p>
+<p>Make a dump of the V8 heap for later inspection.</p>
+<h1 id="yargs"><a href="#yargs" class="headerlink" title="yargs"></a>yargs</h1><p><a target="_blank" rel="noopener" href="https://github.com/yargs/yargs">https://github.com/yargs/yargs</a></p>
+<p>Yargs helps you build interactive command line tools, by parsing arguments and generating an elegant user interface.</p>
+<pre class="language-typescript" data-language="typescript"><code class="language-typescript"># tsnd src&#x2F;index.ts add --title &#39;title-A&#39; --body &#39;body-A&#39; 
+
+import yargs, &#123; Arguments, Argv, CommandModule &#125; from &#39;yargs&#39;
+import &#123; hideBin &#125; from &quot;yargs&#x2F;helpers&quot;;
+
+
+console.log(process.argv)
+
+type PrepareArgs &#x3D; &#123; title: string, body: string &#125;
+class ABC implements CommandModule&lt;&#123;&#125;, PrepareArgs&gt;&#123;
+    constructor(
+      public command &#x3D; &quot;add&quot;, 
+      public describe &#x3D; &quot;Add a new note&quot;)&#123;
     &#125;
-  &#125;
-&#125;</code></pre>
+    builder(argv: Argv&lt;&#123;&#125;&gt;): Argv&lt;PrepareArgs&gt;&#123;
+        return argv
+      .option(&quot;title&quot;, &#123;
+        desc: &quot;name prefix&quot;,
+        type: &quot;string&quot;,
+        demandOption: true,
+      &#125;)
+      .option(&quot;body&quot;, &#123;
+        desc: &quot;directory containing video files&quot;,
+        type: &quot;string&quot;,
+        demandOption: true,
+      &#125;);
+    &#125;
+    async handler(args: Arguments&lt;PrepareArgs&gt;)&#123;
+        console.log(args.title, args.body)
+    &#125;
+&#125;    
 
-</li>
-</ol>
-<h1 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h1><p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/cn/kibana/current/tutorial-visualizing.html">Kibana 可视化</a></p>
-
+&#x2F;&#x2F; Create add command 
+yargs(hideBin(process.argv))    &#x2F;&#x2F; 删除 process.argv 包含的头两个字段: &#x2F;bin&#x2F;node, filePath
+    .scriptName(&quot;yargs-test&quot;)
+    .command(new ABC() as any)
+    .command(new XXX() as any)  &#x2F;&#x2F; XXX is another command
+    .parseAsync();</code></pre>
       
     </div>
 
@@ -323,7 +333,7 @@ DELETE _template&#x2F;xxx-span_template</code></pre>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

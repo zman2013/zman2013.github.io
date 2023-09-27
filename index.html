@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">48</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2023/02/28/oh-my-zsh/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2023/09/27/cmake-syntax/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/02/28/oh-my-zsh/" class="post-title-link" itemprop="url">oh-my-zsh</a>
+            <a href="/2023/09/27/cmake-syntax/" class="post-title-link" itemprop="url">cmake syntax</a>
         </h2>
 
         <div class="post-meta-container">
@@ -243,7 +243,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2023-02-28 13:50:35 / Modified: 13:54:34" itemprop="dateCreated datePublished" datetime="2023-02-28T13:50:35+08:00">2023-02-28</time>
+      <time title="Created: 2023-09-27 19:55:53 / Modified: 20:46:39" itemprop="dateCreated datePublished" datetime="2023-09-27T19:55:53+08:00">2023-09-27</time>
     </span>
 
   
@@ -256,15 +256,40 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="极简的主题"><a href="#极简的主题" class="headerlink" title="极简的主题"></a>极简的主题</h1><pre class="language-none"><code class="language-none">PROMPT&#x3D;&quot;%(?:%&#123;$fg_bold[green]%&#125;➜ :%&#123;$fg_bold[red]%&#125;➜ )&quot;
-RPROMPT&#x3D;&#39;%&#123;$fg[cyan]%&#125;%c%&#123;$reset_color%&#125;  $(git_prompt_info)&#39;
+          <p>CMake 不是构建系统，它为其它构建工具生成构建脚本。例如：CMake 可以生成标准的 UNIX makefiles、Nigja build.ninja、Xcode project files。当然，CMake 也可以调用具体的构建工具完成构建。</p>
+<h1 id="CMake-Command"><a href="#CMake-Command" class="headerlink" title="CMake Command"></a>CMake Command</h1><p>cmake 命令分为两步：</p>
+<pre class="language-shell" data-language="shell"><code class="language-shell">1. 生成构建文件
+cmake -S . -B build [-G Ninja]
+# -S 指定编译源码目录
+# -B 指定构建文件的输出目录
+# -G 指定构建系统名称: &quot;Unix Makefiles&quot;, Ninja, 可以通过 cmake -h 查看
 
-ZSH_THEME_GIT_PROMPT_PREFIX&#x3D;&quot;%&#123;$fg_bold[blue]%&#125;git:(%&#123;$fg[red]%&#125;&quot;
-ZSH_THEME_GIT_PROMPT_SUFFIX&#x3D;&quot;%&#123;$reset_color%&#125; &quot;
-ZSH_THEME_GIT_PROMPT_DIRTY&#x3D;&quot;%&#123;$fg[blue]%&#125;) %&#123;$fg[yellow]%&#125;✗&quot;
-ZSH_THEME_GIT_PROMPT_CLEAN&#x3D;&quot;%&#123;$fg[blue]%&#125;)&quot;</code></pre>
-<h1 id="存放路径"><a href="#存放路径" class="headerlink" title="存放路径"></a>存放路径</h1><p>.oh-my-zsh/custom/themes/zman.zsh-theme</p>
-<h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><p>文件: ~/.zshrc<br>修改配置项: ZSH_THEME=”zman”</p>
+2. 进行构建
+cmake --build build -j [--target &#123;target&#125;]
+# 这一步也可以直接调用具体的构建工具来完成，例如 make
+# --build 指定包含构建文件的目录
+# -j 指定编译的线程数，如果不指定个数，会使用尽可能多的线程数，与核心数有关
+# --target 指定要构建的特定目标，而不是全部</code></pre>
+
+<h1 id="CMakeLists-txt-文件内容"><a href="#CMakeLists-txt-文件内容" class="headerlink" title="CMakeLists.txt 文件内容"></a>CMakeLists.txt 文件内容</h1><h2 id="1-设置CMake最低版本要求"><a href="#1-设置CMake最低版本要求" class="headerlink" title="1. 设置CMake最低版本要求"></a>1. 设置CMake最低版本要求</h2><p><code>cmake_minimum_required(VERSION 3.20.0) </code></p>
+<h2 id="2-设置项目名称和语言"><a href="#2-设置项目名称和语言" class="headerlink" title="2. 设置项目名称和语言"></a>2. 设置项目名称和语言</h2><p><code>project(FlatBuffers_Demo CXX)  </code></p>
+<h2 id="3-添加子目录"><a href="#3-添加子目录" class="headerlink" title="3. 添加子目录"></a>3. 添加子目录</h2><p><code>add_subdirectory(examples)  </code></p>
+<h2 id="4-包含头文件目录"><a href="#4-包含头文件目录" class="headerlink" title="4. 包含头文件目录"></a>4. 包含头文件目录</h2><p><code>include_directories(dir1/include dir2/include)</code></p>
+<h2 id="5-使用三种方式生成三个可执行文件"><a href="#5-使用三种方式生成三个可执行文件" class="headerlink" title="5. 使用三种方式生成三个可执行文件"></a>5. 使用三种方式生成三个可执行文件</h2><pre class="language-shell" data-language="shell"><code class="language-shell"># 添加第一个可执行文件
+add_executable(program1 program1.cpp)
+
+# 添加第二个可执行文件（指定具体的源文件）
+set(SOURCES main.cpp dir1&#x2F;file1.cpp dir2&#x2F;file2.cpp)
+add_executable(program2 $&#123;SOURCES&#125;)
+
+# 添加第三个可执行文件（指定某目录下的所有源文件）
+file(GLOB_RECURSE SOURCES &quot;main.cpp&quot; &quot;dir1&#x2F;*.cpp&quot; &quot;dir2&#x2F;*.cpp&quot;)
+add_executable(program3 $&#123;SOURCES&#125;)</code></pre>
+<h2 id="6-内置变量"><a href="#6-内置变量" class="headerlink" title="6. 内置变量"></a>6. 内置变量</h2><h3 id="6-1-PROJECT-SOURCE-DIR-源文件根目录"><a href="#6-1-PROJECT-SOURCE-DIR-源文件根目录" class="headerlink" title="6.1 PROJECT_SOURCE_DIR 源文件根目录"></a>6.1 PROJECT_SOURCE_DIR 源文件根目录</h3><p><code>include_directories($&#123;PROJECT_SOURCE_DIR&#125;/include)</code></p>
+<h3 id="6-2-PROJECT-BINARY-DIR-构建文件根目录"><a href="#6-2-PROJECT-BINARY-DIR-构建文件根目录" class="headerlink" title="6.2 PROJECT_BINARY_DIR 构建文件根目录"></a>6.2 PROJECT_BINARY_DIR 构建文件根目录</h3><p><code>include_directories($&#123;PROJECT_BINARY_DIR&#125;/include)</code></p>
+<h1 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h1><h2 id="1-xxx-cmake-与-CMakeLists-txt-的关系和区别？"><a href="#1-xxx-cmake-与-CMakeLists-txt-的关系和区别？" class="headerlink" title="1. xxx.cmake 与 CMakeLists.txt 的关系和区别？"></a>1. xxx.cmake 与 CMakeLists.txt 的关系和区别？</h2><p>a. 每个目录都可以包含 CMakeLists.txt，是项目的主要构建描述文件</p>
+<p>b. xxx.cmake 前缀可以任意命名，并且多处复用；CMakeLists.txt 命名唯一，且只服务于当前目录</p>
+<p>c. xxx.cmake 可以定义一些共用的头文件，变量等</p>
 
       
     </div>
@@ -286,7 +311,7 @@ ZSH_THEME_GIT_PROMPT_CLEAN&#x3D;&quot;%&#123;$fg[blue]%&#125;)&quot;</code></pre
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 

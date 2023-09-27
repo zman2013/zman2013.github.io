@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">48</span></a>
 
   </li>
   </ul>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/11/22/wordpress/mysql-innodb-recovery-from-ibd/">
+    <link itemprop="mainEntityOfPage" href="http://zman2013.github.io/2015/11/22/wordpress/java-jni/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -231,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/11/22/wordpress/mysql-innodb-recovery-from-ibd/" class="post-title-link" itemprop="url">MySQL从.ibd文件恢复数据</a>
+            <a href="/2015/11/22/wordpress/java-jni/" class="post-title-link" itemprop="url">Java JNI</a>
         </h2>
 
         <div class="post-meta-container">
@@ -242,14 +242,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2015-11-22 15:24:53" itemprop="dateCreated datePublished" datetime="2015-11-22T15:24:53+08:00">2015-11-22</time>
+      <time title="Created: 2015-11-22 22:39:20" itemprop="dateCreated datePublished" datetime="2015-11-22T22:39:20+08:00">2015-11-22</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2023-02-28 13:54:34" itemprop="dateModified" datetime="2023-02-28T13:54:34+08:00">2023-02-28</time>
+        <time title="Modified: 2023-09-27 20:46:39" itemprop="dateModified" datetime="2023-09-27T20:46:39+08:00">2023-09-27</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,7 +257,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Database/" itemprop="url" rel="index"><span itemprop="name">Database</span></a>
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
         </span>
     </span>
 
@@ -271,54 +271,64 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><em>但愿你没有遇到这样糟糕的事情</em><br><strong>最简单的情况需要四步</strong> </p>
+          <p><em>介绍C++调用Java JNI例子和原理</em> <strong>简单的步骤</strong></p>
 <ol>
-<li><p>创建一个表确证与原始表结构一致: <code>CREATE TABLE &lt;table_name&gt; ...;</code> </p>
-</li>
-<li><p>删除新建的表空间: <code>ALTER TABLE &lt;table_name&gt; DISCARD TABLESPACE;</code> </p>
-</li>
-<li><p>复制待恢复的<table_name>.ibd文件到目标数据库文件夹下面并修改权限:</p>
-<pre class="language-shell" data-language="shell"><code class="language-shell">cp &lt;tablename&gt;.ibd &#x2F;var&#x2F;lib&#x2F;mysql&#x2F;&lt;database_name&gt;
-cd &#x2F;var&#x2F;lib&#x2F;mysql&#x2F;&lt;database_name&gt;
-chown mysql:mysql &lt;tablename&gt;</code></pre>
-</li>
-<li><p>导入表空间即<table_name>.ibd: <code>ALTER TABLE &lt;table_name&gt; IMPORT TABLESPACE;</code></p>
-</li>
-<li><p>如果一切顺利，数据恢复至此完成: <code>SELECT * FROM &lt;table_name&gt; LIMIT 1;</code> </p>
-</li>
+<li> 完成普通的Java类，没有限制，没有规则。如果已经有了现成的类，就直接拿来用吧。</li>
+<li> 编译Java代码，没有限制，没有规则。</li>
+<li> 开发C++代码: 初始化JVM，通过Java JNI Functions调用Java逻辑。</li>
+<li> 编译、运行C++ 应用。</li>
 </ol>
-<p><strong>也可能是更糟糕的情况</strong> 同样执行上面1 ~ 4步，但第4步失败，并提示如下:</p>
-<pre class="language-none"><code class="language-none">InnoDB: Error: tablespace id in file 
-&#39;&lt;table_name&gt;.ibd&#39; is 30, but in the InnoDB
-InnoDB: data dictionary it is 1.</code></pre>
-<p>OK，表空间的ID不匹配：新建的<table_name>对应表空间ID=1，而<table_name>.ibd对应表空间ID=30。需要继续执行以下步骤： </p>
-<ol start="5">
-<li><p>删除新建的表: <code>DROP TABLE &lt;table_name&gt;;</code> </p>
-</li>
-<li><p>新建28(=30-1)个表，<code>CREATE TABLE &lt;tmp_table_name_x&gt; ... ;</code> </p>
-</li>
-<li><p>新建<table_name>, 此表将被分配的表空间ID为30，<code>CREATE TABLE &lt;table_name&gt; ... ;</code> </p>
-</li>
-<li><p>重复步骤2 ~ 4:</p>
-<pre class="language-sql" data-language="sql"><code class="language-sql">mysql&gt; ALTER TABLE &lt;table_name&gt; DISCARD TABLESPACE;
-&lt;-- 复制&lt;table_name&gt;.ibd文件并修改权限 --&gt;
-mysql&gt; ALTER TABLE &lt;table_name&gt; IMPORT TABLESPACE;</code></pre>
-</li>
-<li><p>完成! 测试: <code>SELECT * FROM &lt;table_name&gt; LIMIT 1;</code> </p>
-</li>
-</ol>
-<p><strong>随笔</strong><br>Q：表空间是什么？<br>A：表中数据存储的地方。以MySQL为例，在独立表空间模式下，一个表对应一个表空间，即<table_name>.ibd。 </p>
-<p>Q：数据存储目录在哪里？<br>A：默认位置/usr/lib/mysql。可以通过SQL命令查看： <code>show variables like &#39;datadir&#39;;</code> </p>
-<p>Q：查看所有数据库？<br>A：<code>SHOW DATABASES;</code> </p>
-<p>Q：查看所有表？<br>A：<code>SHOW TABLES;</code> </p>
-<p>Q：导出表数据命令？<br>A：<code>mysqldump -u&lt;username&gt; -p&lt;password&gt; &lt;database&gt; &lt;table_name&gt; &gt; &lt;table_name&gt;.sql</code> </p>
-<p>Q：导入表数据命令？<br>A：<code>mysql -u&lt;username&gt; -p&lt;password&gt; &lt;database&gt; &lt; &lt;table_name&gt;.sql</code> <strong><a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2015/11/22/mysql-innodb-recovery-from-ibd/">LINK</a></strong></p>
+<p><strong>例子（<a target="_blank" rel="noopener" href="https://github.com/zman2013/java-jni-demo.git">源码</a>）</strong> <strong>1.</strong> 一个简单的Java类</p>
+<p>package zman.demo.jni.cpp.invoke.java;</p>
+<p>public class CppInvokeJava{<br>    //求和计算<br>    public int sum(int a, int b, int c) {<br>        return a + b + c;<br>    }</p>
+<p>}</p>
+<p><strong>2.</strong> 编译一下</p>
+<p>zman@zman:find . -name “*.java”  xargs javac -d build</p>
+<p>-d build: 指定class输出路径。</p>
+<p><strong>3.</strong> 完成C++代码 <strong>3.1</strong> 声明一个类CppInvokeJava，文件名：cppinvokejava.h</p>
+<p>#ifndef __CPP_INVOKE_JAVA_H__<br>#define __CPP_INVOKE_JAVA_H__</p>
+<p>#include &lt;jni.h&gt;</p>
+<p>class CppInvokeJava<br>{<br>public:<br>  //init nested jvm, and init java instance.<br>  CppInvokeJava();<br>  //destroy jvm<br>  ~CppInvokeJava();<br>  //normal method<br>  int Sum(int a, int b, int c);</p>
+<p>private:<br>  JavaVM *m_jvm;<br>  JNIEnv *m_env;<br>  //the java class of CppInvokeJava<br>  jclass m_cppinvokejava_class;<br>  //the java instace of the class CppInvokeJava<br>  jobject m_cppinvokejava;<br>  //the java method id of the java sum method which will be invoked by the above ‘sum’ method.<br>  jmethodID m_sum_method;<br>};</p>
+<p>#endif</p>
+<p><strong>3.2</strong> 完成相应的实现逻辑，文件名：cppinvokejava.cpp</p>
+<p>#include &lt;jni.h&gt;<br>#include &lt;string.h&gt;<br>#include “cppinvokejava.h”</p>
+<p>CppInvokeJava::CppInvokeJava()<br>{<br>  //1. prepare jvm args<br>  JavaVMInitArgs vm_args;<br>  vm_args.version = JNI_VERSION_1_8;</p>
+<p>  JavaVMOption options[1];<br>  options[0].optionString = “-Djava.class.path=build”;<br>  vm_args.nOptions = 1;<br>  vm_args.options = options;</p>
+<p>  //2. create jvm<br>  long jvmStatus = JNI_CreateJavaVM(&amp;m_jvm, (void **)&amp;m_env, &amp;vm_args);<br>  if( jvmStatus == JNI_ERR ){<br>    printf(“Creating JVM failed.\n”);<br>  }</p>
+<p>  printf(“Created JVM successfully.\n”);</p>
+<p>  //3. find the CppInvokeJava class<br>  m_cppinvokejava_class = m_env-&gt;FindClass(“zman/demo/jni/cpp/invoke/java/CppInvokeJava”);<br>  if( m_cppinvokejava_class == 0 ){<br>    printf(“Not found class CppInvokeJava.\n”);<br>  }<br>  //4. get the constructor method id<br>  jmethodID cppinvokejava_constructor = m_env-&gt;GetMethodID(m_cppinvokejava_class, “<init>“, “()V”);<br>  if( cppinvokejava_constructor == 0 ){<br>    printf(“Not found CppInvokeJava’s constructor.\n”);<br>  }<br>  //5. create CppInvokeJava instance<br>  m_cppinvokejava = m_env-&gt;NewObject(m_cppinvokejava_class, cppinvokejava_constructor);<br>  if( m_cppinvokejava == 0 ){<br>    printf(“Creating CppInvokeJava instance failed.\n”);<br>  }</p>
+<p>  //6. find the sum method id<br>  m_sum_method = m_env-&gt;GetMethodID(m_cppinvokejava_class, “sum”, “(III)I”);<br>  if( m_sum_method == 0 ){<br>    printf(“Not found sum method.\n”);<br>  }</p>
+<p>}</p>
+<p>CppInvokeJava::~CppInvokeJava()<br>{<br>  m_jvm-&gt;DestroyJavaVM();<br>}</p>
+<p>int CppInvokeJava::Sum(int a, int b, int c)<br>{<br>  return m_env-&gt;CallIntMethod(m_cppinvokejava, m_sum_method, a, b, c);<br>}</p>
+<p>int main()<br>{<br>  CppInvokeJava cppInvokeJava;<br>  int sum = cppInvokeJava.Sum(1, 2, 3);<br>  printf(“The sum is: %d.\n”, sum);<br>}</p>
 <ol>
-<li> <a target="_blank" rel="noopener" href="http://superuser.com/questions/675445/mysql-innodb-lost-tables-but-files-exist">MySQL InnoDB lost tables but files exist</a></li>
-<li> <a target="_blank" rel="noopener" href="http://www.chriscalender.com/tag/innodb-error-tablespace-id-in-file/">Recovering an InnoDB table from only an .ibd file</a></li>
-<li> <a target="_blank" rel="noopener" href="http://imysql.cn/2008_12_17_migrate_innodb_tablespace_smoothly">InnoDB数据表空间文件迁移</a></li>
-<li> <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Tablespace">tablespace</a></li>
+<li> 准备虚拟机参数</li>
+<li> 创建虚拟机</li>
+<li> 调用JNI FindClass方法找到CppInvokeJava class</li>
+<li> 调用JNI GetMethodID方法找到CppInvokeJava的构造方法</li>
+<li> 调用JNI NewObject方法创建CppInvokeJava对象</li>
+<li> 调用JNI GetMethodID方法找到CppInvokeJava的sum方法</li>
 </ol>
+<p><strong>4.</strong> 编译、运行 <strong>4.1</strong> 编译</p>
+<p>//Linux 版<br>zman@zman:g++ -o cppinvokejava src/main/java/zman/demo/jni/cpp/invoke/java/cppinvokejava.cpp -I ${JAVA_HOME}/include/ -I ${JAVA_HOME}/include/linux/ -L ${JAVA_HOME}/jre/lib/amd64/server/ -ljvm</p>
+<p>//Mac 版<br>$ g++ -o cppinvokejava src/main/java/zman/demo/jni/cpp/invoke/java/cppinvokejava.cpp -I ${JAVA_HOME}/include/ -I ${JAVA_HOME}/include/darwin/ -L ${JAVA_HOME}/jre/lib/server/ -ljvm<br>//JDK&gt;1.6时，Mac运行JNI会提示需要安装JDK6，可以通过一下命令解决。<br>$ sudo mkdir /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/<br>$ sudo mkdir /System/Library/Java/Support/Deploy.bundle/</p>
+<p>编译cppinvokejava.cpp，输出到cppinvokejava。</p>
+<p>-I：指定头文件的位置（jni.h等）</p>
+<p>-L：指定动态链接库的位置（libjvm.so）</p>
+<p>-l：指定动态链接库名称（jvm）</p>
+<p><strong>4.2</strong> 指定动态链接库环境变量</p>
+<p>zman@zman:export LD_LIBRARY_PATH=${JAVA_HOME}/jre/lib/amd64/server/</p>
+<p><strong>4.3</strong> 运行</p>
+<p>zman@zman:java-jni-demo$ ./cppinvokejava<br>Created JVM successfully.<br>The sum is: 6.<br>zman@zman:java-jni-demo$</p>
+<p><strong>原理</strong> 正如我们一直了解的，java的字节码是在JVM中加载执行的。C++调用java，事实上是启动一个JVM，java的字节码依然是运行在JVM中，C++通过Java JNI提供的方法与JVM进行通信，达到调用java逻辑的目的。 注意 <strong>*</strong> 对于java对象，C++代码获得的都是引用，C++需要通过JNI Function调用对象提供的方法实现对象的修改。 <strong>*</strong> C++不能直接获得java String字符串，需要通过GetStringUTFRegion将字符串内容复制到C++的空间中；也可以通过SetStringUTFRegion将C++中的字符串赋值给java String对象。 <strong>*</strong> 数组操作与String操作基本相同。 <strong>*</strong> C++中的局部变量如果是java对象的引用，C++方法运行结束时，局部变量自动释放，而相应java对象由JVM自动回收。（如果C++使用完java对象，后续有比较耗时的逻辑，可以调用JNI Function主动释放java对象的引用，不必等到方法结束） <strong>调试</strong> 1. 调试Java程序 设置JVM参数如下，然后在IDE中启动Remote Debug模式:</p>
+<p>JavaVMOption options[2];<br>options[0].optionString = “-Djava.class.path=build”;<br>//添加debug参数<br>options[1].optionString = “-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y”;<br>vm_args.nOptions = 2;<br>vm_args.options = options;</p>
+<p>2. 调试C++程序</p>
+<p>zman@zman: gdb ./cppinvokejava     //调试程序<br>(gdb) r        //启动<br>(gdb) c        //继续执行<br>(gdb&gt; info s   //查看stack信息</p>
+<p><strong>内存泄露</strong> 1. 创建字符串引起内存泄露 实际开发中，在本地方法里，创建字符串并获得本地引用（LocalReference），此本地引用不会返回到上层函数，依然会引起引起内存泄露。 这一现象和JNI Guide and Specification第五章“Local and Global References”描述的机制不一样。 <em>Local and global references have different lifetimes. Local references are</em> <em>automatically freed, whereas global and weak global references remain valid</em> <em>until they are freed by the programmer.</em> <em>It is acceptable to leave up to 16 local references in use for the virtual machine</em> <em>to delete after the native method returns.</em> 推荐：无论何时字符串对象不会再被引用，就手工释放引用。</p>
+<p>void createString()<br>{<br>    jstring localRef = env-&gt;NewStringUTF(“some content”);<br>    …<br>    env-&gt;DeleteLocalRef( localRef );<br>    …<br>}</p>
+<p><strong><a target="_blank" rel="noopener" href="https://www.zmannotes.com/index.php/2015/11/22/java-jni/">LINK</a></strong> 1. <a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/jniTOC.html">JNI Guide from Oracle</a> 2. <a target="_blank" rel="noopener" href="http://www.ibm.com/developerworks/java/tutorials/j-jni/j-jni.html">Java programming with JNI</a> 3. <a target="_blank" rel="noopener" href="http://www.e-booksdirectory.com/details.php?ebook=325">JNI Guide and Specification</a></p>
 
       
     </div>
@@ -340,7 +350,7 @@ mysql&gt; ALTER TABLE &lt;table_name&gt; IMPORT TABLESPACE;</code></pre>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/41/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><span class="page-number current">42</span><a class="page-number" href="/page/43/">43</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/43/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/41/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><span class="page-number current">42</span><a class="page-number" href="/page/43/">43</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" href="/page/43/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
